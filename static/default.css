@@ -1,0 +1,130 @@
+@import 'http://fonts.googleapis.com/css?family=Montserrat:300,400,700';
+
+body {
+    padding: 1ex;
+    margin: 0px;
+    font-family: Montserrat, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    color: #444;
+    background: Silver;
+}
+
+.align-top {
+    vertical-align: top;
+}
+
+.align-right {
+    text-align: right;
+}
+
+td.separator {
+    width: 100%;
+    border: solid 1px;
+}
+
+table.main {
+    width: 100%;
+    border: solid 1px;
+    padding: 0ex 0em;
+    margin: 0px;
+}
+
+table.header {
+    width: 100%;
+    border: solid 1px;
+    padding: 0px;
+    margin: 0px;
+}
+
+table.top-menu {
+    width: 100%;
+    border: solid 1px;
+    padding: 0px;
+    margin: 0px;
+}
+
+table.top-menu > thead > tr > th {
+    padding: 1ex 1em;
+    background: DarkSlateBlue;
+    color: Gold;
+}
+
+table.top-menu > thead > tr > th > a {
+    color: Gold;
+    text-decoration: none;
+}
+
+table.top-menu > thead > tr > th > a:hover {
+    color: Orange;
+    text-decoration: none;
+}
+
+table.left-menu {
+    border: solid 1px;
+    padding: 0px;
+    margin: 0px;
+    width: 100%;
+}
+
+table.main-list {
+    border: solid 1px;
+    margin: 0px;
+    padding: 0px;
+    width: 100%;
+}
+
+table.main-list > thead > tr {
+    background: SteelBlue;
+    color: Gold;
+}
+
+table.main-list > tbody > tr > td, th {
+    padding: 1ex 1em;
+}
+
+table.main-list > tbody, thead > tr:nth-child(odd) {
+    background: Snow;
+}
+
+table.main-list > tbody > tr:nth-child(even) {
+    background: WhiteSmoke;
+}
+
+table.footer {
+    width: 100%;
+    border: solid 1px;
+    padding: 0px;
+    margin: 0px;
+}
+
+table.bottom {
+    width: 100%;
+    border: solid 1px;
+    padding: 0px;
+    margin: 0px;
+}
+
+;th, td {
+;    padding: 5px 10px;
+;}
+
+;tbody tr td:nth-child(2) {
+;    text-align:center;
+;}
+
+;tbody tr td:nth-child(3),
+;tbody tr td:nth-child(4) {
+;    text-align: right;
+;    font-family: monospace;
+;}
+;
+;tfoot {
+;    background: SeaGreen;
+;    color: white;
+;    text-align: right;
+;}
+;
+;tfoot tr th:last-child {
+;    font-family: monospace;
+;}        

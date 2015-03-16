@@ -1,0 +1,21 @@
+{% extends "index.html" %}
+{% block top_menu %}
+    <!--1st LINK -->
+    <div id="logout_box" class="modal_box">
+            <ul>
+                <li><a href='{{ url_for('logout') }}'>logout</a></li>
+                <li><a href="#">cancel</a></li>
+            </ul>
+    </div>
+<table class="top-menu">
+    <thead>
+        <tr>
+            <th width="150px">
+            <th>
+            <th width="100px">
+                <a href='{{ url_for('my_account') }}'>my&nbsp;account</a>
+            <th width="100px">
+                <a href="#logout_box">logout</a>
+    </thead>
+</table>
+{% endblock %}

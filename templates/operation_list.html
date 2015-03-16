@@ -1,0 +1,13 @@
+{% extends "authenticated.html" %}
+{% block body %}
+<table border=1>
+{% for operation in operations %}
+<tr>
+    <td>
+        {{ operation.amount }}
+    <td>        
+        <a href="{{ url_for('operation_remove', oid=operation.oid) }}">remove</a>
+{% endfor %}
+</table>
+<a href="{{ url_for('account_list') }}">back to account list</a>
+{% endblock %}

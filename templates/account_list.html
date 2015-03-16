@@ -1,0 +1,36 @@
+{% extends "authenticated.html" %}
+{% block body %}
+<table class="main-list">
+    <thead>
+    <tr>
+        <th width="100px">
+            remove
+        <th width="100px">
+            modify
+        <th>
+            account
+        <th width="100px">
+            balance
+    </thead>
+    <tbody>
+{% for account in accounts %}
+    <tr>
+        <td>
+            <p><a href="{{ url_for('account_remove', aid=account.aid) }}">remove</a></p>
+        <td>
+            <p><a href="#" onclick="dialog('{{ url_for("ajax_account_edit", aid=account.aid) }}');">modify</a></p>
+        <td>
+            <p><a href="{{ url_for('operation_list', account=account.aid) }}">{{ account.name }}</a></p>
+        <td class="align-right">
+            <p><a href="{{ url_for('operation_list', account=account.aid) }}">{{ account.initial_balance }} zł</a></p>
+{% else %}
+    <tr>
+        <td colspan=4>
+            <p>no accounts were found</p>
+{% endfor %}
+    <tr>
+        <td colspan=4>
+            <p><a href="#" onclick="dialog('{{ url_for("ajax_account_edit", aid=0) }}');">add new one</a></p>
+    </tbody>
+</table>
+{% endblock %}

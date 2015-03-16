@@ -1,0 +1,92 @@
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="/static/default.css">
+        <style type="text/css">
+        /*** pop-up div to cover entire area ***/
+        .modal_box  {
+            position:fixed;
+            top:0%;
+            left:0%;
+            width:80%;
+            height:80%;
+            padding:10%;
+            border:0px;
+            /*! important !*/
+            display:none;
+            /* last attribute set darkness on scale: 0...1.0 */
+            background-color:rgba(0,0,0,0.8);
+            text-align:center;
+            vertical-align:center;
+            z-index:101;
+        }
+                /*** ! target attribute does the job ! ***/
+        .modal_box:target  { display:block; }
+        
+        </style>
+        <script type="text/javascript" src="/static/jxs.js"></script>
+        <script type="text/javascript">
+/* <![CDATA[ */
+function $(id){
+    return document.getElementById(id);
+}
+function dialog(url) {
+    jx.bind({
+        "url": url,
+        "method": "GET",
+        "format": "text",
+        "onSuccess": function(data) {
+            $('modal_box').innerHTML = data;
+            window.location = window.location + 'modal_box';
+        },
+        "onError": function(status) {
+            window.alert("Something when wrong. Error : " + status);
+        },
+    })
+}
+/* ]]> */
+        </script>
+    </head>
+    <body>
+        <div id="modal_box" class="modal_box"> 
+        </div>
+        <table class="main">
+            <tr>
+                <td colspan=2>
+                    <table class="header">
+                        <tr>
+                            <td>
+                                header
+                    </table>
+            <tr>
+                <td colspan=2>
+{% block top_menu %}
+{% endblock %}
+            <tr>
+                <td width="180px" class="align-top">
+                    <table class="left-menu">
+                        <tr>
+                            <td>
+                                left menu
+                    </table>
+{% block left_menu %}
+{% endblock %}
+                <td>
+{% block body %}
+{% endblock %}
+            <tr>
+                <td colspan=2>
+                    <table class="footer">
+                        <tr>
+                            <td>
+                                footer
+                    </table>
+            <tr>
+                <td colspan=2>
+                    <table class="bottom">
+                        <tr>
+                            <td>
+                                bottom
+                    </table>
+        </table>
+    </body>
+</html>

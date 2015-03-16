@@ -1,0 +1,24 @@
+{% extends "index.html" %}
+{% block body %}
+<form action="" method=post class="form-horizontal">
+<table border=1>
+    <tr>
+        <td colspan=3>
+            <h2>sign-in</h1>
+    <tr>
+        <td>
+            login
+        <td>
+            <input type="text" id="login" name="login"
+                   class="input-xlarge" placeholder="login" required>
+        <td rowspan=2>
+          <button type="submit" class="btn btn-success">sign-in</button>
+    <tr>
+        <td>
+            password
+        <td>
+            <input type="password" id="password" name="password"
+                   class="input-xlarge" placeholder="password" required>
+</table>
+</form>
+{% endblock %}
