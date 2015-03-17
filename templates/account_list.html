@@ -20,9 +20,9 @@
         <td>
             <p><a href="#" onclick="dialog('{{ url_for("ajax_account_edit", aid=account.aid) }}');">modify</a></p>
         <td>
-            <p><a href="{{ url_for('operation_list', account=account.aid) }}">{{ account.name }}</a></p>
+            <p><a href="{{ url_for('operation_list', aid=account.aid) }}">{{ account.name }}</a></p>
         <td class="align-right">
-            <p><a href="{{ url_for('operation_list', account=account.aid) }}">{{ account.initial_balance }} zł</a></p>
+            <p><a href="{{ url_for('operation_list', aid=account.aid) }}">{{ account.initial_balance }} zł</a></p>
 {% else %}
     <tr>
         <td colspan=4>

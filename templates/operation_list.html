@@ -1,13 +1,43 @@
 {% extends "authenticated.html" %}
 {% block body %}
-<table border=1>
+<table class="main-list">
+    <thead>
+    <tr>
+        <th width="5%">
+        <th width="20%">
+            date
+        <th width="30%">
+            description
+        <th width="25%">
+            tags
+        <th width="5%">
+        <th width="15%">
+            amount
+    </thead>
+    <tbody>
 {% for operation in operations %}
-<tr>
-    <td>
-        {{ operation.amount }}
-    <td>        
-        <a href="{{ url_for('operation_remove', oid=operation.oid) }}">remove</a>
+    <tr>
+        <td class="align-center">
+            <p><a href="{{ url_for('operation_remove', oid=operation.oid) }}">x</a></p>
+        <td class="align-center">
+            <p>{{ operation.date }}</p>
+        <td>
+            <p>{{ operation.description }}</p>
+        <td>
+            <p>{{ operation.tags }}</p>
+        <td class="align-center">
+            <p><a href="#" onclick="dialog('{{ url_for("ajax_operation_edit", aid=aid, oid=operation.oid) }}');">m</a></p>
+        <td class="align-right">
+            <p><a href="{{ url_for('operation_list', aid=operation.aid) }}">{{ operation.amount }} zł</a></p>
+{% else %}
+    <tr>
+        <td colspan=4>
+            <p>no operations were found</p>
 {% endfor %}
+    <tr>
+        <td colspan=6>
+            <p><a href="#" onclick="dialog('{{ url_for("ajax_operation_edit", aid=aid, oid=0) }}');">add new one</a></p>
+    </tbody>
 </table>
 <a href="{{ url_for('account_list') }}">back to account list</a>
 {% endblock %}

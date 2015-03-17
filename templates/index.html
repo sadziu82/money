@@ -24,6 +24,7 @@
         
         </style>
         <script type="text/javascript" src="/static/jxs.js"></script>
+        <script type="text/javascript" src="/static/shortcut.js"></script>
         <script type="text/javascript">
 /* <![CDATA[ */
 function $(id){
@@ -36,7 +37,15 @@ function dialog(url) {
         "format": "text",
         "onSuccess": function(data) {
             $('modal_box').innerHTML = data;
-            window.location = window.location + 'modal_box';
+            window.location.href = window.location.href + 'modal_box';
+            shortcut.add("Escape", function() {
+                window.location.href = window.location.href.replace('#modal_box', '#');
+                shortcut.remove("Escape");
+            }, {
+                'type': 'keydown',
+                'propagate': true,
+                'target': document
+            });
         },
         "onError": function(status) {
             window.alert("Something when wrong. Error : " + status);

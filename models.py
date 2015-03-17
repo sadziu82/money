@@ -22,10 +22,19 @@ Base = declarative_base()
 ACCOUNT_TYPE = {
     'current': 'current',
     'debit': 'debit',
-    'savings': 'savings',
+    'loan': 'loan',
+    'mortgage loan': 'mortgage loan',
     'credit card': 'credit card',
+    'savings': 'savings',
     'rainy day': 'rainy day',
     'money to burn': 'money to burn',
+}
+
+#
+OPERATION_TYPE = {
+    'expenses': 'expenses',
+    'receipts': 'receipts',
+    'transfers': 'transfers',
 }
 
 #
@@ -107,8 +116,8 @@ class Operation(Base):
     aid = Column(String(36), ForeignKey('account.aid', ondelete="cascade"),
                      nullable=False)
     amount = Column(Numeric(precision=10, scale=2), nullable=False)
-    type = Column(Enum('expenses', 'receipts', 'transfers'),
-                       default='expenses', nullable=False)
+    type = Column(Enum(OPERATION_TYPE.keys()),
+            default=OPERATION_TYPE.keys()[0], nullable=False)
     date = Column(DateTime, default=func.now(), nullable=False)
     booked = Column(Boolean, default=False)
     tags = relationship('OperationTag')

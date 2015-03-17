@@ -65,9 +65,8 @@ def account_list(session, owner):
         return session.query(Account).all()
 
 
-def operation_add(session, owner, account, amount, type, tags):
-    account = account_get(session=session, owner=owner, name=account)
-    operation = Operation(aid=account.aid, amount=amount,
+def operation_add(session, account, amount, type, tags):
+    operation = Operation(aid=account, amount=amount,
                           type=type)
     session.add(operation)
     session.flush()
@@ -86,17 +85,13 @@ def operation_add(session, owner, account, amount, type, tags):
     return operation
 
 
-def operation_get(session, owner, name):
-    user = user_get(session=session, login=owner)
-    operation = session.query(Operation).filter(Operation.oid == user.uid,
-                                            Operation.name == name).one()
+def operation_get(session, oid):
+    operation = session.query(Operation).get(oid)
     return operation
 
 
-def operation_remove(session, owner, name):
-    user = user_get(session=session, login=owner)
-    operation = session.query(Operation).filter(Operation.oid == user.uid,
-                                            Operation.name == name).one()
+def operation_remove(session, oid):
+    operation = session.query(Operation).get(oid)
     session.delete(operation)
     session.flush()
     return True
@@ -105,7 +100,7 @@ def operation_remove(session, owner, name):
 def operation_list(session, owner, account, tags):
     query = session.query(Operation)
     if owner and account:
-        query = query.filter(Operation.aid == account)
+        query = query.filter(Operation.aid == account).order_by(Operation.date)
     #elif owner:
     #    user = user_get(session=session, login=owner)
     #    query = query.join(Account, Operation.aid == Account.aid).filter(Account.oid == user.uid)

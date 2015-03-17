@@ -17,6 +17,8 @@ from flask.ext.login import (LoginManager,
                              current_user, login_required
                              )
 #from flask.forms import LoginForm
+import logging
+from logging.handlers import RotatingFileHandler
 
 
 # FIXME
@@ -74,6 +76,7 @@ def load_user(uid):
 def before_request():
     g.user = current_user
     g.session = db.session
+    g.logger = money.logger
 
 
 @money.route('/', methods=['GET'])
@@ -118,6 +121,14 @@ def ajax_account_edit(aid):
     return render_template('account_edit.html', ACCOUNT_TYPE=models.ACCOUNT_TYPE, account=account)
 
 
+@money.route('/ajax/operation/edit/<aid>/<oid>', methods=['GET'])
+@login_required
+def ajax_operation_edit(aid, oid):
+    account = api.account_get(session=g.session, aid=aid)
+    operation = api.operation_get(session=g.session, oid=oid)
+    return render_template('operation_edit.html', OPERATION_TYPE=models.OPERATION_TYPE, operation=operation, account=account)
+
+
 @money.route('/account/list', methods=['GET'])
 @login_required
 def account_list():
@@ -128,7 +139,8 @@ def account_list():
 @money.route('/account/add', methods=['POST'])
 @login_required
 def account_add():
-    api.account_add(session=g.session, owner=g.user.uid,
+    api.account_add(session=g.session,
+            owner=g.user.uid,
             name=request.form['name'],
             initial_balance=request.form['initial_balance'],
             type=request.form['type'])
@@ -155,32 +167,54 @@ def account_remove(aid):
     return redirect(url_for('account_list'))
 
 
-@money.route('/operation/list/<account>', methods=['GET'])
+@money.route('/operation/list/<aid>', methods=['GET'])
 @login_required
-def operation_list(account):
+def operation_list(aid):
     #user = user_get(session=db.session, login='pawel')
     operations = api.operation_list(session=g.session,
                                     owner=g.user.uid,
-                                    account=account,
+                                    account=aid,
                                     tags=None)
-    return render_template('operation_list.html', operations=operations)
+    return render_template('operation_list.html', aid=aid,
+            operations=operations)
+
+
+@money.route('/operation/save/<oid>', methods=['POST'])
+@login_required
+def operation_save(oid):
+    g.logger.debug(request.form)
+    try:
+        operation = api.operation_get(session=g.session, oid=oid)
+        operation.amount = request.form['amount']
+        operation.type = request.form['type']
+    except:
+        g.logger.debug('jakas dupa')
+        api.operation_add(session=g.session,
+                account=request.form['aid'],
+                amount=request.form['amount'],
+                type=request.form['type'],
+                tags=request.form['tags'])
+    g.session.commit()
+    return redirect(url_for('operation_list', aid=request.form['aid']))
 
 
 @money.route('/operation/remove/<oid>', methods=['GET'])
 @login_required
 def operation_remove(oid):
-    #user = user_get(session=db.session, login='pawel')
-    operations = api.operation_list(session=g.session,
-                                    owner=g.user.uid,
-                                    account=account,
-                                    tags=None)
-    return render_template('operation_list.html', operations=operations)
+    operation = api.operation_get(session=g.session, oid=oid);
+    account = operation.account
+    api.operation_remove(session=g.session, oid=oid)
+    g.session.commit()
+    return redirect(url_for('operation_list', aid=account.aid))
 
 
 ##
 if __name__ == '__main__':
     money.run()
 else:
+    handler = RotatingFileHandler('/srv/money.ithaca.pl/logs/money.log', maxBytes=1048576, backupCount=1)
+    handler.setLevel(logging.DEBUG)
+    money.logger.addHandler(handler)
     money.debug = True
     application = money
 
