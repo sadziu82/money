@@ -6,7 +6,7 @@ import uuid
 import hashlib
 
 # 
-from sqlalchemy import (Column, ForeignKey, String, DateTime,
+from sqlalchemy import (Column, ForeignKey, String, Date, DateTime,
                         Numeric, Enum, Boolean, Integer, Table, func)
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.schema import UniqueConstraint
@@ -118,7 +118,8 @@ class Operation(Base):
     amount = Column(Numeric(precision=10, scale=2), nullable=False)
     type = Column(Enum(OPERATION_TYPE.keys()),
             default=OPERATION_TYPE.keys()[0], nullable=False)
-    date = Column(DateTime, default=func.now(), nullable=False)
+    desc = Column(String(), default='', nullable=False)
+    date = Column(Date, default=func.now(), nullable=False)
     booked = Column(Boolean, default=False)
     tags = relationship('OperationTag')
     order_by = Column(Integer(), nullable=False,
@@ -126,10 +127,11 @@ class Operation(Base):
     account = relationship('Account', uselist=False,
                            backref='operations')
 
-    def __init__(self, aid, amount, type):
+    def __init__(self, aid, amount, desc, type):
         self.oid = uuid.uuid4()
         self.aid = aid
         self.amount = amount
+        self.desc = desc
         self.type = type
 
     def __repr__(self):

@@ -17,7 +17,19 @@
             <th colspan="2" width="234px" class="align-right">
                 account:
             <th>
-                {{ account.name }}
+                <select name="aid">
+{% for a in accounts -%}
+                    {% if operation and operation.aid == a.aid %}
+                    <option value="{{ a.aid }}" selected>
+                    {% elif a.aid == account.aid %}
+                    <option value="{{ a.aid }}" selected>
+                    {% else %}
+                    <option value="{{ a.aid }}">
+                    {% endif %}
+                        {{ a.name }}
+                    </option>
+{% endfor -%}
+                </select>
             <th colspan="2" width="234px">
         <tr>
             <th colspan="2" width="234px" class="align-right">
@@ -25,6 +37,25 @@
             <th>
                 <input type="text" name="amount" class="input-xlarge"
                        placeholder="amount" required value="{{ operation.amount }}">
+            <th colspan="2" width="234px">
+        <tr>
+            <th colspan="2" width="234px" class="align-right">
+                description:
+            <th>
+                <textarea name="desc" class="input-xlarge"
+                       placeholder="description">{{ operation.desc }}</textarea>
+            <th colspan="2" width="234px">
+        <tr>
+            <th colspan="2" width="234px" class="align-right">
+                tags:
+            <th>
+                <textarea id='tags' name="tags" class="input-xlarge"
+                       placeholder="description">{{ operation.tags }}</textarea>
+                <script>
+                    $('tags').select2({
+                        tags: true
+                    })
+                </script>
             <th colspan="2" width="234px">
         <tr>
             <th colspan="2" class="align-right">

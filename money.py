@@ -125,8 +125,9 @@ def ajax_account_edit(aid):
 @login_required
 def ajax_operation_edit(aid, oid):
     account = api.account_get(session=g.session, aid=aid)
+    accounts = api.account_list(session=g.session, owner=g.user.uid)
     operation = api.operation_get(session=g.session, oid=oid)
-    return render_template('operation_edit.html', OPERATION_TYPE=models.OPERATION_TYPE, operation=operation, account=account)
+    return render_template('operation_edit.html', OPERATION_TYPE=models.OPERATION_TYPE, operation=operation, account=account, accounts=accounts)
 
 
 @money.route('/account/list', methods=['GET'])
@@ -182,16 +183,19 @@ def operation_list(aid):
 @money.route('/operation/save/<oid>', methods=['POST'])
 @login_required
 def operation_save(oid):
-    g.logger.debug(request.form)
     try:
         operation = api.operation_get(session=g.session, oid=oid)
+        operation.aid = request.form['aid']
         operation.amount = request.form['amount']
+        operation.desc = request.form['desc']
         operation.type = request.form['type']
+        #operation.tags = request.form['tags']
     except:
-        g.logger.debug('jakas dupa')
+        g.logger.debug(request.form)
         api.operation_add(session=g.session,
                 account=request.form['aid'],
                 amount=request.form['amount'],
+                desc=request.form['desc'],
                 type=request.form['type'],
                 tags=request.form['tags'])
     g.session.commit()

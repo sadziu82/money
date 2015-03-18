@@ -65,9 +65,9 @@ def account_list(session, owner):
         return session.query(Account).all()
 
 
-def operation_add(session, account, amount, type, tags):
+def operation_add(session, account, amount, desc, type, tags):
     operation = Operation(aid=account, amount=amount,
-                          type=type)
+            desc=desc, type=type)
     session.add(operation)
     session.flush()
     if tags:
