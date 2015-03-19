@@ -9,6 +9,7 @@ import ConfigParser
 ##
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm.exc import (NoResultFound)
 from contextlib import contextmanager
 from flask import Flask, request, render_template, redirect, url_for, g, flash
 from flask.ext.sqlalchemy import SQLAlchemy
@@ -126,8 +127,12 @@ def ajax_account_edit(aid):
 def ajax_operation_edit(aid, oid):
     account = api.account_get(session=g.session, aid=aid)
     accounts = api.account_list(session=g.session, owner=g.user.uid)
-    operation = api.operation_get(session=g.session, oid=oid)
-    return render_template('operation_edit.html', OPERATION_TYPE=models.OPERATION_TYPE, operation=operation, account=account, accounts=accounts)
+    try:
+        operation = api.operation_get(session=g.session, oid=oid)
+    except NoResultFound:
+        operation = None
+    tags = api.tag_list(session=g.session)
+    return render_template('operation_edit.html', OPERATION_TYPE=models.OPERATION_TYPE, operation=operation, account=account, accounts=accounts, tags=tags)
 
 
 @money.route('/account/list', methods=['GET'])
@@ -183,21 +188,23 @@ def operation_list(aid):
 @money.route('/operation/save/<oid>', methods=['POST'])
 @login_required
 def operation_save(oid):
+    g.logger.debug(u'formularz: {}'.format(request.form))
     try:
         operation = api.operation_get(session=g.session, oid=oid)
         operation.aid = request.form['aid']
         operation.amount = request.form['amount']
         operation.desc = request.form['desc']
         operation.type = request.form['type']
-        #operation.tags = request.form['tags']
-    except:
-        g.logger.debug(request.form)
+        api.set_operation_tags(session=g.session, oid=operation.oid,
+                tags=request.form.getlist('tags'))
+    except NoResultFound:
+        g.logger.debug(u'nowa operacja: {}'.format(request.form))
         api.operation_add(session=g.session,
                 account=request.form['aid'],
                 amount=request.form['amount'],
                 desc=request.form['desc'],
                 type=request.form['type'],
-                tags=request.form['tags'])
+                tags=request.form.getlist('tags'))
     g.session.commit()
     return redirect(url_for('operation_list', aid=request.form['aid']))
 

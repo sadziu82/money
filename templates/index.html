@@ -1,7 +1,12 @@
 <html>
     <head>
-        <link rel="stylesheet" type="text/css" href="/static/default.css" />
+        <script type="text/javascript" src="/static/jquery-2.1.3.min.js"></script>
+        <script type="text/javascript" src="/static/select2.js"></script>
+        <!-- <script type="text/javascript" src="/static/jxs.js"></script> -->
+        <script type="text/javascript" src="/static/shortcut.js"></script>
+        <!-- -->
         <link rel="stylesheet" type="text/css" href="/static/select2.css" />
+        <link rel="stylesheet" type="text/css" href="/static/default.css" />
         <style type="text/css">
         /*** pop-up div to cover entire area ***/
         .modal_box  {
@@ -24,22 +29,17 @@
         .modal_box:target  { display:block; }
         
         </style>
-        <script type="text/javascript" src="/static/select2.js"></script>
-        <script type="text/javascript" src="/static/jxs.js"></script>
-        <script type="text/javascript" src="/static/shortcut.js"></script>
         <script type="text/javascript">
-/* <![CDATA[ */
-function $(id){
-    return document.getElementById(id);
-}
+
 function dialog(url) {
-    jx.bind({
+    $('#modal_box').html('<h1>loading</h1>');
+    window.location.href = window.location.href + '#modal_box';
+    jQuery.ajax({
         "url": url,
         "method": "GET",
         "format": "text",
-        "onSuccess": function(data) {
-            $('modal_box').innerHTML = data;
-            window.location.href = window.location.href + 'modal_box';
+        "success": function(data) {
+            $('#modal_box').html(data);
             shortcut.add("Escape", function() {
                 window.location.href = window.location.href.replace('#modal_box', '#');
                 shortcut.remove("Escape");
@@ -49,7 +49,7 @@ function dialog(url) {
                 'target': document
             });
         },
-        "onError": function(status) {
+        "error": function(status) {
             window.alert("Something when wrong. Error : " + status);
         },
     })

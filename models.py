@@ -121,7 +121,7 @@ class Operation(Base):
     desc = Column(String(), default='', nullable=False)
     date = Column(Date, default=func.now(), nullable=False)
     booked = Column(Boolean, default=False)
-    tags = relationship('OperationTag')
+    tags = relationship('Tag', secondary='operation_tag')
     order_by = Column(Integer(), nullable=False,
                       autoincrement=True, unique=True)
     account = relationship('Account', uselist=False,

@@ -10,7 +10,7 @@
                 modify operation
                 {% endif %}
             <th width="3em">
-                <a href="#" onclick="shortcut.remove('Escape');">x</a>
+                <a href="#" onclick="shortcut.remove('Escape');"><img height="20px" src="/static/close.png"></a>
     </thead>
     <tbody>
         <tr>
@@ -48,17 +48,25 @@
         <tr>
             <th colspan="2" width="234px" class="align-right">
                 tags:
-            <th>
-                <textarea id='tags' name="tags" class="input-xlarge"
-                       placeholder="description">{{ operation.tags }}</textarea>
-                <script>
-                    $('tags').select2({
-                        tags: true
-                    })
-                </script>
+            <td width="400px">
+            <select name="tags" style="display: none;" tabindex="-1" class="operation-tags form-control" multiple="multiple">
+{% for tag in tags -%}
+                    {% if tag.tid in operation.tags|map(attribute='tid') %}
+                    <option selected>{{ tag.name }}</option>
+                    {% else %}
+                    <option>{{ tag.name }}</option>
+                    {% endif %}
+{% endfor -%}
+            </select>
+        <script type="text/javascript">
+            $(".operation-tags").select2({
+                tags: true,
+                width: '100%',
+            })
+        </script>
             <th colspan="2" width="234px">
         <tr>
-            <th colspan="2" class="align-right">
+            <td colspan="2" class="align-right">
                 type:
             <th>
                 <select name="type">
@@ -82,6 +90,4 @@
                 </button>
     </tbody>
 </table>
-<input type="hidden" name="aid" value="{{ account.aid }}" />
-<input type="hidden" name="tags" value="" />
 </form>

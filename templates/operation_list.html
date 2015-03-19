@@ -6,13 +6,13 @@
         <th width="5%">
         <th width="10%">
             date
-        <th width="34%">
-            description
-        <th width="20%">
+        <th width="40%">
             tags
-        <th width="5%">
+        <th width="14%">
+            description
         <th width="13%">
             amount
+        <th width="5%">
         <th width="13%">
             balance
     </thead>
@@ -20,17 +20,17 @@
 {% for operation in operations %}
     <tr>
         <td class="align-center">
-            <p><a href="{{ url_for('operation_remove', oid=operation.oid) }}">x</a></p>
+            <p><a href="{{ url_for('operation_remove', oid=operation.oid) }}"><img height="20px" src="/static/remove.png"></a></p>
         <td class="align-center">
             <p>{{ operation.date }}</p>
         <td>
-            <p>{{ operation.desc }}</p>
+            <p>{{ operation.tags|map(attribute='name')|sort|join(', ') }}</p>
         <td>
-            <p>{{ operation.tags }}</p>
-        <td class="align-center">
-            <p><a href="#" onclick="dialog('{{ url_for("ajax_operation_edit", aid=aid, oid=operation.oid) }}');">m</a></p>
+            <p>{{ operation.desc }}</p>
         <td class="align-right">
             {{ operation.amount }} zł
+        <td class="align-center">
+            <p><a href="#modal_box" onclick="dialog('{{ url_for("ajax_operation_edit", aid=aid, oid=operation.oid) }}');"><img height="20px" src="/static/edit.png"></a></p>
         <td class="align-right">
             {{ operation.balance }} zł
 {% else %}
@@ -40,7 +40,7 @@
 {% endfor %}
     <tr>
         <td colspan=7>
-            <p><a href="#" onclick="dialog('{{ url_for("ajax_operation_edit", aid=aid, oid=0) }}');">add new one</a></p>
+            <p><a href="#modal_box" onclick="dialog('{{ url_for("ajax_operation_edit", aid=aid, oid=0) }}');">add new one</a></p>
     </tbody>
 </table>
 <a href="{{ url_for('account_list') }}">back to account list</a>

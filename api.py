@@ -65,14 +65,12 @@ def account_list(session, owner):
         return session.query(Account).all()
 
 
-def operation_add(session, account, amount, desc, type, tags):
-    operation = Operation(aid=account, amount=amount,
-            desc=desc, type=type)
-    session.add(operation)
+def set_operation_tags(session, oid, tags):
+    tag_list = []
+    session.query(OperationTag).filter(OperationTag.oid == oid).delete()
     session.flush()
     if tags:
-        tag_list = []
-        for tag in tags.split(','):
+        for tag in tags:
             try:
                 t = session.query(Tag).filter(Tag.name == tag).one()
             except NoResultFound:
@@ -80,13 +78,21 @@ def operation_add(session, account, amount, desc, type, tags):
                 session.add(t)
             tag_list.append(t)
         session.flush()
-        [session.merge(OperationTag(operation.oid, x.tid)) for x in tag_list]
+        [session.merge(OperationTag(oid, x.tid)) for x in tag_list]
         session.flush()
-    return operation
+    return tag_list
+
+
+def operation_add(session, account, amount, desc, type, tags):
+    operation = Operation(aid=account, amount=amount,
+            desc=desc, type=type)
+    session.add(operation)
+    session.flush()
+    set_operation_tags(session=session, oid=operation.oid, tags=tags)
 
 
 def operation_get(session, oid):
-    operation = session.query(Operation).get(oid)
+    operation = session.query(Operation).filter(Operation.oid == oid).one()
     return operation
 
 
@@ -100,11 +106,17 @@ def operation_remove(session, oid):
 def operation_list(session, owner, account, tags):
     query = session.query(Operation)
     if owner and account:
-        query = query.filter(Operation.aid == account).order_by(Operation.date)
+        query = query.filter(Operation.aid == account). \
+                order_by(Operation.date, Operation.order_by)
     #elif owner:
     #    user = user_get(session=session, login=owner)
     #    query = query.join(Account, Operation.aid == Account.aid).filter(Account.oid == user.uid)
     #if tags:
     #    for tag in tags:
     #        query = query.join(OperationTag, Operation.oid == OperationTag.oid).join(Tag, OperationTag.tid == Tag.tid).filter(Tag.name == tag)
+    return query.all()
+
+
+def tag_list(session):
+    query = session.query(Tag).order_by(Tag.name)
     return query.all()
