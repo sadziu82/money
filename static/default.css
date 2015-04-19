@@ -1,5 +1,12 @@
 @import 'http://fonts.googleapis.com/css?family=Montserrat:300,400,700';
 
+#icon_next {
+    background: url('/static/icons.png') no-repeat -2px -2px;
+    background-size: 296px 370px;
+    width: 32px;
+    height: 32px;
+}
+
 body {
     padding: 1ex;
     margin: 0px;
@@ -20,6 +27,12 @@ body {
 
 .align-right {
     text-align: right;
+}
+
+.money {
+    font-family: Monospace;
+    font-weight: bold;
+    font-size: 2ex;
 }
 
 td.separator {
@@ -62,6 +75,12 @@ table.top-menu > thead > tr > th > a {
 table.top-menu > thead > tr > th > a:hover {
     color: Orange;
     text-decoration: none;
+}
+
+td.section {
+    color: Blue;
+    text-align: center;
+    background: LightBlue;
 }
 
 table.left-menu {

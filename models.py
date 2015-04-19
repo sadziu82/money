@@ -7,7 +7,7 @@ import hashlib
 
 # 
 from sqlalchemy import (Column, ForeignKey, String, Date, DateTime,
-                        Numeric, Enum, Boolean, Integer, Table, func)
+                        Numeric, Boolean, Integer, Table, func)
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.schema import UniqueConstraint
 from sqlalchemy.orm import relationship, backref
@@ -17,25 +17,6 @@ from sqlalchemy.schema import DDL
 
 #
 Base = declarative_base()
-
-#
-ACCOUNT_TYPE = {
-    'current': 'current',
-    'debit': 'debit',
-    'loan': 'loan',
-    'mortgage loan': 'mortgage loan',
-    'credit card': 'credit card',
-    'savings': 'savings',
-    'rainy day': 'rainy day',
-    'money to burn': 'money to burn',
-}
-
-#
-OPERATION_TYPE = {
-    'expenses': 'expenses',
-    'receipts': 'receipts',
-    'transfers': 'transfers',
-}
 
 #
 class User(Base):
@@ -71,15 +52,32 @@ class User(Base):
         return '{} ({})'.format(self.login, self.uid)
 
 
+class AccountType(Base):
+    __tablename__ = 'account_type'
+    tid = Column(String(36), primary_key=True)
+    name = Column(String(64), nullable=False, unique=True)
+    sort = Column(Integer(), nullable=False)
+    group = Column(Integer(), nullable=False)
+
+    def __init__(self, name, sort, group):
+        self.tid = uuid.uuid4()
+        self.name = name
+        self.sort = sort
+        self.group = group
+
+    def __repr__(self):
+        return '{} ({})'.format(self.name, self.tid)
+
+
 class Account(Base):
     __tablename__ = 'account'
     aid = Column(String(36), primary_key=True)
     oid = Column(String(36), ForeignKey('user.uid', ondelete="cascade"),
-                 nullable=False)
+            nullable=False)
     name = Column(String(64), nullable=False, unique=True)
     initial_balance = Column(Numeric(precision=10, scale=2), nullable=False)
-    type = Column(Enum(ACCOUNT_TYPE.keys()),
-            default=ACCOUNT_TYPE.keys()[0], nullable=False)
+    type = Column(String(36), ForeignKey('account_type.tid', ondelete="cascade"),
+            nullable=False)
     cdate = Column(DateTime, default=func.now(), nullable=False)
     mdate = Column(DateTime, default=func.now(), onupdate=func.utc_timestamp(),
                    nullable=False)
@@ -116,23 +114,22 @@ class Operation(Base):
     aid = Column(String(36), ForeignKey('account.aid', ondelete="cascade"),
                      nullable=False)
     amount = Column(Numeric(precision=10, scale=2), nullable=False)
-    type = Column(Enum(OPERATION_TYPE.keys()),
-            default=OPERATION_TYPE.keys()[0], nullable=False)
-    desc = Column(String(), default='', nullable=False)
+    desc = Column(String(1024), default='', nullable=False)
     date = Column(Date, default=func.now(), nullable=False)
-    booked = Column(Boolean, default=False)
+    booked = Column(Boolean, default=False, nullable=False)
     tags = relationship('Tag', secondary='operation_tag')
+    external = Column(Boolean, default=True, nullable=False)
     order_by = Column(Integer(), nullable=False,
                       autoincrement=True, unique=True)
     account = relationship('Account', uselist=False,
                            backref='operations')
 
-    def __init__(self, aid, amount, desc, type):
+    def __init__(self, aid, amount, desc, date):
         self.oid = uuid.uuid4()
         self.aid = aid
         self.amount = amount
         self.desc = desc
-        self.type = type
+        self.date = date
 
     def __repr__(self):
         return '{:0.2f} ({})'.format(float(self.amount), self.oid)
@@ -143,6 +140,34 @@ event.listen(
     ALTER TABLE operation CHANGE order_by order_by INT(11) NOT NULL AUTO_INCREMENT
     """)
 )
+
+
+class OperationSchedule(Base):
+    __tablename__ = 'operation_schedule'
+    osid = Column(String(36), primary_key=True)
+    aid = Column(String(36), ForeignKey('account.aid', ondelete="cascade"),
+                     nullable=False)
+    amount = Column(Numeric(precision=10, scale=2), nullable=False)
+    desc = Column(String(1024), default='', nullable=False)
+    start_date = Column(Date, default=func.now(), nullable=False)
+    end_date = Column(Date, nullable=True)
+    period = Column(String(36), ForeignKey('operation_period.opid', ondelete="cascade"),
+            nullable=False)
+    tags = Column(String(4096))
+    external = Column(Boolean, default=True, nullable=False)
+
+    def __init__(self, aid, amount, desc, start_date, period, tags):
+        self.oid = uuid.uuid4()
+        self.aid = aid
+        self.amount = amount
+        self.desc = desc
+        self.start_date = start_date
+        self.period = period
+        self.tag = tag
+        self.period = period
+
+    def __repr__(self):
+        return '{:0.2f} ({})'.format(float(self.amount), self.oid)
 
 
 class OperationTag(Base):

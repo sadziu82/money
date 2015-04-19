@@ -33,6 +33,16 @@
             <th colspan="2" width="234px">
         <tr>
             <th colspan="2" width="234px" class="align-right">
+                date:
+            <th>
+                <input type="text" name="date" class="operation-date input-xlarge"
+                       placeholder="date" required value="{{ operation.date }}">
+        <script type="text/javascript">
+            $(".operation-date").datepicker({dateFormat: 'yy-mm-dd'})
+        </script>
+            <th colspan="2" width="234px">
+        <tr>
+            <th colspan="2" width="234px" class="align-right">
                 amount:
             <th>
                 <input type="text" name="amount" class="input-xlarge"
@@ -65,22 +75,6 @@
             })
         </script>
             <th colspan="2" width="234px">
-        <tr>
-            <td colspan="2" class="align-right">
-                type:
-            <th>
-                <select name="type">
-{% for type in OPERATION_TYPE.keys() -%}
-                    {% if type == operation.type %}
-                    <option name="{{ type }}" selected>
-                    {% else %}
-                    <option name="{{ type }}">
-                    {% endif %}
-                        {{ OPERATION_TYPE[type] }}
-                    </option>
-{% endfor -%}
-                </select>
-            <th colspan="2">
                 <button type="submit">
                 {% if operation == None %}
                 add operation

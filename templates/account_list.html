@@ -3,34 +3,52 @@
 <table class="main-list">
     <thead>
     <tr>
-        <th width="100px">
-            remove
-        <th width="100px">
-            modify
+        <th width="5%">
+        <th width="5%">
         <th>
             account
         <th width="15%">
-            balance
+            to date
+        <th width="15%">
+            total
     </thead>
     <tbody>
-{% for account in accounts %}
+{% for type in accounts_summary %}
+    {% for account in accounts_summary[type].accounts %}
+    {% if loop.first %}
+    <tr class="section">
+        <td colspan=5 class="section">
+            <p>{{ accounts_summary[type].type_name }}</p>
+    {% endif %}
     <tr>
-        <td>
-            <p><a href="{{ url_for('account_remove', aid=account.aid) }}">remove</a></p>
-        <td>
-            <p><a href="#" onclick="dialog('{{ url_for("ajax_account_edit", aid=account.aid) }}');">modify</a></p>
+        <td class="align-center">
+            <p><a href="{{ url_for('account_remove', aid=account.aid) }}"><img height="20px" src="/static/remove.png"></a></p>
+        <td class="align-center">
+            <p><a href="#modal_box" onclick="dialog('{{ url_for("ajax_account_edit", aid=account.aid) }}');"><img height="20px" src="/static/edit.png"></a></p>
         <td>
             <p><a href="{{ url_for('operation_list', aid=account.aid) }}">{{ account.name }}</a></p>
-        <td class="align-right">
-            <p><a href="{{ url_for('operation_list', aid=account.aid) }}">{{ account.initial_balance }} zł</a></p>
-{% else %}
+        <td class="align-right money">
+            {{ cash_amount(account.initial_balance + account.to_date_balance) }}
+        <td class="align-right money">
+            {{ cash_amount(account.initial_balance + account.total_balance) }}
+    {% if loop.last %}
     <tr>
-        <td colspan=4>
+        <td colspan=3>
+            <!-- <p>summary</p> -->
+        <td class="align-right money">
+            {{ cash_amount(accounts_summary[type].to_date_balance) }}
+        <td class="align-right money">
+            {{ cash_amount(accounts_summary[type].total_balance) }}
+    {% endif %}
+    {% else %}
+    <tr>
+        <td colspan=5>
             <p>no accounts were found</p>
+    {% endfor %}
 {% endfor %}
     <tr>
-        <td colspan=4>
-            <p><a href="#" onclick="dialog('{{ url_for("ajax_account_edit", aid=0) }}');">add new one</a></p>
+        <td colspan=5>
+            <p><a href="#modal_box" onclick="dialog('{{ url_for("ajax_account_edit", aid=0) }}');">add new one</a></p>
     </tbody>
 </table>
 {% endblock %}

@@ -36,13 +36,13 @@
                 type:
             <th>
                 <select name="type">
-{% for type in ACCOUNT_TYPE.keys() -%}
-                    {% if type == account.type %}
-                    <option name="{{ type }}" selected>
+{% for type in account_type_list -%}
+                    {% if type.tid == account.type %}
+                    <option value="{{ type.tid }}" selected>
                     {% else %}
-                    <option name="{{ type }}">
+                    <option value="{{ type.tid }}">
                     {% endif %}
-                        {{ ACCOUNT_TYPE[type] }}
+                        {{ type.name }}
                     </option>
 {% endfor -%}
                 </select>

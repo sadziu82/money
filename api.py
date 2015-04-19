@@ -2,12 +2,21 @@
 # -*- coding: utf-8 -*-
 
 #
-from models import (User, Account, Operation, Tag, OperationTag)
+from models import (User, AccountType, Account, Operation, Tag, OperationTag)
 from sqlalchemy.exc import (IntegrityError)
 from sqlalchemy.orm.exc import (NoResultFound)
+from sqlalchemy.sql import func
+from sqlalchemy import case
+import datetime
 
 
 #
+def object_to_dict(Object):
+    dictionary = Object.__dict__.copy()
+    #del(dictionary['_sa_instance_state'])
+    return dictionary
+
+
 def user_add(session, login, password, email):
     user = User(login=login, password=password, email=email)
     session.add(user)
@@ -34,6 +43,10 @@ def user_remove(session, login):
 
 def user_list(session):
     return session.query(User).all()
+
+
+def account_type_list(session):
+    return session.query(AccountType).order_by(AccountType.group, AccountType.sort).all()
 
 
 def account_add(session, owner, name, initial_balance, type):
@@ -65,6 +78,24 @@ def account_list(session, owner):
         return session.query(Account).all()
 
 
+def account_list_with_balance(session, owner, to_date=None):
+    if not to_date:
+        to_date = datetime.datetime.today()
+    return session.query(Account.aid.label('aid'),
+            Account.type.label('type'),
+            Account.name.label('name'),
+            AccountType.name.label('type_name'),
+            AccountType.sort.label('type_sort'),
+            Account.initial_balance.label('initial_balance'),
+            func.sum(case([(Operation.amount == None, 0)], else_=Operation.amount)).label('total_balance'),
+            func.sum(case([(Operation.date <= to_date, Operation.amount)], else_=0)).label('to_date_balance')). \
+        filter(Account.oid == owner). \
+        join(AccountType). \
+        outerjoin(Operation, Account.aid == Operation.aid). \
+        group_by(Account.aid). \
+        order_by(Account.name).all()
+
+
 def set_operation_tags(session, oid, tags):
     tag_list = []
     session.query(OperationTag).filter(OperationTag.oid == oid).delete()
@@ -83,9 +114,9 @@ def set_operation_tags(session, oid, tags):
     return tag_list
 
 
-def operation_add(session, account, amount, desc, type, tags):
+def operation_add(session, account, amount, desc, date, tags):
     operation = Operation(aid=account, amount=amount,
-            desc=desc, type=type)
+            desc=desc, date=date)
     session.add(operation)
     session.flush()
     set_operation_tags(session=session, oid=operation.oid, tags=tags)
@@ -103,10 +134,12 @@ def operation_remove(session, oid):
     return True
 
 
-def operation_list(session, owner, account, tags):
+def operation_list(session, owner, account, tags, start_date=None, end_date=None):
     query = session.query(Operation)
     if owner and account:
         query = query.filter(Operation.aid == account). \
+                filter(Operation.date >= start_date). \
+                filter(Operation.date <= end_date). \
                 order_by(Operation.date, Operation.order_by)
     #elif owner:
     #    user = user_get(session=session, login=owner)
