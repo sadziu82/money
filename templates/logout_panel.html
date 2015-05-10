@@ -1,0 +1,11 @@
+<div id="logout-panel-container">
+    <div id="logout-panel-header">
+        sign out?
+    </div>
+    <div id="logout-panel-cancel">
+        <button id="logout-panel-cancel-button" onclick="go('#');">cancel</button>
+    </div>
+    <div id="logout-panel-logout">
+        <button id="logout-panel-logout-button" onclick="go('{{ url_for('logout') }}');">logout</button>
+    </div>
+</div>

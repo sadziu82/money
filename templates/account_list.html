@@ -1,54 +1,72 @@
+{% from "macros.html" import cash_amount %}
 {% extends "authenticated.html" %}
 {% block body %}
-<table class="main-list">
-    <thead>
-    <tr>
-        <th width="5%">
-        <th width="5%">
-        <th>
-            account
-        <th width="15%">
-            to date
-        <th width="15%">
-            total
-    </thead>
-    <tbody>
-{% for type in accounts_summary %}
-    {% for account in accounts_summary[type].accounts %}
-    {% if loop.first %}
-    <tr class="section">
-        <td colspan=5 class="section">
-            <p>{{ accounts_summary[type].type_name }}</p>
-    {% endif %}
-    <tr>
-        <td class="align-center">
-            <p><a href="{{ url_for('account_remove', aid=account.aid) }}"><img height="20px" src="/static/remove.png"></a></p>
-        <td class="align-center">
-            <p><a href="#modal_box" onclick="dialog('{{ url_for("ajax_account_edit", aid=account.aid) }}');"><img height="20px" src="/static/edit.png"></a></p>
-        <td>
-            <p><a href="{{ url_for('operation_list', aid=account.aid) }}">{{ account.name }}</a></p>
-        <td class="align-right money">
-            {{ cash_amount(account.initial_balance + account.to_date_balance) }}
-        <td class="align-right money">
-            {{ cash_amount(account.initial_balance + account.total_balance) }}
-    {% if loop.last %}
-    <tr>
-        <td colspan=3>
-            <!-- <p>summary</p> -->
-        <td class="align-right money">
-            {{ cash_amount(accounts_summary[type].to_date_balance) }}
-        <td class="align-right money">
-            {{ cash_amount(accounts_summary[type].total_balance) }}
-    {% endif %}
-    {% else %}
-    <tr>
-        <td colspan=5>
-            <p>no accounts were found</p>
+{% include "top_menu.html" %}
+<div id="account-list-container">
+    <div id="account-list-header">
+        <div id="account-list-delete">&nbsp;</div>
+        <div id="account-list-edit">&nbsp;</div>
+        <div id="account-list-name">
+            account name
+        </div>
+        <div id="account-list-to-date-balance">
+            to date balance
+        </div>
+        <div id="account-list-total-balance">
+            total balance
+        </div>
+    </div>
+{% for type in accounts_summary|sort %}
+    {% for account in accounts_summary[type].accounts|sort(attribute='account_type_order') %}
+        {% if loop.first %}
+    <div id="account-list-section">
+        {{ accounts_summary[type].account_type_name|join(', ') }}
+    </div>
+        {% endif %}
+    <div id="account-list-row">
+        <div id="account-list-delete">
+            <a href="{{ url_for('account_remove', id=account.id) }}">
+                <img id="account-list-delete" src="/static/remove.png">
+            </a>
+        </div>
+        <div id="account-list-edit">
+            <a href="#dialog" onclick="dialog('{{ url_for("account_edit", id=account.id) }}');">
+                <img id="account-list-edit" src="/static/edit.png">
+            </a>
+        </div>
+        <div id="account-list-name">
+            <a href="{{ url_for('operation_list', account_id=account.id) }}">
+            {{ account.name  }}
+            </a>
+        </div>
+        <div id="account-list-to-date-balance">
+             {{ cash_amount(account.initial_balance + account.to_date_balance) }}
+        </div>
+        <div id="account-list-total-balance">
+             {{ cash_amount(account.initial_balance + account.total_balance) }}
+        </div>
+    </div>
+        {% if loop.last %}
+    <div id="account-list-summary-row">
+        <div id="account-list-summary-label">
+            summary
+        </div>
+        <div id="account-list-summary-to-date">
+             {{ cash_amount(accounts_summary[type].to_date_balance) }}
+        </div>
+        <div id="account-list-summary-total">
+             {{ cash_amount(accounts_summary[type].total_balance) }}
+        </div>
+    </div>
+        {% endif %}
     {% endfor %}
+{% else %}
+    <div id="account-list-empty">
+        no accounts were found
+    </div>
 {% endfor %}
-    <tr>
-        <td colspan=5>
-            <p><a href="#modal_box" onclick="dialog('{{ url_for("ajax_account_edit", aid=0) }}');">add new one</a></p>
-    </tbody>
-</table>
+    <div id="account-list-action-row">
+        <a href="#dialog" id="account-list-action-link" onclick="dialog('{{ url_for("account_edit", id=0) }}');">add new one</a>
+    </div>
+</div>
 {% endblock %}

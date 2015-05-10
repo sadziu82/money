@@ -1,0 +1,13 @@
+{% macro cash_amount(amount) -%}
+    {% if amount <= -2500 -%}
+        <p style="color: Red; display: inline; font-family: 'Courier'; font-weight: bold;">{{ amount }}&nbsp;zł</p>
+    {% elif amount < 0 -%}
+        <p style="color: LightCoral; display: inline; font-family: 'Courier'; font-weight: bold;">{{ amount }}&nbsp;zł</p>
+    {% elif amount >= 2500 -%}
+        <p style="color: Green; display: inline; font-family: 'Courier'; font-weight: bold;">{{ amount }}&nbsp;zł</p>
+    {% elif amount > 0 -%}
+        <p style="color: CadetBlue; display: inline; font-family: 'Courier'; font-weight: bold;">{{ amount }}&nbsp;zł</p>
+    {% else %}
+        <p style="color: Black; display: inline; font-family: 'Courier'; font-weight: bold;">{{ amount }}&nbsp;zł</p>
+    {% endif -%}
+{%- endmacro %}

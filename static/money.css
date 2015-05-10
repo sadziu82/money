@@ -1,0 +1,663 @@
+@import 'http://fonts.googleapis.com/css?family=Montserrat:300,400,700';
+
+/* date picker overrides */
+.ui-datepicker-trigger {
+    width: 24px;
+}
+
+body {
+    padding: 1ex;
+    margin: 0px;
+    font-family: Montserrat, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    color: #444;
+    background: Gainsboro;
+    overflow: scroll;
+}
+
+div {
+    border: solid black 1px;
+    box-sizing: border-box;
+    padding: 0px 0px 0px 0px;
+    overflow: hidden;
+}
+
+div#page-header {
+    width: 100%;
+    text-align: center;
+}
+
+div#login-panel-container {
+    color: DarkSlateBlue;
+    background-color: Silver;
+    border: solid 1px DarkGray;
+    min-width: 400px;
+    max-width: 600px;
+    margin: auto;
+    padding: auto;
+    border-radius: 2ex;
+}
+
+div#login-panel-header {
+    padding: 3ex 0px 0px 0px;
+    font-size: 20pt;
+    border: 0px;
+    text-align: center;
+}
+
+div#login-panel-username-label {
+    width: 30%;
+    text-align: right;
+    font-size: 14pt;
+    float: left;
+    padding: 3ex 1em 0px 0px;
+    background-color: inherit;
+    border: 0px;
+}
+
+div#login-panel-username-input {
+    width: 70%;
+    text-align: left;
+    font-size: 14pt;
+    float: left;
+    padding: 3ex 0px 0px 1em;
+    border: 0px;
+}
+
+input#login-panel-username-input-field {
+    width: 80%;
+    text-align: left;
+    font-size: 14pt;
+    float: left;
+    padding: 0px 0px 0px 0.5em;
+    margin: 0px 0px 0px 0px;
+    border: solid 1px DarkGray;
+    border-radius: 0.5ex;
+    color: DarkSlateBlue;
+    background-color: LightGray;
+}
+
+div#login-panel-password-label {
+    width: 30%;
+    text-align: right;
+    font-size: 14pt;
+    float: left;
+    padding: 1ex 1em 0px 0px;
+    border: 0px;
+}
+
+div#login-panel-password-input {
+    width: 70%;
+    text-align: left;
+    font-size: 14pt;
+    padding: 1ex 0px 0px 1em;
+    border: 0px;
+}
+
+input#login-panel-password-input-field {
+    width: 80%;
+    text-align: left;
+    font-size: 14pt;
+    padding: 0px 0px 0px 0.5em;
+    border: solid 1px DarkGray;
+    border-radius: 0.5ex;
+    color: DarkSlateBlue;
+    background-color: LightGray;
+}
+
+div#login-panel-submit {
+    width: 100%;
+    text-align: center;
+    font-size: 14pt;
+    padding: 3ex 0px 1ex 0px;
+    border: 0px;
+}
+
+button#login-panel-submit-button {
+    min-width: 400px;
+    max-width: 600px;
+    font-size: 14pt;
+    padding: 0px 0px 0px 0.5em;
+    border: solid 1px DarkGray;
+    border-radius: 0.5ex;
+    color: DarkSlateBlue;
+    background-color: LightGray;
+}
+
+div#logout-panel-container {
+    color: DarkSlateBlue;
+    background-color: Silver;
+    border: solid 1px DarkGray;
+    min-width: 300px;
+    max-width: 500px;
+    margin: auto;
+    padding: auto;
+    border-radius: 2ex;
+}
+
+div#logout-panel-header {
+    width: 100%;
+    padding: 3ex 0px 0px 0px;
+    font-size: 20pt;
+    border: 0px;
+    text-align: center;
+}
+
+div#logout-panel-logout {
+    width: 50%;
+    text-align: center;
+    font-size: 14pt;
+    padding: 4ex 3em 4ex 1em;
+    border: 0px;
+}
+
+button#logout-panel-logout-button {
+    min-width: 175px;
+    font-size: 14pt;
+    padding: 0px 1em 0px 1em;
+    border: solid 1px DarkGray;
+    border-radius: 0.5ex;
+    color: DarkSlateBlue;
+    background-color: LightGray;
+}
+
+div#logout-panel-cancel {
+    width: 50%;
+    text-align: center;
+    font-size: 14pt;
+    float: left;
+    padding: 4ex 1em 4ex 3em;
+    border: 0px;
+}
+
+button#logout-panel-cancel-button {
+    min-width: 175px;
+    font-size: 14pt;
+    padding: 0px 1em 0px 1em;
+    border: solid 1px DarkGray;
+    border-radius: 0.5ex;
+    color: DarkSlateBlue;
+    background-color: LightGray;
+}
+
+div#top-menu-container {
+    background-color: DarkSlateBlue;
+    border: 0px;
+    width: 100%;
+    margin: auto;
+    padding: auto;
+}
+
+div#top-menu-link {
+    width: 10%;
+    text-align: center;
+    float: left;
+    font-size: 12pt;
+    padding: 0.5ex 1em 0.5ex 1em;
+    border: 0px;
+}
+
+a#top-menu-link {
+    color: Gold;
+    text-decoration: none;
+}
+
+a#top-menu-link:hover {
+    color: Orange;
+}
+
+div#account-list-container {
+    border: 0px;
+    width: 100%;
+    margin: 1ex 0px 0px 0px;
+    padding: 0px;
+    font-size: 12pt;
+}
+
+div#account-list-header {
+    color: Gold;
+    background-color: SteelBlue;
+    line-height: 3.5ex;
+    height: 3.5ex;
+    border: 0px;
+}
+
+div#account-list-section {
+    width: 100%;
+    color: #F7C974;
+    margin: 0.5ex 0px 0px 0px;
+    background-color: #9FB7E3;
+    line-height: 3.5ex;
+    height: 3.5ex;
+    border: 0px;
+    text-align: left;
+    padding-left: 10%;
+    font-style: italic;
+}
+
+div#account-list-empty {
+    width: 100%;
+    color: Gray;
+    margin: 0.5ex 0px 0px 0px;
+    background-color: Beige;
+    line-height: 3.5ex;
+    height: 3.5ex;
+    border: 0px;
+    text-align: left;
+    padding-left: 10%;
+    font-style: italic;
+}
+
+div#account-list-row {
+    line-height: 3.5ex;
+    height: 3.5ex;
+    border: 0px;
+}
+
+div#account-list-row:nth-child(even) {
+    background-color: WhiteSmoke;
+}
+
+div#account-list-row:nth-child(even):hover {
+    background-color: #dfdfdf;
+}
+
+div#account-list-row:nth-child(odd) {
+    background-color: Snow;
+}
+
+div#account-list-row:nth-child(odd):hover {
+    background-color: #dfdfdf;
+}
+
+div#account-list-delete {
+    width: 5%;
+    text-align: center;
+    float: left;
+    border: solid 0px;
+}
+
+img#account-list-delete {
+    display: inline-block;
+    height: 75%;
+    vertical-align: middle;
+    padding-bottom: 0.5ex;
+}
+
+div#account-list-edit {
+    width: 5%;
+    text-align: center;
+    float: left;
+    border: solid 0px;
+}
+
+img#account-list-edit {
+    display: inline-block;
+    height: 75%;
+    vertical-align: middle;
+    padding-bottom: 0.5ex;
+}
+
+div#account-list-name {
+    width: 60%;
+    text-align: Left;
+    float: left;
+    border: solid 0px;
+}
+
+div#account-list-to-date-balance {
+    width: 15%;
+    text-align: center;
+    float: left;
+    font-size: 12pt;
+    padding: 0px;
+    border: solid 0px;
+}
+
+div#account-list-total-balance {
+    width: 15%;
+    float: left;
+    font-size: 12pt;
+    padding: 0px;
+    border: solid 0px;
+}
+
+a#account-list-link {
+    color: Gold;
+    text-decoration: none;
+}
+
+a#account-list-link:hover {
+    color: Orange;
+}
+
+div#account-list-header > div#account-list-name {
+    text-align: left;
+    padding-left: 5%;
+}
+
+div#account-list-row > div#account-list-name {
+    text-align: left;
+    padding-left: 5%;
+}
+
+div#account-list-header > div#account-list-to-date-balance {
+    text-align: right;
+    padding-right: 1em;
+}
+
+div#account-list-row > div#account-list-to-date-balance {
+    text-align: right;
+    padding-right: 1em;
+}
+
+div#account-list-header > div#account-list-total-balance {
+    text-align: right;
+    padding-right: 1em;
+}
+
+div#account-list-row > div#account-list-total-balance {
+    text-align: right;
+    padding-right: 1em;
+}
+
+div#account-list-summary-row {
+    width: 100%;
+    background-color: Beige;
+    line-height: 3.5ex;
+    height: 3.5ex;
+    border: 0px;
+}
+
+div#account-list-summary-label {
+    width: 70%;
+    border: 0px;
+    float: left;
+    color: Gray;
+    text-align: right;
+}
+
+div#account-list-summary-to-date {
+    width: 15%;
+    border: 0px;
+    float: left;
+    text-align: right;
+    padding-right: 1em;
+}
+
+div#account-list-summary-total {
+    width: 15%;
+    border: 0px;
+    text-align: right;
+    padding-right: 1em;
+}
+
+div#account-list-action-row {
+    width: 100%;
+    color: Gold;
+    margin: 0.5ex 0px 0px 0px;
+    background-color: SteelBlue;
+    line-height: 3.5ex;
+    height: 3.5ex;
+    border: 0px;
+    text-align: left;
+    padding-left: 10%;
+}
+
+a#account-list-action-link {
+    color: Gold;
+    text-decoration: none;
+}
+
+a#account-list-action-link:hover {
+    color: Orange;
+    text-decoration: none;
+}
+
+div#account-edit-panel-container {
+    color: Gold;
+    background-color: DarkSlateBlue;
+    border: solid 1px Black;
+    font-size: 14pt;
+    min-width: 400px;
+    max-width: 600px;
+    margin: auto;
+    padding: auto;
+    border-radius: 1ex;
+}
+
+div#account-edit-panel-header {
+    padding: 3ex 0px 2ex 0px;
+    font-size: 14pt;
+    border: 0px;
+    text-align: center;
+}
+
+div#account-edit-panel-label {
+    width: 30%;
+    text-align: right;
+    font-size: 14pt;
+    float: left;
+    padding: 1ex 1em 0px 0px;
+    background-color: inherit;
+    border: 0px;
+}
+
+div#account-edit-panel-input {
+    width: 70%;
+    text-align: left;
+    font-size: 14pt;
+    float: left;
+    padding: 1ex 0px 0px 1em;
+    border: 0px;
+}
+
+input#account-edit-panel-input-field {
+    width: 80%;
+    text-align: left;
+    font-size: 14pt;
+    float: left;
+    padding: 0px 0px 0px 0.5em;
+    margin: 0px 0px 0px 0px;
+    border: solid 1px DarkGray;
+    border-radius: 0.5ex;
+    color: DarkSlateBlue;
+    background-color: LightGray;
+}
+
+select#account-edit-panel-input-field {
+    width: 80%;
+    text-align: left;
+    font-size: 14pt;
+    float: left;
+    padding: 0px 0px 0px 0.5em;
+    margin: 0px 0px 0px 0px;
+    border: solid 1px DarkGray;
+    border-radius: 0.5ex;
+    color: DarkSlateBlue;
+    background-color: LightGray;
+}
+
+div#account-edit-panel-submit {
+    width: 100%;
+    text-align: center;
+    font-size: 14pt;
+    padding: 3ex 0px 3ex 0px;
+    border: 0px;
+}
+
+button#account-edit-panel-submit-button {
+    min-width: 400px;
+    max-width: 600px;
+    font-size: 14pt;
+    padding: 0px 0px 0px 0.5em;
+    border: solid 1px DarkGray;
+    border-radius: 0.5ex;
+    color: DarkSlateBlue;
+    background-color: LightGray;
+}
+
+.dialog  {
+    position: fixed;
+    top: 0%;
+    left: 0%;
+    width: 100%;
+    height: 100%;
+    padding: 10% 10%;
+    border: 0px;
+    /*! important !*/
+    display: none;
+    /* last attribute set darkness on scale:  0...1.0 */
+    background-color: rgba(0, 0, 0, 0.75);
+    text-align: center;
+    vertical-align: center;
+    z-index: 101;
+}
+        /*** ! target attribute does the job ! ***/
+.dialog:target {
+    display: block;
+}
+
+;;; #icon_next {
+;;;     background: url('/static/icons.png') no-repeat -2px -2px;
+;;;     background-size: 296px 370px;
+;;;     width: 32px;
+;;;     height: 32px;
+;;; }
+;;; 
+;;; 
+;;; .align-top {
+;;;     vertical-align: top;
+;;; }
+;;; 
+;;; .align-center {
+;;;     text-align: center;
+;;; }
+;;; 
+;;; .align-right {
+;;;     text-align: right;
+;;; }
+;;; 
+;;; .money {
+;;;     font-family: Monospace;
+;;;     font-weight: bold;
+;;;     font-size: 2ex;
+;;; }
+;;; 
+;;; td.separator {
+;;;     width: 100%;
+;;;     border: solid 1px;
+;;; }
+;;; 
+;;; table.main {
+;;;     width: 100%;
+;;;     border: solid 1px;
+;;;     padding: 0ex 0em;
+;;;     margin: 0px;
+;;; }
+;;; 
+;;; table.header {
+;;;     width: 100%;
+;;;     border: solid 1px;
+;;;     padding: 0px;
+;;;     margin: 0px;
+;;; }
+;;; 
+;;; table.top-menu {
+;;;     width: 100%;
+;;;     border: solid 1px;
+;;;     padding: 0px;
+;;;     margin: 0px;
+;;; }
+;;; 
+;;; table.top-menu > thead > tr > th {
+;;;     padding: 1ex 1em;
+;;;     background: DarkSlateBlue;
+;;;     color: Gold;
+;;; }
+;;; 
+;;; table.top-menu > thead > tr > th > a {
+;;;     color: Gold;
+;;;     text-decoration: none;
+;;; }
+;;; 
+;;; table.top-menu > thead > tr > th > a:hover {
+;;;     color: Orange;
+;;;     text-decoration: none;
+;;; }
+;;; 
+;;; td.section {
+;;;     color: Blue;
+;;;     text-align: center;
+;;;     background: LightBlue;
+;;; }
+;;; 
+;;; table.left-menu {
+;;;     border: solid 1px;
+;;;     padding: 0px;
+;;;     margin: 0px;
+;;;     width: 100%;
+;;; }
+;;; 
+;;; table.main-list {
+;;;     border: solid 1px;
+;;;     margin: 0px;
+;;;     padding: 0px;
+;;;     width: 100%;
+;;; }
+;;; 
+;;; table.main-list > thead > tr {
+;;;     background: SteelBlue;
+;;;     color: Gold;
+;;; }
+;;; 
+;;; table.main-list > tbody > tr > td, th {
+;;;     padding: 1ex 1em;
+;;; }
+;;; 
+;;; table.main-list > tbody, thead > tr:nth-child(odd) {
+;;;     background: Snow;
+;;; }
+;;; 
+;;; table.main-list > tbody > tr:nth-child(even) {
+;;;     background: WhiteSmoke;
+;;; }
+;;; 
+;;; table.footer {
+;;;     width: 100%;
+;;;     border: solid 1px;
+;;;     padding: 0px;
+;;;     margin: 0px;
+;;; }
+;;; 
+;;; table.bottom {
+;;;     width: 100%;
+;;;     border: solid 1px;
+;;;     padding: 0px;
+;;;     margin: 0px;
+;;; }
+
+;th, td {
+;    padding: 5px 10px;
+;}
+
+;tbody tr td:nth-child(2) {
+;    text-align:center;
+;}
+
+;tbody tr td:nth-child(3),
+;tbody tr td:nth-child(4) {
+;    text-align: right;
+;    font-family: monospace;
+;}
+;
+;tfoot {
+;    background: SeaGreen;
+;    color: white;
+;    text-align: right;
+;}
+;
+;tfoot tr th:last-child {
+;    font-family: monospace;
+;}        

@@ -21,14 +21,14 @@
 {% for operation in operations %}
     <tr>
         <td class="align-center">
-            <p><a href="{{ url_for('operation_remove', oid=operation.oid) }}"><img height="20px" src="/static/remove.png"></a></p>
+            <p><a href=" url_for('operation_remove', oid=operation.oid) }}"><img height="20px" src="/static/remove.png"></a></p>
         <td class="align-center">
-            <p><a href="#modal_box" onclick="dialog('{{ url_for("ajax_operation_edit", aid=aid, oid=operation.oid) }}');"><img height="20px" src="/static/edit.png"></a></p>
+            <p><a href="#modal_box" onclick="dialog(' url_for("ajax_operation_edit", aid=aid, oid=operation.oid) }}');"><img height="20px" src="/static/edit.png"></a></p>
         <td class="align-center">
             {% if operation.booked %}
-            <p><a href="{{ url_for('operation_toggle_booked', oid=operation.oid) }}"><img height="20px" src="/static/booked.png"></a></p>
+            <p><a href=" url_for('operation_toggle_booked', oid=operation.oid) }}"><img height="20px" src="/static/booked.png"></a></p>
             {% else %}
-            <p><a href="{{ url_for('operation_toggle_booked', oid=operation.oid) }}"><img height="20px" src="/static/scheduled.png"></a></p>
+            <p><a href=" url_for('operation_toggle_booked', oid=operation.oid) }}"><img height="20px" src="/static/scheduled.png"></a></p>
             {% endif %}
         <td class="align-center">
             <p>{{ operation.date }}</p>
@@ -46,8 +46,10 @@
             <p>no operations were found</p>
 {% endfor %}
     <tr>
-        <td colspan=8>
-            <p><a href="#modal_box" onclick="dialog('{{ url_for("ajax_operation_edit", aid=aid, oid=0) }}');">add new one</a></p>
+        <td colspan=4>
+            <p><a href="#modal_box" onclick="dialog(' url_for("ajax_operation_edit", aid=aid, oid=0) }}');">add new one</a></p>
+        <td colspan=1>
+            <p><a href="#modal_box" onclick="dialog(' url_for("ajax_edit_transfer", tid=0) }}');">add new transfer</a></p>
     </tbody>
 </table>
 <a href="{{ url_for('account_list') }}">back to account list</a>

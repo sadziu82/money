@@ -1,59 +1,64 @@
 {% if account == None %}
 <form action="{{ url_for('account_add') }}" method="POST" class="form-horizontal">
 {% else %}
-<form action="{{ url_for('account_modify', aid=account.aid) }}" method="POST" class="form-horizontal">
+<form action="{{ url_for('account_modify', id=account.id) }}" method="POST" class="form-horizontal">
 {% endif %}
-<table class="main-list" style="border: solid red 1px">
-    <thead>
-        <tr>
-            <th width="3em">
-            <th colspan="3">
-                {% if account == None %}
-                add new account
-                {% else %}
-                modify account
-                {% endif %}
-            <th width="3em">
-                <a href="#" onclick="shortcut.remove('Escape');">x</a>
-    </thead>
-    <tbody>
-        <tr>
-            <th colspan="2" width="234px" class="align-right">
-                name:
-            <th>
-                <input type="text" name="name" class="input-xlarge"
-                       placeholder="account name" required value="{{ account.name }}">
-            <th colspan="2" width="234px">
-        <tr>
-            <th colspan="2" class="align-right">
-                initial balance:
-            <th>
-                <input type="text" name="initial_balance" class="input-xlarge"
-                       placeholder="initial balance" required value="{{ account.initial_balance }}">
-            <th colspan="2">
-        <tr>
-            <th colspan="2" class="align-right">
-                type:
-            <th>
-                <select name="type">
+<div id="account-edit-panel-container">
+    <div id="account-edit-panel-header">
+        {% if account == None %}
+        add new account
+        {% else %}
+        modify account
+        {% endif %}
+        <a href="#" onclick="shortcut.remove('Escape');">x</a>
+    </div>
+    <div id="account-edit-panel-label">
+        name
+    </div>
+    <div id="account-edit-panel-input">
+        <input type="text" id="account-edit-panel-input-field" name="name"
+               placeholder="name" required value="{{ account.name }}">
+    </div>
+    <div id="account-edit-panel-label">
+        type
+    </div>
+    <div id="account-edit-panel-input">
+        <select id="account-edit-panel-input-field" name="account_type_id">
 {% for type in account_type_list -%}
-                    {% if type.tid == account.type %}
-                    <option value="{{ type.tid }}" selected>
-                    {% else %}
-                    <option value="{{ type.tid }}">
-                    {% endif %}
-                        {{ type.name }}
-                    </option>
+    {% if type.id == account.account_type_id %}
+            <option value="{{ type.id }}" selected>
+    {% elif not account and loop.first %}
+            <option value="{{ type.id }}" selected>
+    {% else %}
+            <option value="{{ type.id }}">
+    {% endif %}
+                {{ type.name }}
+            </option>
 {% endfor -%}
-                </select>
-            <th colspan="2">
-                <button type="submit">
-                {% if account == None %}
-                add account
-                {% else %}
-                update account
-                {% endif %}
-                </button>
-    </tbody>
-</table>
+        </select>
+    </div>
+    <div id="account-edit-panel-label">
+        initial balance
+    </div>
+    <div id="account-edit-panel-input">
+        <input type="text" id="account-edit-panel-input-field" name="initial_balance"
+               placeholder="initial balance" required value="{{ account.initial_balance }}">
+    </div>
+    <div id="account-edit-panel-label">
+        debit limit
+    </div>
+    <div id="account-edit-panel-input">
+        <input type="text" id="account-edit-panel-input-field" name="debit_limit"
+               placeholder="debit limit" required value="{{ account.debit_limit }}">
+    </div>
+    <div id="account-edit-panel-submit">
+        <button type="submit" id="account-edit-panel-submit-button">
+        {% if account == None %}
+        add account
+        {% else %}
+        update account
+        {% endif %}
+        </button>
+    </div>
+</div>
 </form>

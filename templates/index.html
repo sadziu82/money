@@ -1,91 +1,27 @@
-{% macro cash_amount(amount) -%}
-    {% if amount <= -2500 -%}
-        <p style="color: red">{{ amount }}&nbsp;zł</p>
-    {% elif amount < 0 -%}
-        <p style="color: LightCoral">{{ amount }}&nbsp;zł</p>
-    {% elif amount >= 2500 -%}
-        <p style="color: Blue">{{ amount }}&nbsp;zł</p>
-    {% elif amount > 0 -%}
-        <p style="color: CadetBlue">{{ amount }}&nbsp;zł</p>
-    {% else %}
-        {{ amount }}&nbsp;zł
-    {% endif -%}
-{%- endmacro %}
 <html>
     <head>
+        <!-- -->
         <link rel="stylesheet" type="text/css" href="/static/jquery-ui-1.11.4.css" />
         <script type="text/javascript" src="/static/jquery-2.1.3.min.js"></script>
         <script type="text/javascript" src="/static/jquery-ui-1.11.4.js"></script>
         <script type="text/javascript" src="/static/select2.js"></script>
-        <!-- <script type="text/javascript" src="/static/jxs.js"></script> -->
         <script type="text/javascript" src="/static/shortcut.js"></script>
+        <script type="text/javascript" src="/static/money.js"></script>
         <!-- -->
         <link rel="stylesheet" type="text/css" href="/static/select2.css" />
-        <link rel="stylesheet" type="text/css" href="/static/default.css" />
-        <link rel="stylesheet" type="text/css" href="/static/override.css" />
-        <style type="text/css">
-        /*** pop-up div to cover entire area ***/
-        .modal_box  {
-            position:fixed;
-            top:0%;
-            left:0%;
-            width:80%;
-            height:80%;
-            padding:10%;
-            border:0px;
-            /*! important !*/
-            display:none;
-            /* last attribute set darkness on scale: 0...1.0 */
-            background-color:rgba(0,0,0,0.8);
-            text-align:center;
-            vertical-align:center;
-            z-index:101;
-        }
-                /*** ! target attribute does the job ! ***/
-        .modal_box:target  { display:block; }
-        
-        </style>
-        <script type="text/javascript">
-
-function dialog(url) {
-    $('#modal_box').html('<h1>loading</h1>');
-    window.location.href = window.location.href + '#modal_box';
-    jQuery.ajax({
-        "url": url,
-        "method": "GET",
-        "format": "text",
-        "success": function(data) {
-            $('#modal_box').html(data);
-            shortcut.add("Escape", function() {
-                window.location.href = window.location.href.replace('#modal_box', '#');
-                shortcut.remove("Escape");
-            }, {
-                'type': 'keydown',
-                'propagate': true,
-                'target': document
-            });
-        },
-        "error": function(status) {
-            window.alert("Something when wrong. Error : " + status);
-        },
-    })
-}
-/* ]]> */
-        </script>
+        <link rel="stylesheet" type="text/css" href="/static/money.css" />
     </head>
     <body>
-        <div id="modal_box" class="modal_box"> 
+        <!-- used for dialog boxes -->
+        <div id="dialog" class="dialog"></div>
+        <!-- main table -->
+        <div id="page-header">
+            money.ithaca.pl
         </div>
-        <table class="main">
-            <tr>
-                <td colspan=2>
-                    <table class="header">
-                        <tr>
-                            <td>
-                                header
+<!--
 {% with errors = get_flashed_messages(category_filter=["error"]) %}
 {% if errors %}
-<div class="alert-message block-message error">
+        <div class="alert-message block-message error">
   <a class="close" href="#">×</a>
   <ul>
     {%- for msg in errors %}
@@ -95,73 +31,13 @@ function dialog(url) {
 </div>
 {% endif %}
 {% endwith %}
-                    </table>
-            <tr>
-                <td colspan=2>
-{% block top_menu %}
+-->
+{% block index %}
 {% endblock %}
-            <tr>
-                <td width="180px" class="align-top">
-{{ session['start_date'] }}
-<br>
-{{ session['end_date'] }}
-{% block left_menu %}
-<table class="left-menu">
-    <tr>
-        <td>
-            <input type="hidden" name="date" class="start-date" value="{{ session['start_date'] }}">
-            <script type="text/javascript">
-                $(".start-date").datepicker({
-                    dateFormat: 'yy-mm-dd',
-                    //showButtonPanel: true,
-                    showOn: "button",
-                    buttonImage: "/static/calendar.png",
-                    buttonImageOnly: true,
-                    onSelect: function(date_text) {
-                        document.location.href = "{{ url_for('start_date', date='') }}" + date_text;
-    }
-                    })
-            </script>
-            &nbsp;
-            <a href="{{ url_for('previous_month') }}"><img height="24px" src="/static/left.png"></a>
-            &nbsp;
-            <a href="{{ url_for('current_month') }}"><img height="24px" src="/static/center.png"></a>
-            &nbsp;
-            <a href="{{ url_for('next_month') }}"><img height="24px" src="/static/right.png"></a>
-            &nbsp;
-            <input type="hidden" name="date" class="end-date" value="{{ session['end_date'] }}">
-            <script type="text/javascript">
-                $(".end-date").datepicker({
-                    dateFormat: 'yy-mm-dd',
-                    //showButtonPanel: true,
-                    showOn: "button",
-                    buttonImage: "/static/calendar.png",
-                    buttonImageOnly: true,
-                    onSelect: function(date_text) {
-                        document.location.href = "{{ url_for('end_date', date='') }}" + date_text;
-    }
-                    })
-            </script>
-</table>
-{% endblock %}
-                <td>
-{% block body %}
-{% endblock %}
-            <tr>
-                <td colspan=2>
-                    <table class="footer">
-                        <tr>
-                            <td>
-                                footer
-                    </table>
-            <tr>
-                <td colspan=2>
-                    <table class="bottom">
-                        <tr>
-                            <td>
-                                <!-- bottom -->
+        <!-- -->
+        <div id="page-footer">
+            footer
+        </div>
         {{ session }}
-                    </table>
-        </table>
     </body>
 </html>
