@@ -1,11 +1,11 @@
-<div id="logout-panel-container">
-    <div id="logout-panel-header">
+<div class="mi mi-logout-panel-container">
+    <div class="mi mi-logout-panel-header">
         sign out?
     </div>
-    <div id="logout-panel-cancel">
-        <button id="logout-panel-cancel-button" onclick="go('#');">cancel</button>
+    <div class="mi mi-logout-panel-cancel">
+        <button class="mi mi-logout-panel-cancel-button" onclick="abort_dialog();">cancel</button>
     </div>
-    <div id="logout-panel-logout">
-        <button id="logout-panel-logout-button" onclick="go('{{ url_for('logout') }}');">logout</button>
+    <div class="mi mi-logout-panel-logout">
+        <button class="mi mi-logout-panel-logout-button" onclick="go('{{ url_for('logout') }}');">logout</button>
     </div>
 </div>

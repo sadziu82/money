@@ -11,18 +11,22 @@ function go(url) {
     }
 }
 
+function abort_dialog() {
+    $('#mi-dialog').hide()
+    shortcut.remove("Escape");
+}
+
 function dialog(url) {
-    $('#dialog').html('<h1>loading</h1>');
-    window.location.href = window.location.href + '#dialog';
+    $('#mi-dialog').show()
+    $('#mi-dialog').html('<h1>loading</h1>');
     jQuery.ajax({
         "url": url,
         "method": "GET",
         "format": "text",
         "success": function(data) {
-            $('#dialog').html(data);
+            $('#mi-dialog').html(data);
             shortcut.add("Escape", function() {
-                window.location.href = window.location.href.replace('#dialog', '#');
-                shortcut.remove("Escape");
+                abort_dialog();
             }, {
                 'type': 'keydown',
                 'propagate': true,
@@ -31,7 +35,7 @@ function dialog(url) {
         },
         "error": function(status) {
             window.alert("Something when wrong. Error : " + status);
-            window.location.href = window.location.href.replace('#dialog', '#');
+            $('#mi-dialog').hide()
         },
     })
 }

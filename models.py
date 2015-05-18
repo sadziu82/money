@@ -121,19 +121,20 @@ class Operation(Base):
     description = Column(String(1024), default='', nullable=False)
     date = Column(Date, default=func.now(), nullable=False)
     booked = Column(Boolean, default=False, nullable=False)
-    order_by = Column(Integer(), nullable=False,
-                      autoincrement=True, unique=True)
+    order_by = Column(Integer(), nullable=False, default=500)
     tags = relationship('Tag', secondary='operation_tag')
     account = relationship('Account', uselist=False,
                            backref='operations')
 
-    def __init__(self, account_id, amount, description, date, transaction_id=None):
-        self.oid = uuid.uuid4()
+    def __init__(self, account_id, amount, description, date, transaction_id=None, booked=False, order_by=500):
+        self.id = uuid.uuid4()
         self.account_id = account_id
         self.amount = amount
-        self.desc = desc
+        self.description = description
         self.date = date
         self.transaction_id = transaction_id
+        self.booked = booked
+        self.order_by = order_by
 
     def __repr__(self):
         return '{:0.2f} ({})'.format(float(self.amount), self.oid)

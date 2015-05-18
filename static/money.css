@@ -1,11 +1,54 @@
 @import 'http://fonts.googleapis.com/css?family=Montserrat:300,400,700';
 
+.ui-widget-content {
+    background: LightGray;
+	border: 1px solid Gray;
+    font-size: 12pt;
+    font-weight: bold;
+}
+
+.ui-state-default {
+    background: LightGray;
+    color: DarkSlateBlue;
+    font-size: 10pt;
+    padding: 0.5ex 1em;
+	border: 1px solid Gray;
+}
+
+.ui-state-hover {
+    background: LightGray;
+	border: 1px solid Gray;
+}
+
+/* Corner radius */
+.ui-corner-all {
+	border-radius: 4px;
+}
+
 /* date picker overrides */
 .ui-datepicker-trigger {
     width: 24px;
 }
 
-body {
+.ui-multiselect-menu {
+    width: 45%;
+}
+
+.ui-multiselect-optgroup-label {
+    margin-bottom: 3px;
+}
+
+
+input[type='number'] {
+    -moz-appearance:textfield;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+}
+
+body.mi {
     padding: 1ex;
     margin: 0px;
     font-family: Montserrat, sans-serif;
@@ -16,19 +59,19 @@ body {
     overflow: scroll;
 }
 
-div {
-    border: solid black 1px;
+div.mi {
     box-sizing: border-box;
+    border: solid black 1px;
     padding: 0px 0px 0px 0px;
     overflow: hidden;
 }
 
-div#page-header {
+div.mi-page-header {
     width: 100%;
     text-align: center;
 }
 
-div#login-panel-container {
+div.mi-login-panel-container {
     color: DarkSlateBlue;
     background-color: Silver;
     border: solid 1px DarkGray;
@@ -37,16 +80,17 @@ div#login-panel-container {
     margin: auto;
     padding: auto;
     border-radius: 2ex;
+    overflow: hidden;
 }
 
-div#login-panel-header {
+div.mi-login-panel-header {
     padding: 3ex 0px 0px 0px;
     font-size: 20pt;
     border: 0px;
     text-align: center;
 }
 
-div#login-panel-username-label {
+div.mi-login-panel-username-label {
     width: 30%;
     text-align: right;
     font-size: 14pt;
@@ -56,7 +100,7 @@ div#login-panel-username-label {
     border: 0px;
 }
 
-div#login-panel-username-input {
+div.mi-login-panel-username-input {
     width: 70%;
     text-align: left;
     font-size: 14pt;
@@ -65,7 +109,7 @@ div#login-panel-username-input {
     border: 0px;
 }
 
-input#login-panel-username-input-field {
+input.mi-login-panel-username-input-field {
     width: 80%;
     text-align: left;
     font-size: 14pt;
@@ -78,7 +122,7 @@ input#login-panel-username-input-field {
     background-color: LightGray;
 }
 
-div#login-panel-password-label {
+div.mi-login-panel-password-label {
     width: 30%;
     text-align: right;
     font-size: 14pt;
@@ -87,15 +131,16 @@ div#login-panel-password-label {
     border: 0px;
 }
 
-div#login-panel-password-input {
+div.mi-login-panel-password-input {
     width: 70%;
     text-align: left;
     font-size: 14pt;
+    float: left;
     padding: 1ex 0px 0px 1em;
     border: 0px;
 }
 
-input#login-panel-password-input-field {
+input.mi-login-panel-password-input-field {
     width: 80%;
     text-align: left;
     font-size: 14pt;
@@ -106,7 +151,7 @@ input#login-panel-password-input-field {
     background-color: LightGray;
 }
 
-div#login-panel-submit {
+div.mi-login-panel-submit {
     width: 100%;
     text-align: center;
     font-size: 14pt;
@@ -114,10 +159,11 @@ div#login-panel-submit {
     border: 0px;
 }
 
-button#login-panel-submit-button {
+button.mi-login-panel-submit-button {
     min-width: 400px;
     max-width: 600px;
     font-size: 14pt;
+    margin-top: 3ex;
     padding: 0px 0px 0px 0.5em;
     border: solid 1px DarkGray;
     border-radius: 0.5ex;
@@ -125,18 +171,20 @@ button#login-panel-submit-button {
     background-color: LightGray;
 }
 
-div#logout-panel-container {
+div.mi-logout-panel-container {
     color: DarkSlateBlue;
     background-color: Silver;
     border: solid 1px DarkGray;
     min-width: 300px;
     max-width: 500px;
     margin: auto;
+    margin-top: 10ex;
     padding: auto;
     border-radius: 2ex;
+    overflow: hidden;
 }
 
-div#logout-panel-header {
+div.mi-logout-panel-header {
     width: 100%;
     padding: 3ex 0px 0px 0px;
     font-size: 20pt;
@@ -144,15 +192,16 @@ div#logout-panel-header {
     text-align: center;
 }
 
-div#logout-panel-logout {
+div.mi-logout-panel-logout {
     width: 50%;
     text-align: center;
     font-size: 14pt;
     padding: 4ex 3em 4ex 1em;
     border: 0px;
+    float: left;
 }
 
-button#logout-panel-logout-button {
+button.mi-logout-panel-logout-button {
     min-width: 175px;
     font-size: 14pt;
     padding: 0px 1em 0px 1em;
@@ -160,9 +209,10 @@ button#logout-panel-logout-button {
     border-radius: 0.5ex;
     color: DarkSlateBlue;
     background-color: LightGray;
+    float: left;
 }
 
-div#logout-panel-cancel {
+div.mi-logout-panel-cancel {
     width: 50%;
     text-align: center;
     font-size: 14pt;
@@ -171,25 +221,27 @@ div#logout-panel-cancel {
     border: 0px;
 }
 
-button#logout-panel-cancel-button {
+button.mi-logout-panel-cancel-button {
     min-width: 175px;
     font-size: 14pt;
     padding: 0px 1em 0px 1em;
+    float: left;
     border: solid 1px DarkGray;
     border-radius: 0.5ex;
     color: DarkSlateBlue;
     background-color: LightGray;
 }
 
-div#top-menu-container {
+div.mi-top-menu-container {
     background-color: DarkSlateBlue;
     border: 0px;
     width: 100%;
     margin: auto;
     padding: auto;
+    overflow: hidden;
 }
 
-div#top-menu-link {
+div.mi-top-menu-link {
     width: 10%;
     text-align: center;
     float: left;
@@ -198,24 +250,29 @@ div#top-menu-link {
     border: 0px;
 }
 
-a#top-menu-link {
+a.mi-top-menu-link {
     color: Gold;
     text-decoration: none;
 }
 
-a#top-menu-link:hover {
+a.mi-top-menu-link:hover {
     color: Orange;
 }
 
-div#account-list-container {
+a:hover {
+    cursor: pointer;
+}
+
+div.mi-account-list-container {
     border: 0px;
     width: 100%;
     margin: 1ex 0px 0px 0px;
     padding: 0px;
     font-size: 12pt;
+    overflow: hidden;
 }
 
-div#account-list-header {
+div.mi-account-list-header {
     color: Gold;
     background-color: SteelBlue;
     line-height: 3.5ex;
@@ -223,7 +280,7 @@ div#account-list-header {
     border: 0px;
 }
 
-div#account-list-section {
+div.mi-account-list-section {
     width: 100%;
     color: #F7C974;
     margin: 0.5ex 0px 0px 0px;
@@ -236,7 +293,7 @@ div#account-list-section {
     font-style: italic;
 }
 
-div#account-list-empty {
+div.mi-account-list-empty {
     width: 100%;
     color: Gray;
     margin: 0.5ex 0px 0px 0px;
@@ -249,64 +306,64 @@ div#account-list-empty {
     font-style: italic;
 }
 
-div#account-list-row {
+div.mi-account-list-row {
     line-height: 3.5ex;
     height: 3.5ex;
     border: 0px;
 }
 
-div#account-list-row:nth-child(even) {
+div.mi-account-list-row:nth-child(even) {
     background-color: WhiteSmoke;
 }
 
-div#account-list-row:nth-child(even):hover {
+div.mi-account-list-row:nth-child(even):hover {
     background-color: #dfdfdf;
 }
 
-div#account-list-row:nth-child(odd) {
+div.mi-account-list-row:nth-child(odd) {
     background-color: Snow;
 }
 
-div#account-list-row:nth-child(odd):hover {
+div.mi-account-list-row:nth-child(odd):hover {
     background-color: #dfdfdf;
 }
 
-div#account-list-delete {
+div.mi-account-list-delete {
     width: 5%;
     text-align: center;
     float: left;
     border: solid 0px;
 }
 
-img#account-list-delete {
+img.mi-account-list-delete {
     display: inline-block;
     height: 75%;
     vertical-align: middle;
     padding-bottom: 0.5ex;
 }
 
-div#account-list-edit {
+div.mi-account-list-edit {
     width: 5%;
     text-align: center;
     float: left;
     border: solid 0px;
 }
 
-img#account-list-edit {
+img.mi-account-list-edit {
     display: inline-block;
     height: 75%;
     vertical-align: middle;
     padding-bottom: 0.5ex;
 }
 
-div#account-list-name {
+div.mi-account-list-name {
     width: 60%;
     text-align: Left;
     float: left;
     border: solid 0px;
 }
 
-div#account-list-to-date-balance {
+div.mi-account-list-to-date-balance {
     width: 15%;
     text-align: center;
     float: left;
@@ -315,7 +372,7 @@ div#account-list-to-date-balance {
     border: solid 0px;
 }
 
-div#account-list-total-balance {
+div.mi-account-list-total-balance {
     width: 15%;
     float: left;
     font-size: 12pt;
@@ -323,46 +380,46 @@ div#account-list-total-balance {
     border: solid 0px;
 }
 
-a#account-list-link {
+a.mi-account-list-link {
     color: Gold;
     text-decoration: none;
 }
 
-a#account-list-link:hover {
+a.mi-account-list-link:hover {
     color: Orange;
 }
 
-div#account-list-header > div#account-list-name {
+div.mi-account-list-header > div.mi-account-list-name {
     text-align: left;
     padding-left: 5%;
 }
 
-div#account-list-row > div#account-list-name {
+div.mi-account-list-row > div.mi-account-list-name {
     text-align: left;
     padding-left: 5%;
 }
 
-div#account-list-header > div#account-list-to-date-balance {
+div.mi-account-list-header > div.mi-account-list-to-date-balance {
     text-align: right;
     padding-right: 1em;
 }
 
-div#account-list-row > div#account-list-to-date-balance {
+div.mi-account-list-row > div.mi-account-list-to-date-balance {
     text-align: right;
     padding-right: 1em;
 }
 
-div#account-list-header > div#account-list-total-balance {
+div.mi-account-list-header > div.mi-account-list-total-balance {
     text-align: right;
     padding-right: 1em;
 }
 
-div#account-list-row > div#account-list-total-balance {
+div.mi-account-list-row > div.mi-account-list-total-balance {
     text-align: right;
     padding-right: 1em;
 }
 
-div#account-list-summary-row {
+div.mi-account-list-summary-row {
     width: 100%;
     background-color: Beige;
     line-height: 3.5ex;
@@ -370,7 +427,7 @@ div#account-list-summary-row {
     border: 0px;
 }
 
-div#account-list-summary-label {
+div.mi-account-list-summary-label {
     width: 70%;
     border: 0px;
     float: left;
@@ -378,7 +435,7 @@ div#account-list-summary-label {
     text-align: right;
 }
 
-div#account-list-summary-to-date {
+div.mi-account-list-summary-to-date {
     width: 15%;
     border: 0px;
     float: left;
@@ -386,14 +443,14 @@ div#account-list-summary-to-date {
     padding-right: 1em;
 }
 
-div#account-list-summary-total {
+div.mi-account-list-summary-total {
     width: 15%;
     border: 0px;
     text-align: right;
     padding-right: 1em;
 }
 
-div#account-list-action-row {
+div.mi-account-list-action-row {
     width: 100%;
     color: Gold;
     margin: 0.5ex 0px 0px 0px;
@@ -405,17 +462,17 @@ div#account-list-action-row {
     padding-left: 10%;
 }
 
-a#account-list-action-link {
+a.mi-account-list-action-link {
     color: Gold;
     text-decoration: none;
 }
 
-a#account-list-action-link:hover {
+a.mi-account-list-action-link:hover {
     color: Orange;
     text-decoration: none;
 }
 
-div#account-edit-panel-container {
+div.mi-account-edit-panel-container {
     color: Gold;
     background-color: DarkSlateBlue;
     border: solid 1px Black;
@@ -425,16 +482,17 @@ div#account-edit-panel-container {
     margin: auto;
     padding: auto;
     border-radius: 1ex;
+    overflow: hidden;
 }
 
-div#account-edit-panel-header {
+div.mi-account-edit-panel-header {
     padding: 3ex 0px 2ex 0px;
     font-size: 14pt;
     border: 0px;
     text-align: center;
 }
 
-div#account-edit-panel-label {
+div.mi-account-edit-panel-label {
     width: 30%;
     text-align: right;
     font-size: 14pt;
@@ -444,7 +502,7 @@ div#account-edit-panel-label {
     border: 0px;
 }
 
-div#account-edit-panel-input {
+div.mi-account-edit-panel-input {
     width: 70%;
     text-align: left;
     font-size: 14pt;
@@ -453,7 +511,7 @@ div#account-edit-panel-input {
     border: 0px;
 }
 
-input#account-edit-panel-input-field {
+input.mi-account-edit-panel-input-field {
     width: 80%;
     text-align: left;
     font-size: 14pt;
@@ -466,7 +524,7 @@ input#account-edit-panel-input-field {
     background-color: LightGray;
 }
 
-select#account-edit-panel-input-field {
+select.mi-account-edit-panel-input-field {
     width: 80%;
     text-align: left;
     font-size: 14pt;
@@ -479,7 +537,7 @@ select#account-edit-panel-input-field {
     background-color: LightGray;
 }
 
-div#account-edit-panel-submit {
+div.mi-account-edit-panel-submit {
     width: 100%;
     text-align: center;
     font-size: 14pt;
@@ -487,7 +545,7 @@ div#account-edit-panel-submit {
     border: 0px;
 }
 
-button#account-edit-panel-submit-button {
+button.mi-account-edit-panel-submit-button {
     min-width: 400px;
     max-width: 600px;
     font-size: 14pt;
@@ -498,166 +556,517 @@ button#account-edit-panel-submit-button {
     background-color: LightGray;
 }
 
-.dialog  {
+div.mi-operation-edit-container {
+    color: Gold;
+    background-color: DarkSlateBlue;
+    border: solid 1px Black;
+    font-size: 14pt;
+    min-width: 600px;
+    max-width: 800px;
+    margin: auto;
+    margin-top: 10ex;
+    padding: 1ex 1em 1ex 1em;
+    border-radius: 1ex;
+    overflow: hidden;
+}
+
+div.mi-operation-edit-header {
+    padding: 0px 0px 0px 0px;
+    font-size: 14pt;
+    border: 0px;
+    text-align: center;
+}
+
+div.mi-operation-edit-label {
+    width: 20%;
+    text-align: right;
+    font-size: 14pt;
+    float: left;
+    padding: 0px 0px 0px 0px;
+    margin-top: 1ex;
+    background-color: inherit;
+    border: 0px;
+}
+
+div.mi-operation-edit-input {
+    width: 80%;
+    text-align: left;
+    font-size: 14pt;
+    float: left;
+    margin-top: 1ex;
+    padding: 0px 1em 0px 1em;
+    border: 0px;
+}
+
+input.mi-operation-edit-input-field {
+    width: 100%;
+    text-align: left;
+    font-size: 14pt;
+    float: left;
+    padding: 0px 0.5em 0px 0.5em;
+    margin: 0px 0px 0px 0px;
+    border: solid 1px DarkGray;
+    border-radius: 0.5ex;
+    color: DarkSlateBlue;
+    background-color: LightGray;
+}
+
+textarea.mi-operation-edit-input-field {
+    width: 100%;
+    height: 7.5ex;
+    text-align: left;
+    font-size: 14pt;
+    float: left;
+    padding: 0px 0.5em 0px 0.5em;
+    margin: 0px 0px 0px 0px;
+    border: solid 1px DarkGray;
+    border-radius: 0.5ex;
+    color: DarkSlateBlue;
+    background-color: LightGray;
+}
+
+div.mi-operation-edit-left-label {
+    width: 20%;
+    text-align: right;
+    font-size: 14pt;
+    float: left;
+    padding: 0px 0px 0px 0px;
+    margin-top: 1ex;
+    background-color: inherit;
+    border: 0px;
+}
+
+div.mi-operation-edit-left-input {
+    width: 30%;
+    text-align: left;
+    font-size: 14pt;
+    float: left;
+    padding: 0px 1em 0px 1em;
+    margin-top: 1ex;
+    border: 0px;
+}
+
+div.mi-operation-edit-right-label {
+    width: 15%;
+    text-align: right;
+    font-size: 14pt;
+    float: left;
+    padding: 0px 0px 0px 0px;
+    margin-top: 1ex;
+    background-color: inherit;
+    border: 0px;
+}
+
+div.mi-operation-edit-right-input {
+    width: 35%;
+    text-align: left;
+    font-size: 14pt;
+    float: left;
+    padding: 1ex 1em 0px 1em;
+    border: 0px;
+}
+
+select.mi-operation-edit-input-tags {
+    width: 100%;
+    text-align: left;
+    float: left;
+    padding: 0px 0.5em 0px 0.5em;
+    margin: 0px 0px 0px 0px;
+    border: solid 1px DarkGray;
+    border-radius: 0.5ex;
+    color: DarkSlateBlue;
+    background-color: LightGray;
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__choice {
+    color: SlateBlue;
+    background-color: Silver;
+}
+
+.select2-search__field {
+    color: SlateBlue;
+    font-weight: bold;
+    font-size: 12pt;
+}
+
+.select2-container--focus .select2-selection.select2-selection--multiple {
+    border: solid 1px DarkGray;
+    font-size: 12pt;
+    color: SlateBlue;
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__rendered {
+    color: SlateBlue;
+    background-color: LightGray;
+    font-size: 12pt;
+}
+
+.select2-container--default .select2-results__option[aria-selected=false] {
+    color: SlateBlue;
+    background-color: Gainsboro;
+}
+.select2-container--default .select2-results__option[aria-selected=true] {
+    color: SlateBlue;
+    background-color: Silver;
+}
+
+.select2-container--default .select2-results__option--highlighted[aria-selected] {
+    color: Gold;
+    background-color: SlateBlue;
+}
+
+select.mi-operation-edit-input-field {
+    width: 100%;
+    text-align: left;
+    font-size: 14pt;
+    float: left;
+    padding: 0px 0px 0px 0.5em;
+    margin: 0px 0px 0px 0px;
+    border: solid 1px DarkGray;
+    border-radius: 0.5ex;
+    color: DarkSlateBlue;
+    background-color: LightGray;
+}
+
+div.mi-operation-edit-submit {
+    width: 100%;
+    text-align: center;
+    font-size: 14pt;
+    padding: 3ex 0px 3ex 0px;
+    border: 0px;
+}
+
+button.mi-operation-edit-submit-button {
+    min-width: 400px;
+    max-width: 600px;
+    font-size: 14pt;
+    padding: 0px 0px 0px 0.5em;
+    border: solid 1px DarkGray;
+    border-radius: 0.5ex;
+    color: DarkSlateBlue;
+    background-color: LightGray;
+}
+
+div.mi-operation-list-container {
+    border: 0px;
+    width: 100%;
+    margin: 6ex 0px 0px 0px;
+    padding: 0px;
+    font-size: 12pt;
+    overflow: hidden;
+}
+
+div.mi-operation-list-header {
+    color: Gold;
+    background-color: SteelBlue;
+    line-height: 3.5ex;
+    height: 3.5ex;
+    border: 0px;
+}
+
+div.mi-operation-list-section {
+    width: 100%;
+    color: #F7C974;
+    margin: 0.5ex 0px 0px 0px;
+    background-color: #9FB7E3;
+    line-height: 3.5ex;
+    height: 3.5ex;
+    border: 0px;
+    text-align: left;
+    padding-left: 10%;
+    font-style: italic;
+}
+
+div.mi-operation-list-empty {
+    width: 100%;
+    color: Gray;
+    margin: 0.5ex 0px 0px 0px;
+    background-color: Beige;
+    line-height: 3.5ex;
+    height: 3.5ex;
+    border: 0px;
+    text-align: left;
+    padding-left: 10%;
+    font-style: italic;
+}
+
+div.mi-operation-list-row {
+    line-height: 3.5ex;
+    height: 3.5ex;
+    border: 0px;
+}
+
+div.mi-operation-list-row:nth-child(even) {
+    background-color: WhiteSmoke;
+}
+
+div.mi-operation-list-row:nth-child(even):hover {
+    background-color: #dfdfdf;
+}
+
+div.mi-operation-list-row:nth-child(odd) {
+    background-color: Snow;
+}
+
+div.mi-operation-list-row:nth-child(odd):hover {
+    background-color: #dfdfdf;
+}
+
+div.mi-operation-list-delete {
+    width: 3%;
+    min-height: 1px;
+    text-align: center;
+    float: left;
+    border: solid 0px;
+}
+
+img.mi-operation-list-delete {
+    display: inline-block;
+    height: 75%;
+    vertical-align: middle;
+    padding-bottom: 0.5ex;
+}
+
+div.mi-operation-list-edit {
+    width: 3%;
+    min-height: 1px;
+    text-align: center;
+    float: left;
+    border: solid 0px;
+}
+
+img.mi-operation-list-edit {
+    display: inline-block;
+    height: 75%;
+    vertical-align: middle;
+    padding-bottom: 0.5ex;
+}
+
+div.mi-operation-list-booked {
+    width: 3%;
+    min-height: 1px;
+    text-align: center;
+    float: left;
+    border: solid 0px;
+}
+
+img.mi-operation-list-booked {
+    display: inline-block;
+    height: 75%;
+    vertical-align: middle;
+    padding-bottom: 0.5ex;
+}
+
+div.mi-operation-list-date {
+    width: 12%;
+    text-align: center;
+    float: left;
+    border: solid 0px;
+}
+
+div.mi-operation-list-tags {
+    width: 31%;
+    min-height: 1px;
+    text-align: left;
+    float: left;
+    border: solid 0px;
+}
+
+div.operation-list-description {
+    width: 18%;
+    min-height: 1px;
+    text-align: left;
+    float: left;
+    border: solid 0px;
+}
+
+div.mi-operation-list-amount {
+    width: 15%;
+    text-align: right;
+    float: left;
+    border: solid 0px;
+    padding-right: 1em;
+}
+
+div.mi-operation-list-balance {
+    width: 15%;
+    text-align: right;
+    float: left;
+    font-size: 12pt;
+    padding: 0px;
+    border: solid 0px;
+    padding-right: 1em;
+}
+
+a.mi-operation-list-link {
+    color: Gold;
+    text-decoration: none;
+}
+
+a.mi-operation-list-link:hover {
+    color: Orange;
+}
+
+div.mi-operation-list-header > div.mi-operation-list-tags {
+    text-align: center;
+}
+
+div.mi-operation-list-row > div.mi-operation-list-tags {
+    text-align: left;
+    padding-left: 1em;
+}
+
+div.mi-operation-list-header > div.mi-operation-list-description {
+    text-align: center;
+}
+
+div.mi-operation-list-row > div.mi-operation-list-description {
+    text-align: left;
+    padding-left: 1em;
+}
+
+div.mi-operation-list-summary-row {
+    width: 100%;
+    background-color: Beige;
+    line-height: 3.5ex;
+    height: 3.5ex;
+    border: 0px;
+}
+
+div.mi-operation-list-summary-label {
+    width: 70%;
+    border: 0px;
+    float: left;
+    color: Gray;
+    text-align: right;
+}
+
+div.mi-operation-list-summary-to-date {
+    width: 15%;
+    border: 0px;
+    float: left;
+    text-align: right;
+    padding-right: 1em;
+}
+
+div.mi-operation-list-summary-total {
+    width: 15%;
+    border: 0px;
+    text-align: right;
+    padding-right: 1em;
+}
+
+div.mi-operation-list-action-row {
+    width: 100%;
+    color: Gold;
+    margin: 0.5ex 0px 0px 0px;
+    background-color: SteelBlue;
+    line-height: 3.5ex;
+    height: 3.5ex;
+    border: 0px;
+    text-align: left;
+    padding-left: 10%;
+}
+
+a.mi-operation-list-action-link {
+    color: Gold;
+    text-decoration: none;
+}
+
+a.mi-operation-list-action-link:hover {
+    color: Orange;
+    text-decoration: none;
+}
+
+div.mi-date-panel-container {
+    border: solid 0px;
+    width: 35%;
+    float: left;
+    text-align: center;
+    vertical-align: middle;
+    margin: 1ex 0px 0px 0px;
+    min-height: 1px;
+    padding: 0ex 1em 0px 1em;
+    font-size: 12pt;
+    height: 4ex;
+    overflow: hidden;
+}
+
+input.mi-date-panel-input {
+    width: 8em;
+    text-align: center;
+    font-size: 10pt;
+    font-weight: bold;
+    padding: 0.5ex 0.5em 0.5ex 0.5em;
+    margin: 0px 1em 0ex 1em;
+    border: solid 1px DarkGray;
+    border-radius: 0.5ex;
+    color: DarkSlateBlue;
+    background-color: LightGray;
+}
+
+img.mi-date-button {
+    display: inline-block;
+    height: 75%;
+    vertical-align: middle;
+}
+
+div.mi-last-operations-container {
+    border: solid 0px;
+    width: 15%;
+    float: left;
+    text-align: center;
+    margin: 1ex 0px 0px 0px;
+    min-height: 1px;
+    padding: 0px 0px 0px 0px;
+    font-size: 12pt;
+    height: 4ex;
+}
+
+select.mi-last-operations-select {
+    text-align: left;
+    font-size: 10pt;
+    font-weight: bold;
+    padding: 0.5ex 0.5em 0.5ex 0.5em;
+    margin: 0px 0px 0px 0px;
+    border: solid 1px DarkGray;
+    border-radius: 0.5ex;
+    color: DarkSlateBlue;
+    background-color: LightGray;
+}
+
+div.mi-account-select-container {
+    border: solid 0px;
+    width: 50%;
+    float: left;
+    text-align: center;
+    margin: 1ex 0px 0px 0px;
+    padding: 0px 1em 0px 1em;
+    font-size: 12pt;
+    overflow: visible;
+    height: 4ex;
+}
+
+.SumoSelect {
+    width: 100%;
+}
+
+.SlectBox {
+    width: 100%;
+    background-color: LightGray;
+}
+
+.mi-dialog  {
     position: fixed;
     top: 0%;
     left: 0%;
+    margin-top: auto;
     width: 100%;
     height: 100%;
     padding: 10% 10%;
     border: 0px;
-    /*! important !*/
     display: none;
-    /* last attribute set darkness on scale:  0...1.0 */
     background-color: rgba(0, 0, 0, 0.75);
     text-align: center;
     vertical-align: center;
-    z-index: 101;
 }
-        /*** ! target attribute does the job ! ***/
-.dialog:target {
-    display: block;
-}
-
-;;; #icon_next {
-;;;     background: url('/static/icons.png') no-repeat -2px -2px;
-;;;     background-size: 296px 370px;
-;;;     width: 32px;
-;;;     height: 32px;
-;;; }
-;;; 
-;;; 
-;;; .align-top {
-;;;     vertical-align: top;
-;;; }
-;;; 
-;;; .align-center {
-;;;     text-align: center;
-;;; }
-;;; 
-;;; .align-right {
-;;;     text-align: right;
-;;; }
-;;; 
-;;; .money {
-;;;     font-family: Monospace;
-;;;     font-weight: bold;
-;;;     font-size: 2ex;
-;;; }
-;;; 
-;;; td.separator {
-;;;     width: 100%;
-;;;     border: solid 1px;
-;;; }
-;;; 
-;;; table.main {
-;;;     width: 100%;
-;;;     border: solid 1px;
-;;;     padding: 0ex 0em;
-;;;     margin: 0px;
-;;; }
-;;; 
-;;; table.header {
-;;;     width: 100%;
-;;;     border: solid 1px;
-;;;     padding: 0px;
-;;;     margin: 0px;
-;;; }
-;;; 
-;;; table.top-menu {
-;;;     width: 100%;
-;;;     border: solid 1px;
-;;;     padding: 0px;
-;;;     margin: 0px;
-;;; }
-;;; 
-;;; table.top-menu > thead > tr > th {
-;;;     padding: 1ex 1em;
-;;;     background: DarkSlateBlue;
-;;;     color: Gold;
-;;; }
-;;; 
-;;; table.top-menu > thead > tr > th > a {
-;;;     color: Gold;
-;;;     text-decoration: none;
-;;; }
-;;; 
-;;; table.top-menu > thead > tr > th > a:hover {
-;;;     color: Orange;
-;;;     text-decoration: none;
-;;; }
-;;; 
-;;; td.section {
-;;;     color: Blue;
-;;;     text-align: center;
-;;;     background: LightBlue;
-;;; }
-;;; 
-;;; table.left-menu {
-;;;     border: solid 1px;
-;;;     padding: 0px;
-;;;     margin: 0px;
-;;;     width: 100%;
-;;; }
-;;; 
-;;; table.main-list {
-;;;     border: solid 1px;
-;;;     margin: 0px;
-;;;     padding: 0px;
-;;;     width: 100%;
-;;; }
-;;; 
-;;; table.main-list > thead > tr {
-;;;     background: SteelBlue;
-;;;     color: Gold;
-;;; }
-;;; 
-;;; table.main-list > tbody > tr > td, th {
-;;;     padding: 1ex 1em;
-;;; }
-;;; 
-;;; table.main-list > tbody, thead > tr:nth-child(odd) {
-;;;     background: Snow;
-;;; }
-;;; 
-;;; table.main-list > tbody > tr:nth-child(even) {
-;;;     background: WhiteSmoke;
-;;; }
-;;; 
-;;; table.footer {
-;;;     width: 100%;
-;;;     border: solid 1px;
-;;;     padding: 0px;
-;;;     margin: 0px;
-;;; }
-;;; 
-;;; table.bottom {
-;;;     width: 100%;
-;;;     border: solid 1px;
-;;;     padding: 0px;
-;;;     margin: 0px;
-;;; }
-
-;th, td {
-;    padding: 5px 10px;
-;}
-
-;tbody tr td:nth-child(2) {
-;    text-align:center;
-;}
-
-;tbody tr td:nth-child(3),
-;tbody tr td:nth-child(4) {
-;    text-align: right;
-;    font-family: monospace;
-;}
-;
-;tfoot {
-;    background: SeaGreen;
-;    color: white;
-;    text-align: right;
-;}
-;
-;tfoot tr th:last-child {
-;    font-family: monospace;
-;}        

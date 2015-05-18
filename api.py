@@ -81,7 +81,37 @@ def account_remove(session, account_id):
 
 def account_list(session, user_id):
     return session.query(Account). \
-        filter(Account.user_id == user_id).order_by(Account.name).all()
+        filter(Account.user_id == user_id). \
+        join(AccountType). \
+        order_by(AccountType.group, AccountType.order, Account.name). \
+        all()
+
+
+def account_list_groupped(session, user_id):
+    account_list = session.query(Account.id.label('id'),
+            Account.account_type_id.label('account_type_id'),
+            Account.name.label('name'),
+            Account.initial_balance.label('initial_balance'),
+            Account.debit_limit.label('debit_limit'),
+            AccountType.name.label('account_type_name'),
+            AccountType.group.label('account_type_group'),
+            AccountType.order.label('account_type_order'),
+            ). \
+        filter(Account.user_id == user_id). \
+        join(AccountType). \
+        order_by(AccountType.group, AccountType.order, Account.name). \
+        all()
+    accounts = {}
+    for account in account_list:
+        if account.account_type_group not in accounts.keys():
+            accounts[account.account_type_group] = {
+                'accounts': [],
+                'account_type_name': [],
+            }
+        if account.account_type_name not in accounts[account.account_type_group]['account_type_name']:
+            accounts[account.account_type_group]['account_type_name'].append(account.account_type_name)
+        accounts[account.account_type_group]['accounts'].append(object_to_dict(account))
+    return accounts
 
 
 def account_list_with_balance(session, user_id, to_date=None):
@@ -120,37 +150,60 @@ def account_list_with_balance(session, user_id, to_date=None):
     return summary
 
 
-#def set_operation_tags(session, oid, tags):
-#    tag_list = []
-#    session.query(OperationTag).filter(OperationTag.oid == oid).delete()
-#    session.flush()
-#    if tags:
-#        for tag in tags:
-#            try:
-#                t = session.query(Tag).filter(Tag.name == tag).one()
-#            except NoResultFound:
-#                t = Tag(name=tag)
-#                session.add(t)
-#            tag_list.append(t)
-#        session.flush()
-#        [session.merge(OperationTag(oid, x.tid)) for x in tag_list]
-#        session.flush()
-#    return tag_list
-#
-#
-#def operation_add(session, account, amount, desc, date, tags):
-#    operation = Operation(aid=account, amount=amount,
-#            desc=desc, date=date)
-#    session.add(operation)
-#    session.flush()
-#    set_operation_tags(session=session, oid=operation.oid, tags=tags)
-#
-#
-#def operation_get(session, oid):
-#    operation = session.query(Operation).filter(Operation.oid == oid).one()
-#    return operation
-#
-#
+def operation_get(session, operation_id):
+    operation = session.query(Operation).get(operation_id)
+    return operation
+
+
+def operation_add(session, account_id, amount, description, date, tags,
+                  transaction_id=None, booked=None, order_by=None):
+    operation = Operation(account_id=account_id, amount=amount,
+            description=description, date=date)
+    session.add(operation)
+    session.flush()
+    #set_operation_tags(session=session, oid=operation.oid, tags=tags)
+    return operation
+
+
+def operation_list(session, account_ids, tags=None,
+        start_date=None, end_date=None,
+        last_n_operations=None):
+    query = session.query(Operation)
+    if len(account_ids) > 0:
+        query = query.filter(Operation.account_id.in_((account_ids)))
+    if last_n_operations:
+        query = query.order_by(Operation.date.desc(), Operation.order_by.desc()). \
+                limit(last_n_operations)
+        query = query.from_self().order_by(Operation.date, Operation.order_by)
+    else:
+        if start_date:
+            query = query.filter(Operation.date >= start_date)
+        if end_date:
+            query = query.filter(Operation.date <= end_date)
+        query = query.order_by(Operation.date, Operation.order_by)
+    return query.all()
+
+
+def set_operation_tags(session, operation_id, tags):
+    tag_list = []
+    session.query(OperationTag). \
+        filter(OperationTag.operation_id == operation_id). \
+        delete()
+    session.flush()
+    if tags:
+        for tag in tags:
+            try:
+                t = session.query(Tag).filter(Tag.name == tag).one()
+            except NoResultFound:
+                t = Tag(name=tag)
+                session.add(t)
+            tag_list.append(t)
+        session.flush()
+        [session.merge(OperationTag(operation_id, t.id)) for t in tag_list]
+        session.flush()
+    return tag_list
+
+
 #def transfer_get(session, tid):
 #    operations = session.query(Operation).filter(Operation.tid == tid).all()
 #    return operations
@@ -161,22 +214,6 @@ def account_list_with_balance(session, user_id, to_date=None):
 #    session.delete(operation)
 #    session.flush()
 #    return True
-#
-#
-#def operation_list(session, owner, account, tags, start_date=None, end_date=None):
-#    query = session.query(Operation)
-#    if owner and account:
-#        query = query.filter(Operation.aid == account). \
-#                filter(Operation.date >= start_date). \
-#                filter(Operation.date <= end_date). \
-#                order_by(Operation.date, Operation.order_by)
-#    #elif owner:
-#    #    user = user_get(session=session, login=owner)
-#    #    query = query.join(Account, Operation.aid == Account.aid).filter(Account.oid == user.uid)
-#    #if tags:
-#    #    for tag in tags:
-#    #        query = query.join(OperationTag, Operation.oid == OperationTag.oid).join(Tag, OperationTag.tid == Tag.tid).filter(Tag.name == tag)
-#    return query.all()
 #
 #
 #def schedule_period_get(session, id):
@@ -210,8 +247,8 @@ def account_list_with_balance(session, user_id, to_date=None):
 #            filter(Schedule.start_date <= to_date). \
 #            order_by(Schedule.start_date)
 #    return query.all()
-#
-#
-#def tag_list(session):
-#    query = session.query(Tag).order_by(Tag.name)
-#    return query.all()
+
+
+def tag_list(session):
+    query = session.query(Tag).order_by(Tag.name)
+    return query.all()

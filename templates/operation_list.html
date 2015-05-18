@@ -1,56 +1,75 @@
+{% from "macros.html" import cash_amount %}
 {% extends "authenticated.html" %}
 {% block body %}
-<table class="main-list">
-    <thead>
-    <tr>
-        <th width="3%">
-        <th width="3%">
-        <th width="3%">
-        <th width="11%">
+{% include "top_menu.html" %}
+{% include "date_panel.html" %}
+{% include "last_n_panel.html" %}
+{% include "switch_account_panel.html" %}
+<div class="mi mi-operation-list-container">
+    <div class="mi mi-operation-list-header">
+        <div class="mi mi-operation-list-delete"></div>
+        <div class="mi mi-operation-list-edit"></div>
+        <div class="mi mi-operation-list-booked"></div>
+        <div class="mi mi-operation-list-date">
             date
-        <th width="36%">
+        </div>
+        <div class="mi mi-operation-list-tags">
             tags
-        <th width="16%">
+        </div>
+        <div class="operation-list-description">
             description
-        <th width="14%">
+        </div>
+        <div class="mi mi-operation-list-amount">
             amount
-        <th width="14%">
+        </div>
+        <div class="mi mi-operation-list-balance">
             balance
-    </thead>
-    <tbody>
+        </div>
+    </div>
 {% for operation in operations %}
-    <tr>
-        <td class="align-center">
-            <p><a href=" url_for('operation_remove', oid=operation.oid) }}"><img height="20px" src="/static/remove.png"></a></p>
-        <td class="align-center">
-            <p><a href="#modal_box" onclick="dialog(' url_for("ajax_operation_edit", aid=aid, oid=operation.oid) }}');"><img height="20px" src="/static/edit.png"></a></p>
-        <td class="align-center">
-            {% if operation.booked %}
-            <p><a href=" url_for('operation_toggle_booked', oid=operation.oid) }}"><img height="20px" src="/static/booked.png"></a></p>
-            {% else %}
-            <p><a href=" url_for('operation_toggle_booked', oid=operation.oid) }}"><img height="20px" src="/static/scheduled.png"></a></p>
-            {% endif %}
-        <td class="align-center">
-            <p>{{ operation.date }}</p>
-        <td>
-            <p>{{ operation.tags|map(attribute='name')|sort|join(', ') }}</p>
-        <td>
-            <p>{{ operation.desc }}</p>
-        <td class="align-right money">
+    <div class="mi mi-operation-list-row">
+        <div class="mi mi-operation-list-delete">
+            <a href="{{ url_for('operation_edit', id=operation.id) }}">
+                <img class="mi mi-operation-list-delete" src="/static/remove.png">
+            </a>
+        </div>
+        <div class="mi mi-operation-list-edit">
+            <a onclick="dialog('{{ url_for("operation_edit", id=operation.id) }}');">
+                <img class="mi mi-operation-list-edit" src="/static/edit.png">
+            </a>
+        </div>
+        <div class="mi mi-operation-list-booked">
+            <a href="{{ url_for('operation_edit', id=operation.id) }}">
+                {% if operation.booked %}
+                <img class="mi mi-operation-list-booked" src="/static/booked.png">
+                {% else %}
+                <img class="mi mi-operation-list-booked" src="/static/scheduled.png">
+                {% endif %}
+            </a>
+        </div>
+        <div class="mi mi-operation-list-date">
+             {{ operation.date  }}
+        </div>
+        <div class="mi mi-operation-list-tags" title="{{ operation.tags|map(attribute='name')|sort|join(', ') }}">
+            {{ operation.tags|map(attribute='name')|sort|join(', ')|truncate(40, True) }}
+        </div>
+        <div class="operation-list-description" title="{{ operation.description }}">
+            {{ operation.description|truncate(20, True) }}
+        </div>
+        <div class="mi mi-operation-list-amount">
             {{ cash_amount(operation.amount) }}
-        <td class="align-right money">
-            {{ cash_amount(operation.balance) }}
+        </div>
+        <div class="mi mi-operation-list-balance">
+            {{ cash_amount(operation.amount) }}
+        </div>
+    </div>
 {% else %}
-    <tr>
-        <td colspan=4>
-            <p>no operations were found</p>
+    <div class="mi mi-operation-list-empty">
+        no operations were found
+    </div>
 {% endfor %}
-    <tr>
-        <td colspan=4>
-            <p><a href="#modal_box" onclick="dialog(' url_for("ajax_operation_edit", aid=aid, oid=0) }}');">add new one</a></p>
-        <td colspan=1>
-            <p><a href="#modal_box" onclick="dialog(' url_for("ajax_edit_transfer", tid=0) }}');">add new transfer</a></p>
-    </tbody>
-</table>
-<a href="{{ url_for('account_list') }}">back to account list</a>
+    <div class="mi mi-operation-list-action-row">
+        <a class="mi mi-operation-list-action-link" onclick="dialog('{{ url_for("operation_edit", id=0) }}');">add new one</a>
+    </div>
+</div>
 {% endblock %}

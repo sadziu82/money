@@ -221,46 +221,118 @@ def operation_list():
     #for operation in operations:
     #    operation.balance = balance[operation.account.aid] + operation.amount
     #    balance[operation.account.aid] = balance[operation.account.aid] + operation.amount
-    accounts = []
-    operations = []
+    accounts = api.account_list_groupped(session=g.db_session, user_id=g.user.id)
+    account_ids = session['accounts']
+    operations = api.operation_list(session=g.db_session,
+            account_ids=account_ids,
+            start_date=session['start_date'],
+            end_date=session['end_date'],
+            last_n_operations=session.setdefault('last_n_operations', None))
     session['next'] = url_for('operation_list')
     return render_template('operation_list.html', accounts=accounts,
-            operations=operations)
+            account_ids=account_ids, operations=operations)
 
 
-#@money.route('/previous_month')
-#@login_required
-#def previous_month():
-#    session['end_date'] = session['start_date'].replace(day=1, hour=0, minute=0, second=0) - datetime.timedelta(seconds=1)
-#    session['start_date'] = session['end_date'].replace(day=1, hour=0, minute=0, second=0)
-#    return redirect(session['next'])
-#
-#
-#@money.route('/current_month')
-#@login_required
-#def current_month():
-#    today = datetime.datetime.today()
-#    first_day, last_day = calendar.monthrange(today.year, today.month)
-#    session['start_date'] = datetime.datetime(today.year, today.month, 1, 0, 0, 0)
-#    session['end_date'] = datetime.datetime(today.year, today.month, last_day, 23, 59, 59)
-#    return redirect(session['next'])
-#
-#
-#@money.route('/next_month')
-#@login_required
-#def next_month():
-#    session['start_date'] = session['start_date'] + datetime.timedelta(days=31)
-#    session['start_date'] = session['start_date'].replace(day=1)
-#    first_day, last_day = calendar.monthrange(session['start_date'].year, session['start_date'].month)
-#    session['end_date'] = datetime.datetime(session['start_date'].year, session['start_date'].month, last_day, 23, 59, 59)
-#    today = datetime.datetime.today()
-#    if session['start_date'] > session['today']:
-#        session['today'] = session['start_date']
-#    elif session['end_date'] > session['today']:
-#        session['today'] = datetime.datetime(today.year, today.month, today.day, 23, 59, 59)
-#    return redirect(session['next'])
-#
-#
+@money.route('/operation/add', methods=['POST'])
+@login_required
+def operation_add():
+    g.logger.info(request.form)
+    operation = api.operation_add(session=g.db_session,
+            account_id=request.form['account_id'],
+            amount=request.form['amount'],
+            description=request.form['description'],
+            date=request.form['date'],
+            tags=request.form.getlist('tags'))
+    g.db_session.commit()
+    session['current_operation'] = operation.id
+    return redirect(session['next'])
+
+
+@money.route('/operation/modify/<id>', methods=['POST'])
+@login_required
+def operation_modify(id):
+    g.logger.info(request.form)
+    operation = api.operation_get(session=g.db_session, operation_id=id)
+    operation.account_id = request.form['account_id']
+    operation.amount = request.form['amount']
+    operation.description = request.form['description']
+    operation.date = request.form['date']
+    api.set_operation_tags(session=g.db_session, operation_id=operation.id,
+            tags=request.form.getlist('tags'))
+    g.db_session.commit()
+    session['current_operation'] = operation.id
+    return redirect(session['next'])
+
+
+@money.route('/operation/edit/<id>', methods=['GET'])
+@login_required
+def operation_edit(id):
+    account_id = session['accounts'][0]
+    current_account = api.account_get(session=g.db_session, account_id=account_id)
+    accounts = api.account_list_groupped(session=g.db_session, user_id=g.user.id)
+    try:
+        operation = api.operation_get(session=g.db_session, operation_id=id)
+    except NoResultFound:
+        operation = None
+    #tags = api.tag_list(session=g.db_session)
+    tags = api.tag_list(session=g.db_session)
+    return render_template('operation_edit.html', operation=operation,
+            current_account=current_account, accounts=accounts, tags=tags)
+
+
+@money.route('/go_one_month_back')
+@login_required
+def go_one_month_back():
+    session['end_date'] = session['start_date'].replace(day=1, hour=0, minute=0, second=0) - datetime.timedelta(seconds=1)
+    session['start_date'] = session['end_date'].replace(day=1, hour=0, minute=0, second=0)
+    del session['last_n_operations']
+    return redirect(session['next'])
+
+
+@money.route('/current_month')
+@login_required
+def current_month():
+    today = datetime.datetime.today()
+    first_day, last_day = calendar.monthrange(today.year, today.month)
+    session['start_date'] = datetime.datetime(today.year, today.month, 1, 0, 0, 0)
+    session['end_date'] = datetime.datetime(today.year, today.month, last_day, 23, 59, 59)
+    del session['last_n_operations']
+    return redirect(session['next'])
+
+
+@money.route('/last_n_operations/<n>')
+@login_required
+def last_n_operations(n):
+    if int(n) == 0:
+        del session['last_n_operations']
+    else:
+        session['last_n_operations'] = n
+    return redirect(session['next'])
+
+
+@money.route('/go_one_month_forward')
+@login_required
+def go_one_month_forward():
+    session['start_date'] = session['start_date'] + datetime.timedelta(days=31)
+    session['start_date'] = session['start_date'].replace(day=1)
+    first_day, last_day = calendar.monthrange(session['start_date'].year, session['start_date'].month)
+    session['end_date'] = datetime.datetime(session['start_date'].year, session['start_date'].month, last_day, 23, 59, 59)
+    today = datetime.datetime.today()
+    if session['start_date'] > session['today']:
+        session['today'] = session['start_date']
+    elif session['end_date'] > session['today']:
+        session['today'] = datetime.datetime(today.year, today.month, today.day, 23, 59, 59)
+    del session['last_n_operations']
+    return redirect(session['next'])
+
+
+@money.route('/switch_accounts/<ids>')
+@login_required
+def switch_accounts(ids):
+    session['accounts'] = ids.split(',')
+    return redirect(session['next'])
+
+
 #@money.route('/start_date/<date>')
 #@login_required
 #def start_date(date):
@@ -279,20 +351,6 @@ def operation_list():
 #    return redirect(session['next'])
 
 
-#@money.route('/ajax/operation/edit/<aid>/<oid>', methods=['GET'])
-#@login_required
-#def ajax_operation_edit(aid, oid):
-#    account = api.account_get(session=g.db_session, aid=aid)
-#    accounts = api.account_list(session=g.db_session, owner=g.user.uid)
-#    try:
-#        operation = api.operation_get(session=g.db_session, oid=oid)
-#    except NoResultFound:
-#        operation = None
-#    tags = api.tag_list(session=g.db_session)
-#    return render_template('operation_edit.html', operation=operation,
-#            account=account, accounts=accounts, tags=tags)
-#
-#
 #@money.route('/ajax/edit/transfer/<tid>', methods=['GET'])
 #@login_required
 #def ajax_edit_transfer(tid):
