@@ -30,6 +30,9 @@
                     return $(this).val();
                 }).get().join(',');
                 if (values != static_values) {
+                    if (values == '') {
+                        values = 'none';
+                    }
                     url = "{{ url_for('switch_accounts', ids='') }}";
                     go(url + values);
                 }

@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #
+import re
 import models
 import argparse
 import ConfigParser
@@ -14,7 +15,9 @@ from prettytable import PrettyTable
 from api import (user_add, user_get, user_list, user_remove,
                  account_add, account_get, account_list, account_remove,
                  operation_add, operation_get, operation_list,
-                 operation_remove,
+                 set_operation_tags,
+                 #operation_remove,
+                 transfer_add,
                  )
 
 
@@ -32,6 +35,63 @@ def session_scope():
         raise
     finally:
         session.close()
+
+
+def import_operation(session, file):
+    al = account_list(session=session, user_id='ed306e60-f42a-11e4-bd30-78e0f94055e9')
+    account = {account.name: account.id for account in al}
+    done_transfers = {}
+    with open(file, 'r') as f:
+        p = re.compile(r'^(?P<id>\d+)?;(?P<date>[^;]+)?;(?P<type>[^;]+)?;(?P<tag>[^;]+)?;(?P<desc>[^;]+)?;(?P<expenses>[^;]+)?;(?P<receipts>[^;]+)?;(?P<account>[^;]+)?\n')
+        transfers = {}
+        for line in f:
+            m = p.match(line)
+            if m:
+                if float(m.group('expenses')) != 0:
+                    amount = -float(m.group('expenses'))
+                else:
+                    amount = float(m.group('receipts'))
+                if m.group('type') == 'Opening of account':
+                    a = account_get(session=session, account_id=account[m.group('account')])
+                    a.initial_balance = amount
+                elif m.group('type') == 'Transfers':
+                    key_1 = '{}-{}-{}-{}'.format(m.group('tag'), m.group('account'),
+                                                 m.group('date'), abs(amount))
+                    key_2 = '{}-{}-{}-{}'.format(m.group('account'), m.group('tag'),
+                                                 m.group('date'), abs(amount))
+                    if key_1 in transfers or key_2 in transfers:
+                        continue
+                    else:
+                        transfers[key_1] = 1
+                        transfers[key_2] = 1
+                    operation_from = operation_add(session=session,
+                            account_id=account[m.group('tag')],
+                            amount=-amount,
+                            description=m.group('desc'),
+                            date=m.group('date'))
+                    operation_to = operation_add(session=session,
+                            account_id=account[m.group('account')],
+                            amount=amount,
+                            description=m.group('desc'),
+                            date=m.group('date'))
+                    transfer = transfer_add(session=session,
+                            operation_from_id=operation_from.id,
+                            operation_to_id=operation_to.id)
+                    operation_from.transfer_id = transfer.id
+                    operation_to.transfer_id = transfer.id
+                else:
+                    operation = operation_add(session=session,
+                            account_id=account[m.group('account')],
+                            amount=amount,
+                            description=m.group('desc'),
+                            date=m.group('date'))
+                    set_operation_tags(session=session,
+                            operation_id=operation.id,
+                            tags=[m.group('type').lower(), m.group('tag').lower()])
+                    
+                #print m.group('date'), m.group('desc'), m.group('type'), m.group('tag'), amount
+            else:
+                print line
 
 
 #
@@ -104,11 +164,15 @@ if __name__ == '__main__':
                                                       help='get operation')
     operation_get_parser.add_argument('--owner', required=True)
     operation_get_parser.add_argument('--name', required=True)
+    ### #
+    ### operation_remove_parser = operation_subparser. \
+    ###     add_parser('remove', help='remove operation')
+    ### operation_remove_parser.add_argument('--owner', required=True)
+    ### operation_remove_parser.add_argument('--name', required=True)
     #
-    operation_remove_parser = operation_subparser. \
-        add_parser('remove', help='remove operation')
-    operation_remove_parser.add_argument('--owner', required=True)
-    operation_remove_parser.add_argument('--name', required=True)
+    operation_import_parser = operation_subparser. \
+        add_parser('import', help='import operation')
+    operation_import_parser.add_argument('--file', required=True)
     #
     operation_list_parser = operation_subparser.add_parser('list',
                                                        help='list operation')
@@ -194,9 +258,11 @@ if __name__ == '__main__':
                 print '{}, {}, {}, {}'.format(operation.aid, operation.owner,
                                               operation.name,
                                               operation.initial_balance)
-            elif args.subparser_operation == 'remove':
-                print operation_remove(session=session, owner=args.owner,
-                                     name=args.name)
+            ### elif args.subparser_operation == 'remove':
+            ###     print operation_remove(session=session, owner=args.owner,
+            ###                          name=args.name)
+            elif args.subparser_operation == 'import':
+                import_operation(session=session, file=args.file)
             elif args.subparser_operation == 'list':
                 operations = operation_list(session=session, owner=args.owner,
                                             account=args.account,

@@ -1,0 +1,128 @@
+{% from "macros.html" import cash_amount %}
+{% if transfer == None %}
+<form action="{{ url_for('transfer_add') }}" method="POST" class="form-horizontal">
+{% else %}
+<form action="{{ url_for('transfer_modify', id=transfer.id) }}" method="POST" class="form-horizontal">
+{% endif %}
+<div class="mi mi-transfer-edit-container">
+    <div class="mi mi-transfer-edit-header">
+        {% if transfer == None %}
+        add new transfer
+        {% else %}
+        modify transfer
+        {% endif %}
+        <a href="#" onclick="abort_dialog();">x</a>
+    </div>
+    <div class="mi mi-transfer-edit-label">
+        from
+    </div>
+    <div class="mi mi-transfer-edit-input">
+        <select class="mi mi-transfer-edit-input-field" name="account_from_id">
+{% for type in accounts|sort %}
+    {% for account in accounts[type].accounts|sort(attribute='account_type_order') %}
+        {% if loop.first %}
+            <optgroup label="{{ accounts[type].account_type_name|join(', ') }}">
+        {% endif %}
+        {% if operation_from and operation_from.account_id == account.id %}
+                <option value="{{ account.id }}" selected>
+        {% elif not operation_from and current_account_id == account.id  %}
+                <option value="{{ account.id }}" selected>
+        {% else %}
+                <option value="{{ account.id }}">
+        {% endif %}
+                    {{ account.name }}
+                </option>
+        {% if loop.last %}
+            </optgroup>
+        {% endif %}
+    {% endfor -%}
+{% endfor -%}
+        </select>
+    </div>
+    <div class="mi mi-transfer-edit-label">
+        to
+    </div>
+    <div class="mi mi-transfer-edit-input">
+        <select class="mi mi-transfer-edit-input-field" name="account_to_id">
+{% for type in accounts|sort %}
+    {% if loop.first %}
+            <option selected disabled style="font-style: italic">
+                select target account
+            </option>
+    {% endif %}
+    {% for account in accounts[type].accounts|sort(attribute='account_type_order') %}
+        {% if loop.first %}
+            <optgroup label="{{ accounts[type].account_type_name|join(', ') }}">
+        {% endif %}
+        {% if operation_to and operation_to.account_id == account.id %}
+                <option value="{{ account.id }}" selected>
+        {% elif not operation_to and current_account_id == account.id %}
+                <option value="{{ account.id }}" selected>
+        {% else %}
+                <option value="{{ account.id }}">
+        {% endif %}
+                    {{ account.name }}
+                </option>
+        {% if loop.last %}
+            </optgroup>
+        {% endif %}
+    {% endfor -%}
+{% endfor -%}
+        </select>
+    </div>
+    <div class="mi mi-transfer-edit-label">
+        description
+    </div>
+    <div class="mi mi-transfer-edit-input">
+        <textarea class="mi mi-transfer-edit-input-field" name="description" placeholder="description">{{ operation_from.description }}</textarea>
+    </div>
+    <div class="mi mi-transfer-edit-left-label">
+        amount
+    </div>
+    <div class="mi mi-transfer-edit-left-input">
+        <input type="number" step="0.01" type="^\d+(\.|\,)\d{2}$" class="mi mi-transfer-edit-input-field" name="amount"
+               placeholder="amount" required value="{{ operation_to.amount|default(0.00) }}">
+    </div>
+    <div class="mi mi-transfer-edit-right-label">
+        date
+    </div>
+    <div class="mi mi-transfer-edit-right-input">
+        <input type="date" id="operation-edit-date" name="date"
+               class="mi mi-transfer-edit-input-field"
+               placeholder="date" required value="{{ operation_from.date }}">
+        <script type="text/javascript">
+            $('#operation-edit-date').datepicker({dateFormat: 'yy-mm-dd'})
+        </script>
+    </div>
+    <div class="mi mi-transfer-edit-label">
+        tags
+    </div>
+    <div class="mi mi-transfer-edit-input">
+        <select id="operation-edit-input-tags" class="mi mi-transfer-edit-input-tags" style="display: none;" tabindex="-1" name="tags" multiple="multiple">
+{% for tag in tags -%}
+    {% if tag.id in operation_from.tags|map(attribute='id') %}
+            <option selected> {{ tag.name }}</option>
+    {% else %}
+            <option> {{ tag.name }}</option>
+    {% endif %}
+{% endfor -%}
+        </select>
+        <script type="text/javascript">
+            $("#operation-edit-input-tags").select2({
+                tags: true,
+                multipleWidth: 55,
+                width: '100%',
+            })
+        </script>
+    </div>
+    <div class="mi mi-transfer-edit-submit">
+        <button type="submit" class="mi mi-transfer-edit-submit-button">
+        {% if transfer == None %}
+        add transfer
+        {% else %}
+        update transfer
+        {% endif %}
+        </button>
+    </div>
+</div>
+</form>

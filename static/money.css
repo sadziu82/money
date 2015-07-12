@@ -3,7 +3,7 @@
 .ui-widget-content {
     background: LightGray;
 	border: 1px solid Gray;
-    font-size: 12pt;
+    font-size: 10pt;
     font-weight: bold;
 }
 
@@ -69,6 +69,13 @@ div.mi {
 div.mi-page-header {
     width: 100%;
     text-align: center;
+}
+
+.mi-close-button {
+    width: 20px;
+    float: left;
+    position: relative;
+    border: 0px black solid;
 }
 
 div.mi-login-panel-container {
@@ -245,8 +252,8 @@ div.mi-top-menu-link {
     width: 10%;
     text-align: center;
     float: left;
-    font-size: 12pt;
-    padding: 0.5ex 1em 0.5ex 1em;
+    font-size: 10pt;
+    padding: 0.5ex 1em 1ex 1em;
     border: 0px;
 }
 
@@ -268,7 +275,7 @@ div.mi-account-list-container {
     width: 100%;
     margin: 1ex 0px 0px 0px;
     padding: 0px;
-    font-size: 12pt;
+    font-size: 10pt;
     overflow: hidden;
 }
 
@@ -367,7 +374,6 @@ div.mi-account-list-to-date-balance {
     width: 15%;
     text-align: center;
     float: left;
-    font-size: 12pt;
     padding: 0px;
     border: solid 0px;
 }
@@ -375,7 +381,6 @@ div.mi-account-list-to-date-balance {
 div.mi-account-list-total-balance {
     width: 15%;
     float: left;
-    font-size: 12pt;
     padding: 0px;
     border: solid 0px;
 }
@@ -678,6 +683,277 @@ select.mi-operation-edit-input-tags {
     background-color: LightGray;
 }
 
+div.mi-schedule-edit-container {
+    color: Gold;
+    background-color: DarkSlateBlue;
+    border: solid 1px Black;
+    font-size: 14pt;
+    min-width: 600px;
+    max-width: 800px;
+    margin: auto;
+    margin-top: 10ex;
+    padding: 0px 1em 1ex 1em;
+    border-radius: 1ex;
+    overflow: hidden;
+}
+
+div.mi-schedule-edit-row {
+    padding: 0px 0px 0px 0px;
+    margin-top: 1ex;
+    width: 100%;
+    font-size: 14pt;
+    border: 0px solid red;
+    text-align: center;
+}
+
+div.mi-schedule-edit-header {
+    width: 97%;
+    text-align: center;
+    font-size: 14pt;
+    float: left;
+    padding: 0px 0px 0px 0px;
+    background-color: inherit;
+    border: 0px;
+}
+
+div.mi-schedule-edit-label {
+    width: 15%;
+    text-align: right;
+    font-size: 14pt;
+    float: left;
+    padding: 0px 0px 0px 0px;
+    background-color: inherit;
+    border: 0px;
+}
+
+div.mi-schedule-edit-input {
+    width: 85%;
+    text-align: left;
+    font-size: 14pt;
+    float: left;
+    padding: 0px 1em 0px 1em;
+    border: 0px;
+}
+
+input.mi-schedule-edit-input-field {
+    width: 100%;
+    text-align: left;
+    font-size: 14pt;
+    float: left;
+    padding: 0px 0.5em 0px 0.5em;
+    border: solid 1px DarkGray;
+    border-radius: 0.5ex;
+    color: DarkSlateBlue;
+    background-color: LightGray;
+}
+
+select.mi-schedule-edit-input-field {
+    width: 100%;
+    text-align: left;
+    font-size: 14pt;
+    float: left;
+    padding: 0px 0.5em 0px 0.5em;
+    border: solid 1px DarkGray;
+    border-radius: 0.5ex;
+    color: DarkSlateBlue;
+    background-color: LightGray;
+}
+
+textarea.mi-schedule-edit-input-field {
+    width: 100%;
+    height: 7.5ex;
+    text-align: left;
+    font-size: 14pt;
+    float: left;
+    padding: 0px 0.5em 0px 0.5em;
+    border: solid 1px DarkGray;
+    border-radius: 0.5ex;
+    color: DarkSlateBlue;
+    background-color: LightGray;
+}
+
+div.mi-schedule-edit-left-label {
+    width: 15%;
+    text-align: right;
+    font-size: 14pt;
+    float: left;
+    padding: 0px 0px 0px 0px;
+    background-color: inherit;
+    border: 0px;
+}
+
+div.mi-schedule-edit-left-input {
+    width: 35%;
+    text-align: left;
+    font-size: 14pt;
+    float: left;
+    padding: 0px 1em 0px 1em;
+    border: 0px;
+}
+
+div.mi-schedule-edit-right-label {
+    width: 10%;
+    text-align: right;
+    font-size: 14pt;
+    float: left;
+    padding: 0px 0px 0px 0px;
+    background-color: inherit;
+    border: 0px;
+}
+
+div.mi-schedule-edit-right-input {
+    width: 40%;
+    text-align: left;
+    font-size: 14pt;
+    padding: 0px 1em 0px 1em;
+    float: left;
+    border: 0px;
+}
+
+select.mi-schedule-edit-input-tags {
+    width: 100%;
+    text-align: left;
+    float: left;
+    padding: 0px 0.5em 0px 0.5em;
+    border: solid 1px DarkGray;
+    border-radius: 0.5ex;
+    color: DarkSlateBlue;
+    background-color: LightGray;
+}
+
+button.mi-schedule-edit-submit-button {
+    min-width: 400px;
+    max-width: 600px;
+    font-size: 14pt;
+    padding: 0px 0px 0px 0px;
+    border: solid 1px DarkGray;
+    border-radius: 0.5ex;
+    color: DarkSlateBlue;
+    background-color: LightGray;
+}
+
+div.mi-transfer-edit-container {
+    color: Gold;
+    background-color: DarkSlateBlue;
+    border: solid 1px Black;
+    font-size: 14pt;
+    min-width: 600px;
+    max-width: 800px;
+    margin: auto;
+    margin-top: 10ex;
+    padding: 1ex 1em 1ex 1em;
+    border-radius: 1ex;
+    overflow: hidden;
+}
+
+div.mi-transfer-edit-header {
+    padding: 0px 0px 0px 0px;
+    font-size: 14pt;
+    border: 0px;
+    text-align: center;
+}
+
+div.mi-transfer-edit-label {
+    width: 20%;
+    text-align: right;
+    font-size: 14pt;
+    float: left;
+    padding: 0px 0px 0px 0px;
+    margin-top: 1ex;
+    background-color: inherit;
+    border: 0px;
+}
+
+div.mi-transfer-edit-input {
+    width: 80%;
+    text-align: left;
+    font-size: 14pt;
+    float: left;
+    margin-top: 1ex;
+    padding: 0px 1em 0px 1em;
+    border: 0px;
+}
+
+input.mi-transfer-edit-input-field {
+    width: 100%;
+    text-align: left;
+    font-size: 14pt;
+    float: left;
+    padding: 0px 0.5em 0px 0.5em;
+    margin: 0px 0px 0px 0px;
+    border: solid 1px DarkGray;
+    border-radius: 0.5ex;
+    color: DarkSlateBlue;
+    background-color: LightGray;
+}
+
+textarea.mi-transfer-edit-input-field {
+    width: 100%;
+    height: 7.5ex;
+    text-align: left;
+    font-size: 14pt;
+    float: left;
+    padding: 0px 0.5em 0px 0.5em;
+    margin: 0px 0px 0px 0px;
+    border: solid 1px DarkGray;
+    border-radius: 0.5ex;
+    color: DarkSlateBlue;
+    background-color: LightGray;
+}
+
+div.mi-transfer-edit-left-label {
+    width: 20%;
+    text-align: right;
+    font-size: 14pt;
+    float: left;
+    padding: 0px 0px 0px 0px;
+    margin-top: 1ex;
+    background-color: inherit;
+    border: 0px;
+}
+
+div.mi-transfer-edit-left-input {
+    width: 30%;
+    text-align: left;
+    font-size: 14pt;
+    float: left;
+    padding: 0px 1em 0px 1em;
+    margin-top: 1ex;
+    border: 0px;
+}
+
+div.mi-transfer-edit-right-label {
+    width: 15%;
+    text-align: right;
+    font-size: 14pt;
+    float: left;
+    padding: 0px 0px 0px 0px;
+    margin-top: 1ex;
+    background-color: inherit;
+    border: 0px;
+}
+
+div.mi-transfer-edit-right-input {
+    width: 35%;
+    text-align: left;
+    font-size: 14pt;
+    float: left;
+    padding: 1ex 1em 0px 1em;
+    border: 0px;
+}
+
+select.mi-transfer-edit-input-tags {
+    width: 100%;
+    text-align: left;
+    float: left;
+    padding: 0px 0.5em 0px 0.5em;
+    margin: 0px 0px 0px 0px;
+    border: solid 1px DarkGray;
+    border-radius: 0.5ex;
+    color: DarkSlateBlue;
+    background-color: LightGray;
+}
+
 .select2-container--default .select2-selection--multiple .select2-selection__choice {
     color: SlateBlue;
     background-color: Silver;
@@ -713,6 +989,38 @@ select.mi-operation-edit-input-tags {
 .select2-container--default .select2-results__option--highlighted[aria-selected] {
     color: Gold;
     background-color: SlateBlue;
+}
+
+select.mi-transfer-edit-input-field {
+    width: 100%;
+    text-align: left;
+    font-size: 14pt;
+    float: left;
+    padding: 0px 0px 0px 0.5em;
+    margin: 0px 0px 0px 0px;
+    border: solid 1px DarkGray;
+    border-radius: 0.5ex;
+    color: DarkSlateBlue;
+    background-color: LightGray;
+}
+
+div.mi-transfer-edit-submit {
+    width: 100%;
+    text-align: center;
+    font-size: 14pt;
+    padding: 3ex 0px 3ex 0px;
+    border: 0px;
+}
+
+button.mi-transfer-edit-submit-button {
+    min-width: 400px;
+    max-width: 600px;
+    font-size: 14pt;
+    padding: 0px 0px 0px 0.5em;
+    border: solid 1px DarkGray;
+    border-radius: 0.5ex;
+    color: DarkSlateBlue;
+    background-color: LightGray;
 }
 
 select.mi-operation-edit-input-field {
@@ -752,7 +1060,7 @@ div.mi-operation-list-container {
     width: 100%;
     margin: 6ex 0px 0px 0px;
     padding: 0px;
-    font-size: 12pt;
+    font-size: 10pt;
     overflow: hidden;
 }
 
@@ -858,14 +1166,21 @@ img.mi-operation-list-booked {
 }
 
 div.mi-operation-list-date {
-    width: 12%;
+    width: 8%;
     text-align: center;
     float: left;
     border: solid 0px;
 }
 
+div.mi-operation-list-account {
+    width: 14%;
+    text-align: left;
+    float: left;
+    border: solid 0px;
+}
+
 div.mi-operation-list-tags {
-    width: 31%;
+    width: 30%;
     min-height: 1px;
     text-align: left;
     float: left;
@@ -873,7 +1188,7 @@ div.mi-operation-list-tags {
 }
 
 div.operation-list-description {
-    width: 18%;
+    width: 15%;
     min-height: 1px;
     text-align: left;
     float: left;
@@ -881,7 +1196,7 @@ div.operation-list-description {
 }
 
 div.mi-operation-list-amount {
-    width: 15%;
+    width: 12%;
     text-align: right;
     float: left;
     border: solid 0px;
@@ -889,10 +1204,9 @@ div.mi-operation-list-amount {
 }
 
 div.mi-operation-list-balance {
-    width: 15%;
+    width: 12%;
     text-align: right;
     float: left;
-    font-size: 12pt;
     padding: 0px;
     border: solid 0px;
     padding-right: 1em;
@@ -908,7 +1222,8 @@ a.mi-operation-list-link:hover {
 }
 
 div.mi-operation-list-header > div.mi-operation-list-tags {
-    text-align: center;
+    text-align: left;
+    padding-left: 1em;
 }
 
 div.mi-operation-list-row > div.mi-operation-list-tags {
@@ -971,9 +1286,249 @@ div.mi-operation-list-action-row {
 a.mi-operation-list-action-link {
     color: Gold;
     text-decoration: none;
+    padding-left: 1em;
 }
 
 a.mi-operation-list-action-link:hover {
+    color: Orange;
+    text-decoration: none;
+}
+
+div.mi-schedule-list-container {
+    border: 0px;
+    width: 100%;
+    margin: 6ex 0px 0px 0px;
+    padding: 0px;
+    font-size: 10pt;
+    overflow: hidden;
+}
+
+div.mi-schedule-list-header {
+    color: Gold;
+    background-color: SteelBlue;
+    line-height: 3.5ex;
+    height: 3.5ex;
+    border: 0px;
+}
+
+div.mi-schedule-list-section {
+    width: 100%;
+    color: #F7C974;
+    margin: 0.5ex 0px 0px 0px;
+    background-color: #9FB7E3;
+    line-height: 3.5ex;
+    height: 3.5ex;
+    border: 0px;
+    text-align: left;
+    padding-left: 10%;
+    font-style: italic;
+}
+
+div.mi-schedule-list-empty {
+    width: 100%;
+    color: Gray;
+    margin: 0.5ex 0px 0px 0px;
+    background-color: Beige;
+    line-height: 3.5ex;
+    height: 3.5ex;
+    border: 0px;
+    text-align: left;
+    padding-left: 10%;
+    font-style: italic;
+}
+
+div.mi-schedule-list-row {
+    line-height: 3.5ex;
+    height: 3.5ex;
+    border: 0px;
+}
+
+div.mi-schedule-list-row:nth-child(even) {
+    background-color: WhiteSmoke;
+}
+
+div.mi-schedule-list-row:nth-child(even):hover {
+    background-color: #dfdfdf;
+}
+
+div.mi-schedule-list-row:nth-child(odd) {
+    background-color: Snow;
+}
+
+div.mi-schedule-list-row:nth-child(odd):hover {
+    background-color: #dfdfdf;
+}
+
+div.mi-schedule-list-delete {
+    width: 3%;
+    min-height: 1px;
+    text-align: center;
+    float: left;
+    border: solid 0px;
+}
+
+img.mi-schedule-list-delete {
+    display: inline-block;
+    height: 75%;
+    vertical-align: middle;
+    padding-bottom: 0.5ex;
+}
+
+div.mi-schedule-list-edit {
+    width: 3%;
+    min-height: 1px;
+    text-align: center;
+    float: left;
+    border: solid 0px;
+}
+
+img.mi-schedule-list-edit {
+    display: inline-block;
+    height: 75%;
+    vertical-align: middle;
+    padding-bottom: 0.5ex;
+}
+
+div.mi-schedule-list-booked {
+    width: 3%;
+    min-height: 1px;
+    text-align: center;
+    float: left;
+    border: solid 0px;
+}
+
+img.mi-schedule-list-booked {
+    display: inline-block;
+    height: 75%;
+    vertical-align: middle;
+    padding-bottom: 0.5ex;
+}
+
+div.mi-schedule-list-date {
+    width: 8%;
+    text-align: center;
+    float: left;
+    border: solid 0px;
+}
+
+div.mi-schedule-list-account {
+    width: 20%;
+    text-align: left;
+    float: left;
+    border: solid 0px;
+}
+
+div.mi-schedule-list-tags {
+    width: 24%;
+    min-height: 1px;
+    text-align: left;
+    float: left;
+    border: solid 0px;
+}
+
+div.schedule-list-description {
+    width: 15%;
+    min-height: 1px;
+    text-align: left;
+    float: left;
+    border: solid 0px;
+}
+
+div.mi-schedule-list-amount {
+    width: 12%;
+    text-align: right;
+    float: left;
+    border: solid 0px;
+    padding-right: 1em;
+}
+
+div.mi-schedule-list-balance {
+    width: 12%;
+    text-align: right;
+    float: left;
+    padding: 0px;
+    border: solid 0px;
+    padding-right: 1em;
+}
+
+a.mi-schedule-list-link {
+    color: Gold;
+    text-decoration: none;
+}
+
+a.mi-schedule-list-link:hover {
+    color: Orange;
+}
+
+div.mi-schedule-list-header > div.mi-schedule-list-tags {
+    text-align: left;
+    padding-left: 1em;
+}
+
+div.mi-schedule-list-row > div.mi-schedule-list-tags {
+    text-align: left;
+    padding-left: 1em;
+}
+
+div.mi-schedule-list-header > div.mi-schedule-list-description {
+    text-align: center;
+}
+
+div.mi-schedule-list-row > div.mi-schedule-list-description {
+    text-align: left;
+    padding-left: 1em;
+}
+
+div.mi-schedule-list-summary-row {
+    width: 100%;
+    background-color: Beige;
+    line-height: 3.5ex;
+    height: 3.5ex;
+    border: 0px;
+}
+
+div.mi-schedule-list-summary-label {
+    width: 70%;
+    border: 0px;
+    float: left;
+    color: Gray;
+    text-align: right;
+}
+
+div.mi-schedule-list-summary-to-date {
+    width: 15%;
+    border: 0px;
+    float: left;
+    text-align: right;
+    padding-right: 1em;
+}
+
+div.mi-schedule-list-summary-total {
+    width: 15%;
+    border: 0px;
+    text-align: right;
+    padding-right: 1em;
+}
+
+div.mi-schedule-list-action-row {
+    width: 100%;
+    color: Gold;
+    margin: 0.5ex 0px 0px 0px;
+    background-color: SteelBlue;
+    line-height: 3.5ex;
+    height: 3.5ex;
+    border: 0px;
+    text-align: left;
+    padding-left: 10%;
+}
+
+a.mi-schedule-list-action-link {
+    color: Gold;
+    text-decoration: none;
+    padding-left: 1em;
+}
+
+a.mi-schedule-list-action-link:hover {
     color: Orange;
     text-decoration: none;
 }

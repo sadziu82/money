@@ -23,6 +23,7 @@ import logging
 from logging.handlers import RotatingFileHandler
 import time
 import datetime
+import dateutil.parser
 import dateutil.relativedelta
 import calendar
 
@@ -85,15 +86,27 @@ def before_request():
     g.user = current_user
     g.db_session = db.session
     g.logger = money.logger
-    today = datetime.datetime.today()
-    session['today'] = datetime.datetime(today.year, today.month, today.day, 23, 59, 59)
+    today = datetime.date.today()
+    session['today'] = datetime.date(today.year, today.month, today.day)
+    for key in ['start_date', 'end_date']:
+        try:
+            date = dateutil.parser.parse(session[key])
+            session[key] = datetime.date(date.year, date.month, date.day)
+        except KeyError:
+            pass
 
 
-@money.before_request
-def after_request():
+@money.after_request
+def after_request(e):
+    for key in ['today', 'start_date', 'end_date']:
+        try:
+            session[key] = session[key].isoformat()
+        except KeyError:
+            pass
     g.user = current_user
     g.db_session = db.session
     g.logger = money.logger
+    return e
 
 
 @money.route('/', methods=['GET'])
@@ -114,11 +127,12 @@ def login():
     if user is None:
         session['next'] = url_for('login')
     else:
+        session['accounts'] = []
         today = session['today']
         first_day, last_day = calendar.monthrange(today.year, today.month)
         session['next'] = url_for('index')
-        session['start_date'] = datetime.datetime(today.year, today.month, 1, 0, 0, 0)
-        session['end_date'] = datetime.datetime(today.year, today.month, last_day, 23, 59, 59)
+        session['start_date'] = datetime.date(today.year, today.month, 1)
+        session['end_date'] = datetime.date(today.year, today.month, last_day)
         login_user(user)
     return redirect(session['next'])
 
@@ -149,7 +163,6 @@ def my_account():
 def account_list():
     accounts_summary = api.account_list_with_balance(session=g.db_session,
             user_id=g.user.id)
-    g.logger.info('{}'.format(accounts_summary))
     session['next'] = url_for('account_list')
     return render_template('account_list.html', accounts_summary=accounts_summary)
 
@@ -208,22 +221,9 @@ def operation_list_account_id(account_id):
 @money.route('/operation/list', methods=['GET'])
 @login_required
 def operation_list():
-    #start_date = datetime.datetime.today()
-    #one_day = datetime.timedelta(days=10)
-    #accounts = api.account_list_with_balance(session=g.db_session, owner=g.user.uid,
-    #        to_date=session['start_date'] - datetime.timedelta(seconds=1))
-    #balance = {}
-    #for account in accounts:
-    #    balance[account.aid] = account.initial_balance + account.to_date_balance
-    #operations = api.operation_list(session=g.db_session,
-    #        owner=g.user.uid, account=aid, tags=None,
-    #        start_date=session['start_date'], end_date=session['end_date'])
-    #for operation in operations:
-    #    operation.balance = balance[operation.account.aid] + operation.amount
-    #    balance[operation.account.aid] = balance[operation.account.aid] + operation.amount
     accounts = api.account_list_groupped(session=g.db_session, user_id=g.user.id)
     account_ids = session['accounts']
-    operations = api.operation_list(session=g.db_session,
+    operations = api.operation_list_with_balance(session=g.db_session,
             account_ids=account_ids,
             start_date=session['start_date'],
             end_date=session['end_date'],
@@ -236,12 +236,13 @@ def operation_list():
 @money.route('/operation/add', methods=['POST'])
 @login_required
 def operation_add():
-    g.logger.info(request.form)
+    #g.logger.info(request.form)
     operation = api.operation_add(session=g.db_session,
             account_id=request.form['account_id'],
             amount=request.form['amount'],
             description=request.form['description'],
-            date=request.form['date'],
+            date=request.form['date'])
+    api.set_operation_tags(session=g.db_session, operation_id=operation.id,
             tags=request.form.getlist('tags'))
     g.db_session.commit()
     session['current_operation'] = operation.id
@@ -251,7 +252,7 @@ def operation_add():
 @money.route('/operation/modify/<id>', methods=['POST'])
 @login_required
 def operation_modify(id):
-    g.logger.info(request.form)
+    #g.logger.info(request.form)
     operation = api.operation_get(session=g.db_session, operation_id=id)
     operation.account_id = request.form['account_id']
     operation.amount = request.form['amount']
@@ -267,36 +268,136 @@ def operation_modify(id):
 @money.route('/operation/edit/<id>', methods=['GET'])
 @login_required
 def operation_edit(id):
-    account_id = session['accounts'][0]
-    current_account = api.account_get(session=g.db_session, account_id=account_id)
+    try:
+        account_id = session['accounts'][0]
+        current_account = api.account_get(session=g.db_session, account_id=account_id)
+    except IndexError:
+        account_id = None
+        current_account = None
     accounts = api.account_list_groupped(session=g.db_session, user_id=g.user.id)
     try:
         operation = api.operation_get(session=g.db_session, operation_id=id)
     except NoResultFound:
         operation = None
-    #tags = api.tag_list(session=g.db_session)
     tags = api.tag_list(session=g.db_session)
     return render_template('operation_edit.html', operation=operation,
             current_account=current_account, accounts=accounts, tags=tags)
 
 
+@money.route('/transfer/edit/<id>', methods=['GET'])
+@login_required
+def transfer_edit(id):
+    try:
+        current_account_id = session['accounts'][0]
+    except IndexError:
+        current_account_id = None
+    accounts = api.account_list_groupped(session=g.db_session, user_id=g.user.id)
+    try:
+        transfer = api.transfer_get(session=g.db_session,
+                transfer_id=id)
+        operation_from = api.operation_get(session=g.db_session,
+                operation_id=transfer.operation_from_id)
+        operation_to = api.operation_get(session=g.db_session,
+                operation_id=transfer.operation_to_id)
+    except (NoResultFound, AttributeError):
+        transfer = None
+        operation_from = None
+        operation_to = None
+    tags = api.tag_list(session=g.db_session)
+    return render_template('transfer_edit.html',
+            current_account_id=current_account_id,
+            transfer=transfer,
+            operation_from=operation_from,
+            operation_to=operation_to,
+            accounts=accounts,
+            tags=tags)
+
+
+@money.route('/transfer/add', methods=['POST'])
+@login_required
+def transfer_add():
+    #g.logger.info(request.form)
+    operation_from = api.operation_add(session=g.db_session,
+            account_id=request.form['account_from_id'],
+            amount=-float(request.form['amount']),
+            description=request.form['description'],
+            date=request.form['date'])
+    api.set_operation_tags(session=g.db_session, operation_id=operation_from.id,
+            tags=request.form.getlist('tags'))
+    operation_to = api.operation_add(session=g.db_session,
+            account_id=request.form['account_to_id'],
+            amount=request.form['amount'],
+            description=request.form['description'],
+            date=request.form['date'])
+    api.set_operation_tags(session=g.db_session, operation_id=operation_to.id,
+            tags=request.form.getlist('tags'))
+    transfer = api.transfer_add(session=g.db_session,
+            operation_from_id=operation_from.id,
+            operation_to_id=operation_to.id)
+    operation_from.transfer_id = transfer.id
+    operation_to.transfer_id = transfer.id
+    g.db_session.commit()
+    session['current_operation'] = operation_from.id
+    return redirect(session['next'])
+
+
+@money.route('/transfer/modify/<id>', methods=['POST'])
+@login_required
+def transfer_modify(id):
+    #g.logger.info(request.form)
+    transfer = api.transfer_get(session=g.db_session, transfer_id=id)
+    operation_from = api.operation_get(session=g.db_session,
+            operation_id=transfer.operation_from_id)
+    operation_from.account_id = request.form['account_from_id']
+    operation_from.amount = -float(request.form['amount'])
+    operation_from.description = request.form['description']
+    operation_from.date = request.form['date']
+    api.set_operation_tags(session=g.db_session,
+            operation_id=transfer.operation_from_id,
+            tags=request.form.getlist('tags'))
+    operation_to = api.operation_get(session=g.db_session,
+            operation_id=transfer.operation_to_id)
+    operation_to.account_id = request.form['account_to_id']
+    operation_to.amount = request.form['amount']
+    operation_to.description = request.form['description']
+    operation_to.date = request.form['date']
+    api.set_operation_tags(session=g.db_session,
+            operation_id=transfer.operation_to_id,
+            tags=request.form.getlist('tags'))
+    g.db_session.commit()
+    session['current_operation'] = operation_from.id
+    return redirect(session['next'])
+
+
 @money.route('/go_one_month_back')
 @login_required
 def go_one_month_back():
-    session['end_date'] = session['start_date'].replace(day=1, hour=0, minute=0, second=0) - datetime.timedelta(seconds=1)
-    session['start_date'] = session['end_date'].replace(day=1, hour=0, minute=0, second=0)
-    del session['last_n_operations']
+    session['start_date'] = session['start_date'] + dateutil.relativedelta.relativedelta(
+            months=-1)
+    session['end_date'] = session['end_date'] + dateutil.relativedelta.relativedelta(
+            months=-1)
+    first_day, last_day = calendar.monthrange(session['end_date'].year,
+            session['end_date'].month)
+    session['end_date'] = datetime.date(session['end_date'].year,
+            session['end_date'].month, last_day)
+    try:
+        del session['last_n_operations']
+    except KeyError:
+        pass
     return redirect(session['next'])
 
 
 @money.route('/current_month')
 @login_required
 def current_month():
-    today = datetime.datetime.today()
+    today = datetime.date.today()
     first_day, last_day = calendar.monthrange(today.year, today.month)
-    session['start_date'] = datetime.datetime(today.year, today.month, 1, 0, 0, 0)
-    session['end_date'] = datetime.datetime(today.year, today.month, last_day, 23, 59, 59)
-    del session['last_n_operations']
+    session['start_date'] = datetime.date(today.year, today.month, 1)
+    session['end_date'] = datetime.date(today.year, today.month, last_day)
+    try:
+        del session['last_n_operations']
+    except KeyError:
+        pass
     return redirect(session['next'])
 
 
@@ -304,7 +405,10 @@ def current_month():
 @login_required
 def last_n_operations(n):
     if int(n) == 0:
-        del session['last_n_operations']
+        try:
+            del session['last_n_operations']
+        except KeyError:
+            pass
     else:
         session['last_n_operations'] = n
     return redirect(session['next'])
@@ -313,42 +417,55 @@ def last_n_operations(n):
 @money.route('/go_one_month_forward')
 @login_required
 def go_one_month_forward():
-    session['start_date'] = session['start_date'] + datetime.timedelta(days=31)
-    session['start_date'] = session['start_date'].replace(day=1)
-    first_day, last_day = calendar.monthrange(session['start_date'].year, session['start_date'].month)
-    session['end_date'] = datetime.datetime(session['start_date'].year, session['start_date'].month, last_day, 23, 59, 59)
-    today = datetime.datetime.today()
-    if session['start_date'] > session['today']:
-        session['today'] = session['start_date']
-    elif session['end_date'] > session['today']:
-        session['today'] = datetime.datetime(today.year, today.month, today.day, 23, 59, 59)
-    del session['last_n_operations']
+    session['start_date'] = session['start_date'] + dateutil.relativedelta.relativedelta(
+            months=1)
+    session['end_date'] = session['end_date'] + dateutil.relativedelta.relativedelta(
+            months=1)
+    first_day, last_day = calendar.monthrange(session['end_date'].year,
+            session['end_date'].month)
+    session['end_date'] = datetime.date(session['end_date'].year,
+            session['end_date'].month, last_day)
+    try:
+        del session['last_n_operations']
+    except KeyError:
+        pass
     return redirect(session['next'])
 
 
 @money.route('/switch_accounts/<ids>')
 @login_required
 def switch_accounts(ids):
-    session['accounts'] = ids.split(',')
+    if ids == 'none':
+        session['accounts'] = ['none-existing-id']
+    else:
+        session['accounts'] = ids.split(',')
     return redirect(session['next'])
 
 
-#@money.route('/start_date/<date>')
-#@login_required
-#def start_date(date):
-#    start_date = time.strptime('{}'.format(date), '%Y-%m-%d')
-#    session['start_date'] = datetime.datetime(start_date.tm_year, start_date.tm_mon,
-#            start_date.tm_mday, 23, 59, 59)
-#    return redirect(session['next'])
-#
-#
-#@money.route('/end_date/<date>')
-#@login_required
-#def end_date(date):
-#    end_date = time.strptime('{}'.format(date), '%Y-%m-%d')
-#    session['end_date'] = datetime.datetime(end_date.tm_year, end_date.tm_mon,
-#            end_date.tm_mday, 23, 59, 59)
-#    return redirect(session['next'])
+@money.route('/start_date/<date>')
+@login_required
+def start_date(date):
+    start_date = time.strptime('{}'.format(date), '%Y-%m-%d')
+    session['start_date'] = datetime.date(start_date.tm_year, start_date.tm_mon,
+            start_date.tm_mday)
+    try:
+        del session['last_n_operations']
+    except KeyError:
+        pass
+    return redirect(session['next'])
+
+
+@money.route('/end_date/<date>')
+@login_required
+def end_date(date):
+    end_date = time.strptime('{}'.format(date), '%Y-%m-%d')
+    session['end_date'] = datetime.date(end_date.tm_year, end_date.tm_mon,
+            end_date.tm_mday)
+    try:
+        del session['last_n_operations']
+    except KeyError:
+        pass
+    return redirect(session['next'])
 
 
 #@money.route('/ajax/edit/transfer/<tid>', methods=['GET'])
@@ -440,61 +557,179 @@ def switch_accounts(ids):
 #    return redirect(session['next'])
 #
 #
-#@money.route('/operation/remove/<oid>', methods=['GET'])
-#@login_required
-#def operation_remove(oid):
-#    operation = api.operation_get(session=g.db_session, oid=oid);
-#    account = operation.account
-#    api.operation_remove(session=g.db_session, oid=oid)
-#    g.db_session.commit()
-#    return redirect(session['next'])
-#
-#
-#@money.route('/operation/toggle_booked/<oid>', methods=['GET'])
-#@login_required
-#def operation_toggle_booked(oid):
-#    operation = api.operation_get(session=g.db_session, oid=oid);
-#    operation.booked = not operation.booked
-#    g.db_session.commit()
-#    return redirect(session['next'])
-#
-#
-#@money.route('/schedule', methods=['GET'])
-#@login_required
-#def schedule():
-#    session['next'] = url_for('schedule_list')
-#    return redirect(session['next'])
-#
-#@money.route('/schedule/list', methods=['GET'])
-#@login_required
-#def schedule_list():
-#    start_date = datetime.datetime.today()
-#    schedules = api.schedule_list(session=g.db_session, owner=g.user.uid,
-#            to_date=session['end_date'])
-#    g.logger.debug(u'{}'.format(schedules))
-#    schedule_list = []
-#    for schedule in schedules:
-#        g.logger.info(schedule)
-#        s = {
-#            'id': schedule.id,
-#            'a1': schedule.a1,
-#            'a1_name': schedule.account_1.name,
-#            'a2': schedule.a2,
-#            'a2_name': schedule.account_2.name,
-#            'amount': schedule.amount,
-#            'desc': schedule.desc,
-#            'start_date': schedule.start_date,
-#            'tags': schedule.tags,
-#        }
-#        period = schedule.period
-#        while s['start_date'] <= session['end_date'].date():
-#            schedule_list.append(s.copy())
-#            s['start_date'] = s['start_date'] + dateutil.relativedelta.relativedelta(
-#                months=period.months, days=period.days)
-#    schedule_list.sort(key=lambda tup: tup['start_date'])
-#    return render_template('schedule_list.html', schedule_list=schedule_list)
-#
-#
+@money.route('/operation/remove/<operation_id>', methods=['GET'])
+@login_required
+def operation_remove(operation_id):
+    api.operation_remove(session=g.db_session, operation_id=operation_id)
+    g.db_session.commit()
+    return redirect(session['next'])
+
+
+@money.route('/schedule/remove/<schedule_id>', methods=['GET'])
+@login_required
+def schedule_remove(schedule_id):
+    api.schedule_remove(session=g.db_session, schedule_id=schedule_id)
+    g.db_session.commit()
+    return redirect(session['next'])
+
+
+@money.route('/transfer/remove/<transfer_id>', methods=['GET'])
+@login_required
+def transfer_remove(transfer_id):
+    api.transfer_remove(session=g.db_session, transfer_id=transfer_id)
+    g.db_session.commit()
+    return redirect(session['next'])
+
+
+@money.route('/operation/toggle_booked/<operation_id>', methods=['GET'])
+@login_required
+def operation_toggle_booked(operation_id):
+    operation = api.operation_get(session=g.db_session, operation_id=operation_id);
+    operation.booked = not operation.booked
+    g.db_session.commit()
+    return redirect(session['next'])
+
+
+@money.route('/schedule', methods=['GET'])
+@login_required
+def schedule():
+    session['next'] = url_for('schedule_list')
+    return redirect(session['next'])
+
+@money.route('/schedule/list', methods=['GET', 'POST'])
+@login_required
+def schedule_list():
+    account_ids = session['accounts']
+    accounts_summary = api.account_list_with_balance(session=g.db_session, user_id=g.user.id,
+            end_date=session['end_date'])
+    schedules = api.schedule_list(session=g.db_session, user_id=g.user.id,
+            end_date=session['end_date'])
+    scheduled_balance = {}
+    schedule_list = []
+    for schedule in schedules:
+        #g.logger.info(schedule)
+        s = {
+            'id': schedule.id,
+            'account_1_id': schedule.account_1_id,
+            'account_1_name': schedule.account_1.name,
+            'account_2_id': schedule.account_2_id,
+            'account_2_name': schedule.account_2.name if schedule.account_2 else '',
+            'amount': schedule.amount,
+            'desc': schedule.desc,
+            'date': schedule.start_date,
+            'tags': schedule.tags,
+        }
+        period = schedule.schedule_period
+        try:
+            if request.method == 'POST' and request.form[s['id']]:
+                s['checked'] = ' checked'
+        except KeyError:
+            s['checked'] = ''
+        while s['date'] <= session['end_date'].date():
+            schedule_list.append(s.copy())
+            s['date'] = s['date'] + dateutil.relativedelta.relativedelta(
+                months=period.months, days=period.days)
+            try:
+                if request.method == 'POST' and request.form[s['id']]:
+                    if s['account_2_id']:
+                        scheduled_balance[s['account_1_id']] = scheduled_balance.setdefault(s['account_1_id'], 0) - s['amount']
+                        scheduled_balance[s['account_2_id']] = scheduled_balance.setdefault(s['account_2_id'], 0) + s['amount']
+                    else:
+                        scheduled_balance[s['account_1_id']] = scheduled_balance.setdefault(s['account_1_id'], 0) + s['amount']
+            except KeyError:
+                pass
+    schedule_list.sort(key=lambda s: s['date'])
+    if request.method == 'POST':
+        for account_type_group in accounts_summary:
+            for account in accounts_summary[account_type_group]['accounts']:
+                try:
+                    account['total_balance'] = account['total_balance'] + scheduled_balance[account['id']]
+                    accounts_summary[account_type_group]['total_balance'] = accounts_summary[account_type_group]['total_balance'] + scheduled_balance[account['id']]
+                except KeyError:
+                    pass
+    ##
+    session['next'] = url_for('schedule_list')
+    #g.logger.debug(u'{}'.format(scheduled_balance))
+    return render_template('schedule_list.html', accounts_summary=accounts_summary,
+            account_ids=account_ids, schedule_list=schedule_list)
+
+
+@money.route('/schedule/transfer', methods=['POST'])
+@login_required
+def schedule_transfer():
+    for schedule_id in request.form:
+        max_date = max(request.form.getlist(schedule_id))
+        api.schedule_transfer(session=g.db_session, schedule_id=schedule_id,
+                max_date=max_date)
+        g.logger.info('{}: {}'.format(schedule_id, max_date))
+    g.db_session.commit()
+    return redirect(session['next'])
+
+
+@money.route('/schedule/edit/<id>', methods=['GET'])
+@login_required
+def schedule_edit(id):
+    account_id = session['accounts'][0]
+    current_account = api.account_get(session=g.db_session, account_id=account_id)
+    accounts = api.account_list_groupped(session=g.db_session, user_id=g.user.id)
+    schedule_periods = api.schedule_period_list(session=g.db_session)
+    try:
+        schedule = api.schedule_get(session=g.db_session, schedule_id=id)
+    except NoResultFound:
+        schedule = None
+    tags = api.tag_list(session=g.db_session)
+    return render_template('schedule_edit.html',
+            schedule=schedule, schedule_periods=schedule_periods,
+            current_account=current_account, accounts=accounts, tags=tags)
+
+
+@money.route('/schedule/add', methods=['POST'])
+@login_required
+def schedule_add():
+    #g.logger.info(request.form)
+    schedule = api.schedule_add(session=g.db_session,
+            account_1_id=request.form['account_1_id'],
+            account_2_id=request.form['account_2_id']
+                         if request.form['account_2_id'] != ''
+                         else None,
+            amount=request.form['amount'],
+            desc=request.form['desc'],
+            schedule_period_id=request.form['schedule_period_id'],
+            start_date=request.form['start_date'],
+            end_date=request.form['end_date']
+                     if request.form['end_date'] != ''
+                     else None)
+    api.set_schedule_tags(session=g.db_session, schedule_id=schedule.id,
+            tags=request.form.getlist('tags'))
+    g.db_session.commit()
+    session['current_schedule'] = schedule.id
+    session['next'] = url_for('schedule_list')
+    return redirect(session['next'])
+
+
+@money.route('/schedule/modify/<id>', methods=['POST'])
+@login_required
+def schedule_modify(id):
+    #g.logger.info(request.form)
+    schedule = api.schedule_get(session=g.db_session, schedule_id=id)
+    schedule.account_1_id=request.form['account_1_id']
+    schedule.account_2_id=request.form['account_2_id'] \
+                          if request.form['account_2_id'] != '' \
+                          else None
+    schedule.amount=request.form['amount']
+    schedule.desc=request.form['desc']
+    schedule.schedule_period_id=request.form['schedule_period_id']
+    schedule.start_date=request.form['start_date']
+    schedule.end_date=request.form['end_date'] \
+                      if request.form['end_date'] != '' \
+                      else None
+    api.set_schedule_tags(session=g.db_session, schedule_id=schedule.id,
+            tags=request.form.getlist('tags'))
+    g.db_session.commit()
+    session['current_schedule'] = schedule.id
+    return redirect(session['next'])
+
+
 #@money.route('/schedule/save/<id>', methods=['POST'])
 #@login_required
 #def schedule_save(id):

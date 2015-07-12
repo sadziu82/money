@@ -2,13 +2,15 @@
 # -*- coding: utf-8 -*-
 
 #
-from models import (User, AccountType, Account, Operation, Tag, OperationTag)
+from models import (User, AccountType, Account, Operation, Tag, OperationTag,
+        Transfer, ScheduleTag, SchedulePeriod, Schedule)
 #        SchedulePeriod, Schedule)
 from sqlalchemy.exc import (IntegrityError)
 from sqlalchemy.orm.exc import (NoResultFound)
 from sqlalchemy.sql import func
 from sqlalchemy import case
 import datetime
+import dateutil
 
 
 #
@@ -114,10 +116,13 @@ def account_list_groupped(session, user_id):
     return accounts
 
 
-def account_list_with_balance(session, user_id, to_date=None):
-    if not to_date:
-        to_date = datetime.datetime.today()
-    accounts = session.query(Account.id.label('id'),
+def account_list_with_balance(session, user_id, end_date=None):
+    if end_date:
+        end_date_func = func.sum(case([(Operation.date <= end_date, Operation.amount)], else_=0)).label('end_date_balance')
+    else:
+        end_date_func = func.sum(Operation.amount).label('end_date_balance')
+    
+    query = session.query(Account.id.label('id'),
             Account.account_type_id.label('account_type_id'),
             Account.name.label('name'),
             Account.initial_balance.label('initial_balance'),
@@ -125,29 +130,93 @@ def account_list_with_balance(session, user_id, to_date=None):
             AccountType.name.label('account_type_name'),
             AccountType.group.label('account_type_group'),
             AccountType.order.label('account_type_order'),
-            func.sum(case([(Operation.amount == None, 0)], else_=Operation.amount)).label('total_balance'),
-            func.sum(case([(Operation.date <= to_date, Operation.amount)], else_=0)).label('to_date_balance'),
-            ). \
+            func.sum(case([(Operation.amount.is_(None), 0)], else_=Operation.amount)).label('total_balance'),
+            end_date_func,
+        ). \
         filter(Account.user_id == user_id). \
         join(AccountType). \
-        outerjoin(Operation, Account.id == Operation.account_id). \
+        outerjoin(Operation). \
         group_by(Account.id). \
         order_by(AccountType.group, AccountType.order, Account.name)
-    summary = {}
-    for account in accounts:
-        if account.account_type_group not in summary.keys():
-            summary[account.account_type_group] = {
+        
+    ## execute query
+    accounts = {}
+    for account in query.all():
+        if account.account_type_group not in accounts.keys():
+            accounts[account.account_type_group] = {
                 'accounts': [],
                 'account_type_name': [],
-                'to_date_balance': 0,
+                'end_date_balance': 0,
                 'total_balance': 0,
             }
-        if account.account_type_name not in summary[account.account_type_group]['account_type_name']:
-            summary[account.account_type_group]['account_type_name'].append(account.account_type_name)
-        summary[account.account_type_group]['accounts'].append(object_to_dict(account))
-        summary[account.account_type_group]['to_date_balance'] = summary[account.account_type_group]['to_date_balance'] + account.to_date_balance + account.initial_balance
-        summary[account.account_type_group]['total_balance'] = summary[account.account_type_group]['total_balance'] + account.total_balance + account.initial_balance
-    return summary
+        if account.end_date_balance is None:
+            account.end_date_balance = 0
+        if account.account_type_name not in accounts[account.account_type_group]['account_type_name']:
+            accounts[account.account_type_group]['account_type_name'].append(account.account_type_name)
+        accounts[account.account_type_group]['accounts'].append(object_to_dict(account))
+        accounts[account.account_type_group]['end_date_balance'] = accounts[account.account_type_group]['end_date_balance'] + account.end_date_balance + account.initial_balance
+        accounts[account.account_type_group]['total_balance'] = accounts[account.account_type_group]['total_balance'] + account.total_balance + account.initial_balance
+    return accounts
+
+
+def accounts_balance(session, account_ids, date=None):
+    if date:
+        balance_func = func.sum(case([(Operation.date <= date, Operation.amount)], else_=0)).label('balance')
+    else:
+        balance_func = func.sum(Operation.amount).label('balance')
+    
+    query = session.query(
+            Operation.account_id.label('account_id'),
+            Account.initial_balance.label('initial_balance'),
+            Account.name.label('name'),
+            balance_func,
+        ). \
+        join(Account)
+    if len(account_ids) > 0:
+        query = query.filter(Operation.account_id.in_((account_ids)))
+    query = query.group_by(Operation.account_id)
+        
+    #E execute query
+    accounts = {}
+    for item in query.all():
+        accounts[item.account_id] = item.balance + item.initial_balance
+    return accounts
+
+
+#def account_list_with_balance(session, user_id, end_date=None):
+#    if not end_date:
+#        end_date = datetime.datetime.today()
+#    accounts = session.query(Account.id.label('id'),
+#            Account.account_type_id.label('account_type_id'),
+#            Account.name.label('name'),
+#            Account.initial_balance.label('initial_balance'),
+#            Account.debit_limit.label('debit_limit'),
+#            AccountType.name.label('account_type_name'),
+#            AccountType.group.label('account_type_group'),
+#            AccountType.order.label('account_type_order'),
+#            func.sum(case([(Operation.amount == None, 0)], else_=Operation.amount)).label('total_balance'),
+#            func.sum(case([(Operation.date <= end_date, Operation.amount)], else_=0)).label('end_date_balance'),
+#            ). \
+#        filter(Account.user_id == user_id). \
+#        join(AccountType). \
+#        outerjoin(Operation, Account.id == Operation.account_id). \
+#        group_by(Account.id). \
+#        order_by(AccountType.group, AccountType.order, Account.name)
+#    summary = {}
+#    for account in accounts:
+#        if account.account_type_group not in summary.keys():
+#            summary[account.account_type_group] = {
+#                'accounts': [],
+#                'account_type_name': [],
+#                'end_date_balance': 0,
+#                'total_balance': 0,
+#            }
+#        if account.account_type_name not in summary[account.account_type_group]['account_type_name']:
+#            summary[account.account_type_group]['account_type_name'].append(account.account_type_name)
+#        summary[account.account_type_group]['accounts'].append(object_to_dict(account))
+#        summary[account.account_type_group]['end_date_balance'] = summary[account.account_type_group]['end_date_balance'] + account.end_date_balance + account.initial_balance
+#        summary[account.account_type_group]['total_balance'] = summary[account.account_type_group]['total_balance'] + account.total_balance + account.initial_balance
+#    return summary
 
 
 def operation_get(session, operation_id):
@@ -155,8 +224,8 @@ def operation_get(session, operation_id):
     return operation
 
 
-def operation_add(session, account_id, amount, description, date, tags,
-                  transaction_id=None, booked=None, order_by=None):
+def operation_add(session, account_id, amount, description, date,
+                  transfer_id=None, booked=None, order_by=None):
     operation = Operation(account_id=account_id, amount=amount,
             description=description, date=date)
     session.add(operation)
@@ -184,6 +253,37 @@ def operation_list(session, account_ids, tags=None,
     return query.all()
 
 
+def operation_list_with_balance(session, account_ids, tags=None,
+        start_date=None, end_date=None,
+        last_n_operations=None):
+    query = session.query(Operation)
+    if len(account_ids) > 0:
+        query = query.filter(Operation.account_id.in_((account_ids)))
+    if last_n_operations:
+        balance = accounts_balance(session=session, account_ids=account_ids)
+        query = query.order_by(Operation.date.desc(), Operation.order_by.desc()). \
+                limit(last_n_operations)
+        query = query.from_self().order_by(Operation.date, Operation.order_by)
+    else:
+        balance = accounts_balance(session=session, account_ids=account_ids,
+                date=(start_date + dateutil.relativedelta.relativedelta(days=-1)))
+        if start_date:
+            query = query.filter(Operation.date >= start_date)
+        if end_date:
+            query = query.filter(Operation.date <= end_date)
+        query = query.order_by(Operation.date, Operation.order_by)
+    operations = query.all()
+    if last_n_operations:
+        for operation in reversed(operations):
+            operation.balance = balance[operation.account_id]
+            balance[operation.account_id] = balance.setdefault(operation.account_id, operation.account.initial_balance) - operation.amount 
+    else:
+        for operation in operations:
+            balance[operation.account_id] = balance.setdefault(operation.account_id, operation.account.initial_balance) + operation.amount 
+            operation.balance = balance[operation.account_id]
+    return operations
+
+
 def set_operation_tags(session, operation_id, tags):
     tag_list = []
     session.query(OperationTag). \
@@ -204,49 +304,141 @@ def set_operation_tags(session, operation_id, tags):
     return tag_list
 
 
-#def transfer_get(session, tid):
-#    operations = session.query(Operation).filter(Operation.tid == tid).all()
-#    return operations
-#
-#
-#def operation_remove(session, oid):
-#    operation = session.query(Operation).get(oid)
-#    session.delete(operation)
-#    session.flush()
-#    return True
-#
-#
+def set_schedule_tags(session, schedule_id, tags):
+    tag_list = []
+    session.query(ScheduleTag). \
+        filter(ScheduleTag.schedule_id == schedule_id). \
+        delete()
+    session.flush()
+    if tags:
+        for tag in tags:
+            try:
+                t = session.query(Tag).filter(Tag.name == tag).one()
+            except NoResultFound:
+                t = Tag(name=tag)
+                session.add(t)
+            tag_list.append(t)
+        session.flush()
+        [session.merge(ScheduleTag(schedule_id, t.id)) for t in tag_list]
+        session.flush()
+    return tag_list
+
+
+def transfer_get(session, transfer_id):
+    transfer = session.query(Transfer).get(transfer_id)
+    return transfer
+
+
+def transfer_add(session, operation_from_id, operation_to_id):
+    transfer = Transfer(operation_from_id=operation_from_id,
+            operation_to_id=operation_to_id)
+    session.add(transfer)
+    session.flush()
+    return transfer
+
+
+def transfer_remove(session, transfer_id):
+    transfer = transfer_get(session=session, transfer_id=transfer_id)
+    session.delete(transfer)
+    operation_remove(session, operation_id=transfer.operation_from_id)
+    operation_remove(session, operation_id=transfer.operation_to_id)
+    session.flush()
+    return True
+
+
+def operation_remove(session, operation_id):
+    set_operation_tags(session=session, operation_id=operation_id, tags=None)
+    operation = session.query(Operation).get(operation_id)
+    session.delete(operation)
+    session.flush()
+    return True
+
+
 #def schedule_period_get(session, id):
 #    schedule_period = session.query(SchedulePeriod).get(id)
 #    return schedule_period
 #
 #
-#def schedule_period_list(session):
-#    query = session.query(SchedulePeriod). \
-#            order_by(SchedulePeriod.months, SchedulePeriod.days)
-#    return query.all()
-#
-#
-#def schedule_add(session, a1, a2, amount, desc, start_date, period_id, end_date,
-#        tags, external):
-#    schedule = Schedule(a1=a1, a2=a2, amount=amount, desc=desc,
-#            start_date=start_date, period_id=period_id, end_date=end_date, tags=tags,
-#            external=external)
-#    session.add(schedule)
-#    session.flush()
-#    #set_schedule_tags(session=session, id=schedule.id, tags=tags)
-#
-#
-#def schedule_get(session, id):
-#    schedule = session.query(Schedule).get(id)
-#    return schedule
-#
-#
-#def schedule_list(session, owner, to_date=None):
-#    query = session.query(Schedule). \
-#            filter(Schedule.start_date <= to_date). \
-#            order_by(Schedule.start_date)
-#    return query.all()
+def schedule_period_list(session):
+    query = session.query(SchedulePeriod). \
+            order_by(SchedulePeriod.months, SchedulePeriod.days)
+    return query.all()
+
+
+def schedule_add(session, account_1_id, account_2_id, amount, desc,
+        schedule_period_id, start_date, end_date):
+    schedule = Schedule(account_1_id=account_1_id, account_2_id=account_2_id,
+            amount=amount, desc=desc,
+            schedule_period_id=schedule_period_id,
+            start_date=start_date, end_date=end_date)
+    session.add(schedule)
+    session.flush()
+    return schedule
+
+
+def schedule_remove(session, schedule_id):
+    schedule = schedule_get(session=session, schedule_id=schedule_id)
+    session.delete(schedule)
+    session.flush()
+    return True
+
+
+def schedule_get(session, schedule_id):
+    schedule = session.query(Schedule).get(schedule_id)
+    return schedule
+
+
+def schedule_transfer(session, schedule_id, max_date):
+    schedule = session.query(Schedule).get(schedule_id)
+    ##
+    if schedule.end_date:
+        end_date = min(schedule.end_date, max_date)
+    else:
+        end_date = max_date
+    ##
+    current_date = schedule.start_date
+    print current_date, end_date
+    ##
+    while str(current_date) <= end_date:
+        if schedule.account_2_id:
+            operation_from = operation_add(session=session,
+                    account_id=schedule.account_1_id,
+                    amount=-schedule.amount,
+                    description=schedule.desc,
+                    date=current_date)
+            set_operation_tags(session=session, operation_id=operation_from.id,
+                    tags=[x.name for x in schedule.tags])
+            operation_to = operation_add(session=session,
+                    account_id=schedule.account_2_id,
+                    amount=schedule.amount,
+                    description=schedule.desc,
+                    date=current_date)
+            set_operation_tags(session=session, operation_id=operation_to.id,
+                    tags=[x.name for x in schedule.tags])
+            transfer = transfer_add(session=session,
+                    operation_from_id=operation_from.id,
+                    operation_to_id=operation_to.id)
+            operation_from.transfer_id = transfer.id
+            operation_to.transfer_id = transfer.id
+        else:
+            operation = operation_add(session=session,
+                    account_id=schedule.account_1_id,
+                    amount=schedule.amount,
+                    description=schedule.desc,
+                    date=current_date)
+            set_operation_tags(session=session, operation_id=operation.id,
+                    tags=[x.name for x in schedule.tags])
+        current_date = current_date + dateutil.relativedelta.relativedelta(
+                months=schedule.schedule_period.months, days=schedule.schedule_period.days)
+        schedule.start_date = current_date
+
+    session.flush()
+
+
+def schedule_list(session, user_id, end_date=None):
+    query = session.query(Schedule). \
+        order_by(Schedule.start_date)
+    return query.all()
 
 
 def tag_list(session):

@@ -95,7 +95,7 @@ class Account(Base):
         self.debit_limit = debit_limit
 
     def __repr__(self):
-        return '{} ({})'.format(self.name, self.id)
+        return u'{} ({})'.format(self.name, self.id)
 
 
 class Tag(Base):
@@ -116,7 +116,7 @@ class Operation(Base):
     id = Column(String(36), primary_key=True)
     account_id = Column(String(36), ForeignKey('account.id', ondelete="cascade"),
                      nullable=False)
-    transaction_id = Column(String(36), nullable=True)
+    transfer_id = Column(String(36), nullable=True)
     amount = Column(Numeric(precision=10, scale=2), nullable=False)
     description = Column(String(1024), default='', nullable=False)
     date = Column(Date, default=func.now(), nullable=False)
@@ -126,13 +126,13 @@ class Operation(Base):
     account = relationship('Account', uselist=False,
                            backref='operations')
 
-    def __init__(self, account_id, amount, description, date, transaction_id=None, booked=False, order_by=500):
+    def __init__(self, account_id, amount, description, date, transfer_id=None, booked=False, order_by=500):
         self.id = uuid.uuid4()
         self.account_id = account_id
         self.amount = amount
         self.description = description
         self.date = date
-        self.transaction_id = transaction_id
+        self.transfer_id = transfer_id
         self.booked = booked
         self.order_by = order_by
 
@@ -162,42 +162,78 @@ class OperationTag(Base):
         return '{}{}'.format(self.operation_tag, self.tag_id)
 
 
-#class SchedulePeriod(Base):
-#    __tablename__ = 'schedule_period'
-#    id = Column(String(36), primary_key=True)
-#    name = Column(String(128), unique=True, nullable=False)
-#    days = Column(Integer(), nullable=False)
-#    months = Column(Integer(), nullable=False)
-#
-#
-#class Schedule(Base):
-#    __tablename__ = 'schedule'
-#    id = Column(String(36), primary_key=True)
-#    a1 = Column(String(36), ForeignKey('account.aid', ondelete="cascade"),
-#                     nullable=False)
-#    a2 = Column(String(36), ForeignKey('account.aid', ondelete="cascade"),
-#                     nullable=False)
-#    amount = Column(Numeric(precision=10, scale=2), nullable=False)
-#    desc = Column(String(1024), default='', nullable=False)
-#    start_date = Column(Date, default=func.now(), nullable=False)
-#    period_id = Column(String(36), ForeignKey('schedule_period.id', ondelete="cascade"),
-#            nullable=False)
-#    end_date = Column(Date, nullable=True)
-#    tags = Column(String(4096))
-#    external = Column(Boolean, default=True, nullable=False)
-#    account_1 = relationship('Account', uselist=False, primaryjoin="Schedule.a1==Account.aid")
-#    account_2 = relationship('Account', uselist=False, primaryjoin="Schedule.a2==Account.aid")
-#    period = relationship('SchedulePeriod', uselist=False)
-#
-#    def __init__(self, a1, a2, amount, desc, start_date, period_id, end_date, tags, external):
-#        self.id = uuid.uuid4()
-#        self.a1 = a1
-#        self.a2 = a2
-#        self.amount = amount
-#        self.desc = desc
-#        self.start_date = start_date
-#        self.period_id = period_id
-#        self.end_date = end_date
-#        self.tags = tags
-#        self.external = external
-#
+class Transfer(Base):
+    __tablename__ = 'transfer'
+    id = Column(String(36), primary_key=True)
+    operation_from_id = Column(String(36), ForeignKey('operation.id'), nullable=False)
+    operation_to_id = Column(String(36), ForeignKey('operation.id'), nullable=False)
+    operation_from = relationship('Operation', foreign_keys=operation_from_id,
+            uselist=False)
+    operation_to = relationship('Operation', foreign_keys=operation_to_id,
+            uselist=False)
+
+    def __init__(self, operation_from_id, operation_to_id):
+        self.id = uuid.uuid4()
+        self.operation_from_id = operation_from_id
+        self.operation_to_id = operation_to_id
+
+    def __repr__(self):
+        return '{} - {} - {}'.format(self.id,
+                self.operation_from_id,
+                self.operation_to_id)
+
+
+class SchedulePeriod(Base):
+    __tablename__ = 'schedule_period'
+    id = Column(String(36), primary_key=True)
+    name = Column(String(128), unique=True, nullable=False)
+    days = Column(Integer(), nullable=False)
+    months = Column(Integer(), nullable=False)
+
+
+class ScheduleTag(Base):
+    __tablename__ = 'schedule_tag'
+    schedule_id = Column(String(36), ForeignKey('schedule.id'), primary_key=True)
+    tag_id = Column(String(36), ForeignKey('tag.id'), primary_key=True)
+    schedule = relationship('Schedule', uselist=False)
+    tag = relationship('Tag', uselist=False)
+
+    def __init__(self, schedule_id, tag_id):
+        self.schedule_id = schedule_id
+        self.tag_id = tag_id
+
+    def __repr__(self):
+        return '{}:{}'.format(self.schedule_tag, self.tag_id)
+
+
+class Schedule(Base):
+    __tablename__ = 'schedule'
+    id = Column(String(36), primary_key=True)
+    account_1_id = Column(String(36), ForeignKey('account.id', ondelete="cascade"),
+            nullable=False)
+    account_2_id = Column(String(36), ForeignKey('account.id', ondelete="cascade"),
+            nullable=True)
+    amount = Column(Numeric(precision=10, scale=2), nullable=False)
+    desc = Column(String(1024), default='', nullable=False)
+    schedule_period_id = Column(String(36), ForeignKey('schedule_period.id',
+                ondelete="cascade"),
+            nullable=False)
+    start_date = Column(Date, default=func.now(), nullable=False)
+    end_date = Column(Date, nullable=True)
+    tags = relationship('Tag', secondary='schedule_tag')
+    account_1 = relationship('Account', uselist=False,
+            primaryjoin="Schedule.account_1_id == Account.id")
+    account_2 = relationship('Account', uselist=False,
+            primaryjoin="Schedule.account_2_id == Account.id")
+    schedule_period = relationship('SchedulePeriod', uselist=False)
+
+    def __init__(self, account_1_id, account_2_id, amount, desc,
+            schedule_period_id, start_date, end_date):
+        self.id = uuid.uuid4()
+        self.account_1_id = account_1_id
+        self.account_2_id = account_2_id
+        self.amount = amount
+        self.desc = desc
+        self.schedule_period_id = schedule_period_id
+        self.start_date = start_date
+        self.end_date = end_date
