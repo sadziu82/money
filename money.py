@@ -162,7 +162,7 @@ def my_account():
 @login_required
 def account_list():
     accounts_summary = api.account_list_with_balance(session=g.db_session,
-            user_id=g.user.id)
+            user_id=g.user.id, end_date=session['today'])
     session['next'] = url_for('account_list')
     return render_template('account_list.html', accounts_summary=accounts_summary)
 
@@ -625,7 +625,13 @@ def schedule_list():
                 s['checked'] = ' checked'
         except KeyError:
             s['checked'] = ''
-        while s['date'] <= session['end_date'].date():
+        ##
+        if schedule.end_date:
+            s['end_date'] = schedule.end_date
+        else:
+            s['end_date'] = session['end_date']
+        ##
+        while s['date'] <= session['end_date'] and s['date'] <= s['end_date']:
             schedule_list.append(s.copy())
             s['date'] = s['date'] + dateutil.relativedelta.relativedelta(
                 months=period.months, days=period.days)

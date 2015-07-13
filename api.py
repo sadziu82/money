@@ -392,7 +392,7 @@ def schedule_transfer(session, schedule_id, max_date):
     schedule = session.query(Schedule).get(schedule_id)
     ##
     if schedule.end_date:
-        end_date = min(schedule.end_date, max_date)
+        end_date = min(str(schedule.end_date), max_date)
     else:
         end_date = max_date
     ##

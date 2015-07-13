@@ -8,7 +8,17 @@
     <div class="mi mi-schedule-list-header">
         <div class="mi mi-schedule-list-delete"></div>
         <div class="mi mi-schedule-list-edit"></div>
-        <div class="mi mi-schedule-list-booked"></div>
+        <div class="mi mi-schedule-list-booked">
+            <input type="checkbox" id="select-all">
+            <script type="text/javascript">
+                $('#select-all').click(function (event) {
+                    check_state = this.checked;
+                    $(':checkbox').each(function() {
+                        this.checked = check_state;
+                    });
+                });
+            </script>
+        </div>
         <div class="mi mi-schedule-list-date">
             date
         </div>
