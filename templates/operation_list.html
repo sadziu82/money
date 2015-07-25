@@ -87,7 +87,7 @@
         <div class="mi mi-operation-list-amount">
             {{ cash_amount(operation.amount) }}
         </div>
-        <div class="mi mi-operation-list-balance">
+        <div class="mi mi-operation-list-balance" title="available funds: {{ operation.available_funds }}">
             {{ cash_amount(operation.balance) }}
         </div>
     </div>

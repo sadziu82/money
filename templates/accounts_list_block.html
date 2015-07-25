@@ -37,10 +37,10 @@
             {{ account.name  }}
             </a>
         </div>
-        <div class="mi mi-account-list-to-date-balance">
+        <div class="mi mi-account-list-to-date-balance" title="available funds: {{ account.initial_balance + account.end_date_balance - account.debit_limit }} zł">
              {{ cash_amount(account.initial_balance + account.end_date_balance) }}
         </div>
-        <div class="mi mi-account-list-total-balance">
+        <div class="mi mi-account-list-total-balance" title="available funds: {{ account.initial_balance + account.total_balance - account.debit_limit }} zł">
              {{ cash_amount(account.initial_balance + account.total_balance) }}
         </div>
     </div>

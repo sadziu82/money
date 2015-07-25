@@ -277,10 +277,12 @@ def operation_list_with_balance(session, account_ids, tags=None,
         for operation in reversed(operations):
             operation.balance = balance[operation.account_id]
             balance[operation.account_id] = balance.setdefault(operation.account_id, operation.account.initial_balance) - operation.amount 
+            operation.available_funds = operation.balance - operation.account.debit_limit
     else:
         for operation in operations:
             balance[operation.account_id] = balance.setdefault(operation.account_id, operation.account.initial_balance) + operation.amount 
             operation.balance = balance[operation.account_id]
+            operation.available_funds = balance[operation.account_id] - operation.account.debit_limit
     return operations
 
 

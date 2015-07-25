@@ -436,7 +436,7 @@ def go_one_month_forward():
 @login_required
 def switch_accounts(ids):
     if ids == 'none':
-        session['accounts'] = ['none-existing-id']
+        session['accounts'] = []
     else:
         session['accounts'] = ids.split(',')
     return redirect(session['next'])
