@@ -263,7 +263,8 @@ def operation_list_with_balance(session, account_ids, tags=None,
         balance = accounts_balance(session=session, account_ids=account_ids)
         query = query.order_by(Operation.date.desc(), Operation.order_by.desc()). \
                 limit(last_n_operations)
-        query = query.from_self().order_by(Operation.date, Operation.order_by)
+        query = query.from_self().order_by(Operation.date, Operation.booked.desc(),
+                Operation.order_by)
     else:
         balance = accounts_balance(session=session, account_ids=account_ids,
                 date=(start_date + dateutil.relativedelta.relativedelta(days=-1)))
@@ -271,7 +272,8 @@ def operation_list_with_balance(session, account_ids, tags=None,
             query = query.filter(Operation.date >= start_date)
         if end_date:
             query = query.filter(Operation.date <= end_date)
-        query = query.order_by(Operation.date, Operation.order_by)
+        query = query.order_by(Operation.date, Operation.booked.desc(),
+                Operation.order_by)
     operations = query.all()
     if last_n_operations:
         for operation in reversed(operations):
