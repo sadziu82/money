@@ -128,6 +128,7 @@ def login():
         session['next'] = url_for('login')
     else:
         session['accounts'] = []
+        session['tags'] = []
         today = session['today']
         first_day, last_day = calendar.monthrange(today.year, today.month)
         session['next'] = url_for('index')
@@ -245,6 +246,7 @@ def operation_add():
     api.set_operation_tags(session=g.db_session, operation_id=operation.id,
             tags=request.form.getlist('tags'))
     g.db_session.commit()
+    session['last_used_account_id'] = operation.account_id
     session['current_operation'] = operation.id
     return redirect(session['next'])
 
@@ -261,6 +263,7 @@ def operation_modify(id):
     api.set_operation_tags(session=g.db_session, operation_id=operation.id,
             tags=request.form.getlist('tags'))
     g.db_session.commit()
+    session['last_used_account_id'] = operation.account_id
     session['current_operation'] = operation.id
     return redirect(session['next'])
 
@@ -269,9 +272,9 @@ def operation_modify(id):
 @login_required
 def operation_edit(id):
     try:
-        account_id = session['accounts'][0]
+        account_id = session['last_used_account_id']
         current_account = api.account_get(session=g.db_session, account_id=account_id)
-    except IndexError:
+    except KeyError:
         account_id = None
         current_account = None
     accounts = api.account_list_groupped(session=g.db_session, user_id=g.user.id)
@@ -367,6 +370,26 @@ def transfer_modify(id):
     g.db_session.commit()
     session['current_operation'] = operation_from.id
     return redirect(session['next'])
+
+
+@money.route('/reports', methods=['GET', 'POST'])
+@login_required
+def reports():
+    if request.method == 'POST':
+        session['tags'] = request.form.getlist('tags')
+    accounts = api.account_list_groupped(session=g.db_session, user_id=g.user.id)
+    account_ids = session['accounts']
+    operations = api.operation_list_with_balance(session=g.db_session,
+            account_ids=account_ids,
+            start_date=session['start_date'],
+            end_date=session['end_date'],
+            last_n_operations=session.setdefault('last_n_operations', None),
+            tags=session['tags'])
+    tags = api.tag_list(session=g.db_session)
+    session['next'] = url_for('reports')
+    return render_template('reports.html', accounts=accounts,
+            account_ids=account_ids, operations=operations,
+            tags=tags, selected_tags=session['tags'])
 
 
 @money.route('/go_one_month_back')
@@ -675,8 +698,15 @@ def schedule_transfer():
 @money.route('/schedule/edit/<id>', methods=['GET'])
 @login_required
 def schedule_edit(id):
-    account_id = session['accounts'][0]
-    current_account = api.account_get(session=g.db_session, account_id=account_id)
+    try:
+        account_id = session['last_used_account_id']
+        current_account = api.account_get(session=g.db_session, account_id=account_id)
+    except KeyError:
+        account_id = None
+        current_account = None
+        #accounts = api.account_list(session=g.db_session, user_id=g.user.id)
+        #current_account = accounts[0]
+        #account_id = current_account.id
     accounts = api.account_list_groupped(session=g.db_session, user_id=g.user.id)
     schedule_periods = api.schedule_period_list(session=g.db_session)
     try:
@@ -708,6 +738,7 @@ def schedule_add():
     api.set_schedule_tags(session=g.db_session, schedule_id=schedule.id,
             tags=request.form.getlist('tags'))
     g.db_session.commit()
+    session['last_used_account_id'] = schedule.account_1_id
     session['current_schedule'] = schedule.id
     session['next'] = url_for('schedule_list')
     return redirect(session['next'])
@@ -732,6 +763,7 @@ def schedule_modify(id):
     api.set_schedule_tags(session=g.db_session, schedule_id=schedule.id,
             tags=request.form.getlist('tags'))
     g.db_session.commit()
+    session['last_used_account_id'] = schedule.account_1_id
     session['current_schedule'] = schedule.id
     return redirect(session['next'])
 

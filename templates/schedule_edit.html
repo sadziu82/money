@@ -32,7 +32,7 @@
         {% endif %}
         {% if schedule and schedule.account_1_id == account.id %}
                     <option value="{{ account.id }}" selected>
-        {% elif not schedule and current_account_id == account.id  %}
+        {% elif not schedule and current_account.id == account.id  %}
                     <option value="{{ account.id }}" selected>
         {% else %}
                     <option value="{{ account.id }}">
@@ -62,8 +62,6 @@
                 <optgroup label="{{ accounts[type].account_type_name|join(', ') }}">
         {% endif %}
         {% if schedule and schedule.account_2_id == account.id %}
-                    <option value="{{ account.id }}" selected>
-        {% elif not schedule and current_account_id == account.id %}
                     <option value="{{ account.id }}" selected>
         {% else %}
                     <option value="{{ account.id }}">

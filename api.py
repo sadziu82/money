@@ -257,6 +257,9 @@ def operation_list_with_balance(session, account_ids, tags=None,
         start_date=None, end_date=None,
         last_n_operations=None):
     query = session.query(Operation)
+    if tags is not None:
+        for tag in tags:
+            query = query.join(OperationTag).filter(OperationTag.tag_id == tag)
     if len(account_ids) > 0:
         query = query.filter(Operation.account_id.in_((account_ids)))
     if last_n_operations:
@@ -285,6 +288,10 @@ def operation_list_with_balance(session, account_ids, tags=None,
             balance[operation.account_id] = balance.setdefault(operation.account_id, operation.account.initial_balance) + operation.amount 
             operation.balance = balance[operation.account_id]
             operation.available_funds = balance[operation.account_id] - operation.account.debit_limit
+    balance_report = 0
+    for operation in operations:
+        balance_report = balance_report + operation.amount
+        operation.balance_report = balance_report
     return operations
 
 

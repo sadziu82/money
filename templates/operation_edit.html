@@ -58,7 +58,7 @@
     <div class="mi mi-operation-edit-right-input">
         <input type="date" id="operation-edit-date" name="date"
                class="mi mi-operation-edit-input-field"
-               placeholder="date" required value="{{ operation.date }}">
+               placeholder="date" required value="{{ operation.date|default(session['today']) }}">
         <script type="text/javascript">
             $('#operation-edit-date').datepicker({dateFormat: 'yy-mm-dd'})
         </script>
