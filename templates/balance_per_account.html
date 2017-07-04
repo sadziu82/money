@@ -1,0 +1,62 @@
+{% from "macros.html" import cash_amount %}
+{% extends "authenticated.html" %}
+{% block body %}
+{% include "top_menu.html" %}
+{% include "date_panel.html" %}
+{% include "switch_account_panel.html" %}
+<div class="mi mi-balance-list-container">
+    <div class="mi mi-balance-list-header">
+        <div class="mi mi-balance-list-period">
+            period
+        </div>
+        <div class="mi mi-balance-list-account">
+            account
+        </div>
+        <div class="mi mi-balance-list-tags">
+            expenses
+        </div>
+        <div class="operation-list-description">
+            revenues
+        </div>
+        <div class="mi mi-balance-list-amount">
+            balance
+        </div>
+        <div class="mi mi-balance-list-balance">
+            &nbsp;
+        </div>
+    </div>
+{% for year_month in balance|sort %}
+    {% for type in accounts %}
+        {% for account in accounts[type].accounts %}
+            {% if account.id in balance[year_month] %}
+    <div class="mi mi-balance-list-row">
+        <div class="mi mi-balance-list-period">
+            {{ year_month }}
+        </div>
+        <div class="mi mi-balance-list-account">
+            {{ account.name }}
+        </div>
+        <div class="mi mi-balance-list-tags">
+            {{ cash_amount(balance[year_month][account.id]['monthly_expenses']) }}
+        </div>
+        <div class="operation-list-description">
+            {{ cash_amount(balance[year_month][account.id]['monthly_income']) }}
+        </div>
+        <div class="mi mi-balance-list-amount">
+            {{ cash_amount(balance[year_month][account.id]['monthly_balance']) }}
+        </div>
+        <div class="mi mi-balance-list-balance" title="available funds: {{ balance[year_month][account.id]['total_balance'] - account.debit_limit }}">
+            {{ cash_amount(balance[year_month][account.id]['total_balance']) }}
+        </div>
+    </div>
+            {% endif %}
+        {% endfor %}
+    {% endfor %}
+{% else %}
+    <div class="mi mi-balance-list-empty">
+        no accounts were found
+    </div>
+{% endfor %}
+</div>
+{% endblock %}
+

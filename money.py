@@ -392,6 +392,22 @@ def reports():
             tags=tags, selected_tags=session['tags'])
 
 
+@money.route('/balance', methods=['GET', 'POST'])
+@login_required
+def balance():
+    if request.method == 'POST':
+        session['tags'] = request.form.getlist('tags')
+    accounts = api.account_list_groupped(session=g.db_session, user_id=g.user.id)
+    account_ids = session['accounts']
+    balance = api.account_monthly_balance(session=g.db_session,
+            account_ids=account_ids,
+            start_date=session['start_date'],
+            end_date=session['end_date'])
+    session['next'] = url_for('balance')
+    return render_template('balance.html', accounts=accounts,
+            account_ids=account_ids, balance=balance)
+
+
 @money.route('/go_one_month_back')
 @login_required
 def go_one_month_back():
@@ -667,6 +683,8 @@ def schedule_list():
                         scheduled_balance[s['account_1_id']] = scheduled_balance.setdefault(s['account_1_id'], 0) + s['amount']
             except KeyError:
                 pass
+            if period.months == 0 and period.days == 0:
+                break
     schedule_list.sort(key=lambda s: s['date'])
     if request.method == 'POST':
         for account_type_group in accounts_summary:
@@ -686,6 +704,18 @@ def schedule_list():
 @money.route('/schedule/transfer', methods=['POST'])
 @login_required
 def schedule_transfer():
+    for schedule_id in request.form:
+        max_date = max(request.form.getlist(schedule_id))
+        api.schedule_transfer(session=g.db_session, schedule_id=schedule_id,
+                max_date=max_date)
+        g.logger.info('{}: {}'.format(schedule_id, max_date))
+    g.db_session.commit()
+    return redirect(session['next'])
+
+
+@money.route('/schedule/transfer_next_week', methods=['GET'])
+@login_required
+def schedule_transfer_next_week():
     for schedule_id in request.form:
         max_date = max(request.form.getlist(schedule_id))
         api.schedule_transfer(session=g.db_session, schedule_id=schedule_id,

@@ -1535,7 +1535,7 @@ a.mi-schedule-list-action-link:hover {
 
 div.mi-date-panel-container {
     border: solid 0px;
-    width: 35%;
+    width: 40%;
     float: left;
     text-align: center;
     vertical-align: middle;
@@ -1548,7 +1548,7 @@ div.mi-date-panel-container {
 }
 
 input.mi-date-panel-input {
-    width: 8em;
+    width: 7em;
     text-align: center;
     font-size: 10pt;
     font-weight: bold;
@@ -1592,7 +1592,7 @@ select.mi-last-operations-select {
 
 div.mi-account-select-container {
     border: solid 0px;
-    width: 50%;
+    width: 45%;
     float: left;
     text-align: center;
     margin: 1ex 0px 0px 0px;
@@ -1600,6 +1600,16 @@ div.mi-account-select-container {
     font-size: 12pt;
     overflow: visible;
     height: 4ex;
+}
+
+div.mi-tags-container {
+    border: solid 0px;
+    width: 100%;
+    float: left;
+    text-align: center;
+    margin: 1ex 0px 0px 0px;
+    padding: 1ex 1em 1ex 1em;
+    font-size: 12pt;
 }
 
 .SumoSelect {
@@ -1625,3 +1635,243 @@ div.mi-account-select-container {
     text-align: center;
     vertical-align: center;
 }
+
+div.mi-balance-list-container {
+    border: 0px;
+    width: 100%;
+    margin: 6ex 0px 0px 0px;
+    padding: 0px;
+    font-size: 10pt;
+    overflow: hidden;
+}
+
+div.mi-balance-list-header {
+    color: Gold;
+    background-color: SteelBlue;
+    line-height: 3.5ex;
+    height: 3.5ex;
+    border: 0px;
+}
+
+div.mi-balance-list-section {
+    width: 100%;
+    color: #F7C974;
+    margin: 0.5ex 0px 0px 0px;
+    background-color: #9FB7E3;
+    line-height: 3.5ex;
+    height: 3.5ex;
+    border: 0px;
+    text-align: left;
+    padding-left: 10%;
+    font-style: italic;
+}
+
+div.mi-balance-list-empty {
+    width: 100%;
+    color: Gray;
+    margin: 0.5ex 0px 0px 0px;
+    background-color: Beige;
+    line-height: 3.5ex;
+    height: 3.5ex;
+    border: 0px;
+    text-align: left;
+    padding-left: 10%;
+    font-style: italic;
+}
+
+div.mi-balance-list-row {
+    line-height: 3.5ex;
+    height: 3.5ex;
+    border: 0px;
+}
+
+div.mi-balance-list-row:nth-child(even) {
+    background-color: WhiteSmoke;
+}
+
+div.mi-balance-list-row:nth-child(even):hover {
+    background-color: #dfdfdf;
+}
+
+div.mi-balance-list-row:nth-child(odd) {
+    background-color: Snow;
+}
+
+div.mi-balance-list-row:nth-child(odd):hover {
+    background-color: #dfdfdf;
+}
+
+div.mi-balance-list-delete {
+    width: 3%;
+    min-height: 1px;
+    text-align: center;
+    float: left;
+    border: solid 0px;
+}
+
+img.mi-balance-list-delete {
+    display: inline-block;
+    height: 75%;
+    vertical-align: middle;
+    padding-bottom: 0.5ex;
+}
+
+div.mi-balance-list-edit {
+    width: 3%;
+    min-height: 1px;
+    text-align: center;
+    float: left;
+    border: solid 0px;
+}
+
+img.mi-balance-list-edit {
+    display: inline-block;
+    height: 75%;
+    vertical-align: middle;
+    padding-bottom: 0.5ex;
+}
+
+div.mi-balance-list-booked {
+    width: 3%;
+    min-height: 1px;
+    text-align: center;
+    float: left;
+    border: solid 0px;
+}
+
+img.mi-balance-list-booked {
+    display: inline-block;
+    height: 75%;
+    vertical-align: middle;
+    padding-bottom: 0.5ex;
+}
+
+div.mi-balance-list-period {
+    width: 12%;
+    text-align: center;
+    float: left;
+    border: solid 0px;
+}
+
+div.mi-balance-list-account {
+    width: 14%;
+    text-align: left;
+    float: left;
+    border: solid 0px;
+}
+
+div.mi-balance-list-tags {
+    width: 30%;
+    min-height: 1px;
+    text-align: left;
+    float: left;
+    border: solid 0px;
+}
+
+div.operation-list-description {
+    width: 15%;
+    min-height: 1px;
+    text-align: left;
+    float: left;
+    border: solid 0px;
+}
+
+div.mi-balance-list-amount {
+    width: 12%;
+    text-align: right;
+    float: left;
+    border: solid 0px;
+    padding-right: 1em;
+}
+
+div.mi-balance-list-balance {
+    width: 12%;
+    text-align: right;
+    float: left;
+    padding: 0px;
+    border: solid 0px;
+    padding-right: 1em;
+}
+
+a.mi-balance-list-link {
+    color: Gold;
+    text-decoration: none;
+}
+
+a.mi-balance-list-link:hover {
+    color: Orange;
+}
+
+div.mi-balance-list-header > div.mi-balance-list-tags {
+    text-align: left;
+    padding-left: 1em;
+}
+
+div.mi-balance-list-row > div.mi-balance-list-tags {
+    text-align: left;
+    padding-left: 1em;
+}
+
+div.mi-balance-list-header > div.mi-balance-list-description {
+    text-align: center;
+}
+
+div.mi-balance-list-row > div.mi-balance-list-description {
+    text-align: left;
+    padding-left: 1em;
+}
+
+div.mi-balance-list-summary-row {
+    width: 100%;
+    background-color: Beige;
+    line-height: 3.5ex;
+    height: 3.5ex;
+    border: 0px;
+}
+
+div.mi-balance-list-summary-label {
+    width: 70%;
+    border: 0px;
+    float: left;
+    color: Gray;
+    text-align: right;
+}
+
+div.mi-balance-list-summary-to-date {
+    width: 15%;
+    border: 0px;
+    float: left;
+    text-align: right;
+    padding-right: 1em;
+}
+
+div.mi-balance-list-summary-total {
+    width: 15%;
+    border: 0px;
+    text-align: right;
+    padding-right: 1em;
+}
+
+div.mi-balance-list-action-row {
+    width: 100%;
+    color: Gold;
+    margin: 0.5ex 0px 0px 0px;
+    background-color: SteelBlue;
+    line-height: 3.5ex;
+    height: 3.5ex;
+    border: 0px;
+    text-align: left;
+    padding-left: 10%;
+}
+
+a.mi-balance-list-action-link {
+    color: Gold;
+    text-decoration: none;
+    padding-left: 1em;
+}
+
+a.mi-balance-list-action-link:hover {
+    color: Orange;
+    text-decoration: none;
+}
+

@@ -25,7 +25,7 @@
         {% endif %}
         {% if operation and operation.account_id == account.id %}
                 <option value="{{ account.id }}" selected>
-        {% elif account.id == current_account.id %}
+        {% elif not operation and account.id == current_account.id %}
                 <option value="{{ account.id }}" selected>
         {% else %}
                 <option value="{{ account.id }}">

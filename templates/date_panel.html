@@ -13,7 +13,7 @@
             //showOn: "button",
             //buttonImage: "/static/calendar.png",
             //buttonImageOnly: true,
-            maxDate: '{{ session['start_date']|string }}',
+            maxDate: '{{ session['end_date']|string }}',
             onSelect: function(date_text) {
                 document.location.href = "{{ url_for('start_date', date='') }}" + date_text;
             },

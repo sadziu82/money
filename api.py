@@ -241,15 +241,15 @@ def operation_list(session, account_ids, tags=None,
     if len(account_ids) > 0:
         query = query.filter(Operation.account_id.in_((account_ids)))
     if last_n_operations:
-        query = query.order_by(Operation.date.desc(), Operation.order_by.desc()). \
+        query = query.order_by(Operation.date.desc(), Operation.booked.desc(), Operation.order_by.desc()). \
                 limit(last_n_operations)
-        query = query.from_self().order_by(Operation.date, Operation.order_by)
+        query = query.from_self().order_by(Operation.date, Operation.booked.desc(), Operation.order_by)
     else:
         if start_date:
             query = query.filter(Operation.date >= start_date)
         if end_date:
             query = query.filter(Operation.date <= end_date)
-        query = query.order_by(Operation.date, Operation.order_by)
+        query = query.order_by(Operation.date, Operation.booked, Operation.order_by)
     return query.all()
 
 
@@ -264,10 +264,10 @@ def operation_list_with_balance(session, account_ids, tags=None,
         query = query.filter(Operation.account_id.in_((account_ids)))
     if last_n_operations:
         balance = accounts_balance(session=session, account_ids=account_ids)
-        query = query.order_by(Operation.date.desc(), Operation.order_by.desc()). \
+        query = query.order_by(Operation.date.desc(), Operation.booked, Operation.order_by.desc()). \
                 limit(last_n_operations)
-        query = query.from_self().order_by(Operation.date, Operation.booked.desc(),
-                Operation.order_by)
+        query = query.from_self().order_by(Operation.date,
+                Operation.booked.desc(), Operation.order_by)
     else:
         balance = accounts_balance(session=session, account_ids=account_ids,
                 date=(start_date + dateutil.relativedelta.relativedelta(days=-1)))
@@ -455,3 +455,79 @@ def schedule_list(session, user_id, end_date=None):
 def tag_list(session):
     query = session.query(Tag).order_by(Tag.name)
     return query.all()
+
+
+def account_monthly_balance_per_account(session, account_ids,
+        start_date=None, end_date=None):
+    query = session.query(Operation)
+    if len(account_ids) > 0:
+        query = query.filter(Operation.account_id.in_((account_ids)))
+    initial_balance = accounts_balance(session=session, account_ids=account_ids,
+            date=(start_date + dateutil.relativedelta.relativedelta(days=-1)))
+    if start_date:
+        query = query.filter(Operation.date >= start_date)
+    if end_date:
+        query = query.filter(Operation.date <= end_date)
+    query = query.order_by(Operation.date, Operation.booked.desc(),
+            Operation.order_by)
+    operations = query.all()
+    ##
+    current_balance = accounts_balance(session=session, account_ids=account_ids,
+            date=(start_date + dateutil.relativedelta.relativedelta(days=-1)))
+    balance = {}
+    for operation in operations:
+        year_month = operation.date.strftime('%Y-%m')
+        balance.setdefault(year_month, {})
+        balance[year_month].setdefault(operation.account_id, {
+            'monthly_balance': 0,
+            'total_balance': 0,
+            'monthly_income': 0,
+            'monthly_expenses': 0,
+        })
+        if operation.amount < 0:
+            balance[year_month][operation.account_id]['monthly_expenses'] = balance[year_month][operation.account_id]['monthly_expenses'] + operation.amount 
+        if operation.amount > 0:
+            balance[year_month][operation.account_id]['monthly_income'] = balance[year_month][operation.account_id]['monthly_income'] + operation.amount 
+        balance[year_month][operation.account_id]['monthly_balance'] = balance[year_month][operation.account_id]['monthly_balance'] + operation.amount 
+        balance[year_month][operation.account_id]['total_balance'] = current_balance[operation.account_id] + operation.amount 
+        current_balance[operation.account_id] = balance[year_month][operation.account_id]['total_balance']
+    return balance
+
+
+def account_monthly_balance(session, account_ids,
+        start_date=None, end_date=None):
+    query = session.query(Operation)
+    if len(account_ids) > 0:
+        query = query.filter(Operation.account_id.in_((account_ids)))
+    initial_balance = accounts_balance(session=session, account_ids=account_ids,
+            date=(start_date + dateutil.relativedelta.relativedelta(days=-1)))
+    if start_date:
+        query = query.filter(Operation.date >= start_date)
+    if end_date:
+        query = query.filter(Operation.date <= end_date)
+    query = query.order_by(Operation.date, Operation.booked.desc(),
+            Operation.order_by)
+    operations = query.all()
+    ##
+    current_balance = accounts_balance(session=session, account_ids=account_ids,
+            date=(start_date + dateutil.relativedelta.relativedelta(days=-1)))
+    start_balance = 0
+    for balance in current_balance:
+        start_balance = start_balance + current_balance[balance]
+    balance = {}
+    for operation in operations:
+        year_month = operation.date.strftime('%Y-%m')
+        balance.setdefault(year_month, {
+            'monthly_balance': 0,
+            'total_balance': 0,
+            'monthly_income': 0,
+            'monthly_expenses': 0,
+        })
+        if operation.amount < 0:
+            balance[year_month]['monthly_expenses'] = balance[year_month]['monthly_expenses'] + operation.amount 
+        if operation.amount > 0:
+            balance[year_month]['monthly_income'] = balance[year_month]['monthly_income'] + operation.amount 
+        balance[year_month]['monthly_balance'] = balance[year_month]['monthly_balance'] + operation.amount 
+        balance[year_month]['total_balance'] = start_balance + operation.amount 
+        start_balance = balance[year_month]['total_balance']
+    return balance

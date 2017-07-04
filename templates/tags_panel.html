@@ -1,7 +1,6 @@
 {% block tags_panel %}
 <form id="reports-form" action="{{ url_for('reports') }}" method="POST" class="form-horizontal">
-<div class="mi mi-account-select-container">
-    <div class="mi mi-operation-edit-input">
+<div class="mi mi-tags-container">
         <select id="tags-panel-input" class="mi mi-tags-panel-input" style="display: none;" tabindex="-1" name="tags" multiple="multiple">
 {% for tag in tags -%}
     {% if tag.id in selected_tags %}
@@ -21,7 +20,6 @@
                 $('#reports-form').submit();
             });
         </script>
-    </div>
 </div>
 </form>
 {% endblock %}
