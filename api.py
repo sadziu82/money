@@ -441,6 +441,9 @@ def schedule_transfer(session, schedule_id, max_date):
                     tags=[x.name for x in schedule.tags])
         current_date = current_date + dateutil.relativedelta.relativedelta(
                 months=schedule.schedule_period.months, days=schedule.schedule_period.days)
+        ## break loop if schedule is 'once' only
+        if schedule.start_date == current_date:
+            break
         schedule.start_date = current_date
 
     session.flush()
