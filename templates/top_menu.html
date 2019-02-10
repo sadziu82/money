@@ -1,0 +1,26 @@
+<div class="mi mi-top-menu-container">
+    <div class="mi mi-top-menu-link"></div>
+    <div class="mi mi-top-menu-link">
+        <a class="mi mi-top-menu-link" href='{{ url_for('account_list') }}'>accounts</a>
+    </div>
+    <div class="mi mi-top-menu-link">
+        <a class="mi mi-top-menu-link" href='{{ url_for('operation_list') }}'>operations</a>
+    </div>
+    <div class="mi mi-top-menu-link">
+        <a class="mi mi-top-menu-link" href='{{ url_for('schedule_list') }}'>schedule</a>
+    </div>
+    <div class="mi mi-top-menu-link">
+        <a class="mi mi-top-menu-link" href='{{ url_for('reports') }}'>reports</a>
+    </div>
+    <div class="mi mi-top-menu-link">
+        <a class="mi mi-top-menu-link" href='{{ url_for('balance') }}'>balance</a>
+    </div>
+    <div class="mi mi-top-menu-link"></div>
+    <div class="mi mi-top-menu-link"></div>
+    <div class="mi mi-top-menu-link">
+        <a class="mi mi-top-menu-link" href='{{ url_for('my_account') }}'>my&nbsp;account</a>
+    </div>
+    <div class="mi mi-top-menu-link">
+        <a class="mi mi-top-menu-link" onclick="dialog('{{ url_for("dialog_logout") }}');">logout</a>
+    </div>
+</div>

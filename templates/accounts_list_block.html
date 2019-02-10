@@ -1,0 +1,70 @@
+{% from "macros.html" import cash_amount %}
+{% block accounts_list %}
+<div class="mi mi-account-list-container">
+    <div class="mi mi-account-list-header">
+        <div class="mi mi-account-list-delete">&nbsp;</div>
+        <div class="mi mi-account-list-edit">&nbsp;</div>
+        <div class="mi mi-account-list-name">
+            account name
+        </div>
+        <div class="mi mi-account-list-to-date-balance">
+            to date balance
+        </div>
+        <div class="mi mi-account-list-total-balance">
+            total balance
+        </div>
+    </div>
+{% for type in accounts_summary|sort %}
+    {% for account in accounts_summary[type].accounts|sort(attribute='account_type_order') %}
+        {% if loop.first %}
+    <div class="mi mi-account-list-section">
+        {{ accounts_summary[type].account_type_name|join(', ') }}
+    </div>
+        {% endif %}
+    <div class="mi mi-account-list-row">
+        <div class="mi mi-account-list-delete">
+            <a href="{{ url_for('account_remove', id=account.id) }}">
+                <img class="mi mi-account-list-delete" src="/static/remove.png">
+            </a>
+        </div>
+        <div class="mi mi-account-list-edit">
+            <a onclick="dialog('{{ url_for("account_edit", id=account.id) }}');">
+                <img class="mi mi-account-list-edit" src="/static/edit.png">
+            </a>
+        </div>
+        <div class="mi mi-account-list-name">
+            <a href="{{ url_for('operation_list_account_id', account_id=account.id) }}">
+            {{ account.name  }}
+            </a>
+        </div>
+        <div class="mi mi-account-list-to-date-balance" title="available funds: {{ account.initial_balance + account.end_date_balance - account.debit_limit }} zł">
+             {{ cash_amount(account.initial_balance + account.end_date_balance) }}
+        </div>
+        <div class="mi mi-account-list-total-balance" title="available funds: {{ account.initial_balance + account.total_balance - account.debit_limit }} zł">
+             {{ cash_amount(account.initial_balance + account.total_balance) }}
+        </div>
+    </div>
+        {% if loop.last %}
+    <div class="mi mi-account-list-summary-row">
+        <div class="mi mi-account-list-summary-label">
+            summary
+        </div>
+        <div class="mi mi-account-list-summary-to-date">
+             {{ cash_amount(accounts_summary[type].end_date_balance) }}
+        </div>
+        <div class="mi mi-account-list-summary-total">
+             {{ cash_amount(accounts_summary[type].total_balance) }}
+        </div>
+    </div>
+        {% endif %}
+    {% endfor %}
+{% else %}
+    <div class="mi mi-account-list-empty">
+        no accounts were found
+    </div>
+{% endfor %}
+    <div class="mi mi-account-list-action-row">
+        <a class="mi mi-account-list-action-link" onclick="dialog('{{ url_for("account_edit", id=0) }}');">add new one</a>
+    </div>
+</div>
+{% endblock %}

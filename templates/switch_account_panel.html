@@ -1,0 +1,43 @@
+{% block switch_account %}
+<div class="mi mi-account-select-container">
+    <select id="switch-account-select" multiple="multiple" name="accounts">
+{% for type in accounts|sort %}
+    {% for account in accounts[type].accounts|sort(attribute='account_type_order') %}
+        {% if loop.first %}
+        <optgroup label="{{ accounts[type].account_type_name|join(', ') }}">
+        {% endif %}
+        {% if account.id in account_ids %}
+            <option value="{{ account.id }}" selected>
+        {% else %}
+            <option value="{{ account.id }}">
+        {% endif %}
+                {{ account.name }}
+            </option>
+        {% if loop.last %}
+        </optgroup>
+        {% endif %}
+    {% endfor -%}
+{% endfor -%}
+    </select>
+    <script type="text/javascript">
+        static_values = '{{ account_ids|join(',') }}';
+        $('#switch-account-select').multiselect({
+            selectedList: 4,
+            header: false,
+            height: '50ex',
+            close: function() {
+                values = $('#switch-account-select').map(function() {
+                    return $(this).val();
+                }).get().join(',');
+                if (values != static_values) {
+                    if (values == '') {
+                        values = 'none';
+                    }
+                    url = "{{ url_for('switch_accounts', ids='') }}";
+                    go(url + values);
+                }
+            }
+        });
+    </script>
+</div>
+{% endblock %}

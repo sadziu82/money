@@ -1,0 +1,50 @@
+{% block date_panel %}
+<div class="mi mi-date-panel-container">
+    <a href="{{ url_for('go_one_month_back') }}"><img class="mi mi-date-button" src="/static/left.png" title="one month back"></a>
+    <input type="text" id="date-panel-start" value="{{ session['start_date']|string }}" title="start date" class="mi mi-date-panel-input">
+    <script type="text/javascript">
+        $("#date-panel-start").datepicker({
+            dateFormat: 'yy-mm-dd',
+            defaultDate: '+1w',
+            changeMonth: true,
+            changeYear: true,
+            numberOfMonths: 1,
+            showButtonPanel: true,
+            //showOn: "button",
+            //buttonImage: "/static/calendar.png",
+            //buttonImageOnly: true,
+            maxDate: '{{ session['end_date']|string }}',
+            onSelect: function(date_text) {
+                document.location.href = "{{ url_for('start_date', date='') }}" + date_text;
+            },
+            onClose: function(selectedDate) {
+                $('#date-panel-end').datepicker('option', 'minDate', selectedDate);
+            }
+        })
+    </script>
+    <a href="{{ url_for('current_month') }}"><img class="mi mi-date-button" src="/static/center.png" title="current month"></a>
+    <input type="text" id="date-panel-end" value="{{ session['end_date']|string }}" title="end date" class="mi mi-date-panel-input">
+    <script type="text/javascript">
+        $("#date-panel-end").datepicker({
+            dateFormat: 'yy-mm-dd',
+            defaultDate: '+1w',
+            changeMonth: true,
+            changeYear: true,
+            numberOfMonths: 1,
+            showButtonPanel: true,
+            //showOn: "button",
+            //buttonImage: "/static/calendar.png",
+            //buttonImageOnly: true,
+            minDate: '{{ session['start_date']|string }}',
+            onSelect: function(date_text) {
+                document.location.href = "{{ url_for('end_date', date='') }}" + date_text;
+    
+            },
+            onClose: function(selectedDate) {
+                $('#date-panel-start').datepicker('option', 'maxDate', selectedDate);
+            }
+        })
+    </script>
+    <a href="{{ url_for('go_one_month_forward') }}"><img class="mi mi-date-button" src="/static/right.png" title="one month forward"></a>
+</div>
+{% endblock %}

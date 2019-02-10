@@ -1,0 +1,173 @@
+{% from "macros.html" import cash_amount %}
+{% if schedule == None %}
+<form action="{{ url_for('schedule_add') }}" method="POST" class="form-horizontal">
+{% else %}
+<form action="{{ url_for('schedule_modify', id=schedule.id) }}" method="POST" class="form-horizontal">
+{% endif %}
+<div class="mi mi-schedule-edit-container">
+    <div class="mi mi-schedule-edit-row">
+        <div class="mi mi-schedule-edit-header">
+            {% if schedule == None %}
+            add new schedule
+            {% else %}
+            modify schedule
+            {% endif %}
+        </div>
+        <div class="mi-close-button">
+            <a href="#" onclick="abort_dialog();" class="mi mi-close-button">
+                <img src="/static/close.png" class="mi mi-close-button">
+            </a>
+        </div>
+    </div>
+    <div class="mi mi-schedule-edit-row">
+        <div class="mi mi-schedule-edit-left-label">
+            from
+        </div>
+        <div class="mi mi-schedule-edit-left-input">
+            <select class="mi mi-schedule-edit-input-field" name="account_1_id">
+{% for type in accounts|sort %}
+    {% for account in accounts[type].accounts|sort(attribute='account_type_order') %}
+        {% if loop.first %}
+                <optgroup label="{{ accounts[type].account_type_name|join(', ') }}">
+        {% endif %}
+        {% if schedule and schedule.account_1_id == account.id %}
+                    <option value="{{ account.id }}" selected>
+        {% elif not schedule and current_account.id == account.id  %}
+                    <option value="{{ account.id }}" selected>
+        {% else %}
+                    <option value="{{ account.id }}">
+        {% endif %}
+                        {{ account.name }}
+                    </option>
+        {% if loop.last %}
+                </optgroup>
+        {% endif %}
+    {% endfor -%}
+{% endfor -%}
+            </select>
+        </div>
+        <div class="mi mi-schedule-edit-right-label">
+            to
+        </div>
+        <div class="mi mi-schedule-edit-right-input">
+            <select class="mi mi-schedule-edit-input-field" name="account_2_id">
+{% for type in accounts|sort %}
+    {% if loop.first %}
+                <option value="" selected style="font-style: italic">
+                    external account
+                </option>
+    {% endif %}
+    {% for account in accounts[type].accounts|sort(attribute='account_type_order') %}
+        {% if loop.first %}
+                <optgroup label="{{ accounts[type].account_type_name|join(', ') }}">
+        {% endif %}
+        {% if schedule and schedule.account_2_id == account.id %}
+                    <option value="{{ account.id }}" selected>
+        {% else %}
+                    <option value="{{ account.id }}">
+        {% endif %}
+                        {{ account.name }}
+                    </option>
+        {% if loop.last %}
+                </optgroup>
+        {% endif %}
+    {% endfor -%}
+{% endfor -%}
+            </select>
+        </div>
+    </div>
+    <div class="mi mi-schedule-edit-row">
+        <div class="mi mi-schedule-edit-label">
+            description
+        </div>
+        <div class="mi mi-schedule-edit-input">
+            <textarea class="mi mi-schedule-edit-input-field" name="desc" placeholder="description">{{ schedule.desc }}</textarea>
+        </div>
+    </div>
+    <div class="mi mi-schedule-edit-row">
+        <div class="mi mi-schedule-edit-left-label">
+            start date
+        </div>
+        <div class="mi mi-schedule-edit-left-input">
+            <input type="date" id="schedule-edit-start-date" name="start_date"
+                class="mi mi-schedule-edit-input-field"
+                placeholder="start date" required value="{{ schedule.start_date }}">
+            <script type="text/javascript">
+                $('#schedule-edit-start-date').datepicker({dateFormat: 'yy-mm-dd'})
+            </script>
+        </div>
+        <div class="mi mi-schedule-edit-right-label">
+            period
+        </div>
+        <div class="mi mi-schedule-edit-right-input">
+            <select class="mi mi-schedule-edit-input-field" name="schedule_period_id">
+{% for period in schedule_periods %}
+        {% if schedule and schedule.schedule_period_id == period.id %}
+                <option value="{{ period.id }}" selected>
+        {% else %}
+                <option value="{{ period.id }}">
+        {% endif %}
+                    {{ period.name }}
+                </option>
+{% endfor -%}
+            </select>
+        </div>
+    </div>
+    <div class="mi mi-schedule-edit-row">
+        <div class="mi mi-schedule-edit-left-label">
+            end date
+        </div>
+        <div class="mi mi-schedule-edit-left-input">
+            <input type="date" id="schedule-edit-end-date" name="end_date"
+                class="mi mi-schedule-edit-input-field"
+                placeholder="end date" value="{{ schedule.end_date or '' }}">
+            <script type="text/javascript">
+                $('#schedule-edit-end-date').datepicker({dateFormat: 'yy-mm-dd'})
+            </script>
+        </div>
+        <div class="mi mi-schedule-edit-right-label">
+            amount
+        </div>
+        <div class="mi mi-schedule-edit-right-input">
+            <input type="number" step="0.01" type="^\d+(\.|\,)\d{2}$" class="mi mi-schedule-edit-input-field" name="amount"
+                placeholder="amount" required value="{{ schedule.amount|default(0.00) }}">
+        </div>
+    </div>
+    <div class="mi mi-schedule-edit-row">
+        <div class="mi mi-schedule-edit-label">
+            tags
+        </div>
+        <div class="mi mi-schedule-edit-input">
+            <select id="schedule-edit-input-tags" class="mi mi-schedule-edit-input-tags" style="display: none;" tabindex="-1" name="tags" multiple="multiple">
+{% for tag in tags -%}
+    {% if tag.id in schedule.tags|map(attribute='id') %}
+                <option selected>{{ tag.name }}</option>
+    {% else %}
+                <option>{{ tag.name }}</option>
+    {% endif %}
+{% endfor -%}
+            </select>
+            <script type="text/javascript">
+                $("#schedule-edit-input-tags").select2({
+                    tags: true,
+                    multipleWidth: 55,
+                    width: '100%',
+                })
+            </script>
+        </div>
+    </div>
+    <div class="mi mi-schedule-edit-row">
+    </div>
+    <div class="mi mi-schedule-edit-row">
+        <button type="submit" class="mi mi-schedule-edit-submit-button">
+        {% if schedule == None %}
+            add schedule
+        {% else %}
+            update schedule
+        {% endif %}
+        </button>
+    </div>
+    <div class="mi mi-schedule-edit-row">
+    </div>
+</div>
+</form>

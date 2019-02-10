@@ -1,0 +1,28 @@
+{% block last_n %}
+<div class="mi mi-last-operations-container">
+    <select class="mi mi-last-operations-select" id="last-n-operations" name="last_n_operations">
+{% if not session['last_n_operations'] -%}
+        <option style='font-style: italic;' value="0" selected>
+{% else %}
+        <option style='font-style: italic;' value="0">
+{% endif %}
+            by date
+{% for n in [8, 21, 31, 64, 128, 1024] %}
+    {% if session['last_n_operations'] and n == session['last_n_operations']|int -%}
+        <option value="{{ n }}" selected>
+    {% else %}
+        <option value="{{ n }}">
+    {% endif %}
+            {{ n }} last operations
+        </option>
+{% endfor -%}
+    </select>
+    <script type="text/javascript">
+        $('#last-n-operations').on('change', function() {
+            url = "{{ url_for('last_n_operations', n=0) }}";
+            url = url.replace(/\/0$/, '/' + this.value);
+            go(url);
+        });
+    </script>
+</div>
+{% endblock %}

@@ -1,0 +1,68 @@
+{% extends "authenticated.html" %}
+{% block body %}
+<form action=" url_for('schedule_save', id=d|default(0)) }}" method="POST" class="form-horizontal">
+<table class="main-list">
+    <thead>
+    <tr>
+        <th width="3%">
+        <th width="3%">
+        <th width="3%">
+        <th width="11%">
+            account
+        <th width="11%">
+            date
+        <th width="36%">
+            tags
+        <th width="16%">
+            description
+        <th width="14%">
+            amount
+    </thead>
+    <tbody>
+{% for schedule in schedule_list %}
+    <tr>
+        <td class="align-center">
+            <p><a href=" url_for('schedule_remove', id=schedule.id) }}"><img height="20px" src="/static/remove.png"></a></p>
+        <td class="align-center">
+            <p><a href="#modal_box" onclick="dialog(' url_for("ajax_schedule_edit", id=schedule.id) }}');"><img height="20px" src="/static/edit.png"></a></p>
+        <td class="align-center">
+            <p><input type="checkbox" name="selected_schedule" class="selected_schedule checkbox- schedule.id }}" value="{{ schedule.id }}" onchange="new_state = this.checked; $('.checkbox-{{ schedule.id }}').each(function(){ this.checked = new_state });"></p>
+        <td class="align-center">
+            <p>{{ schedule.a1_name }}</p>
+            {% if schedule.a1 != schedule.a2 %}
+            <p>{{ schedule.a2_name }}</p>
+            {% endif %}
+        <td class="align-center">
+            <p>{{ schedule.start_date }}</p>
+        <td>
+            <p>{{ schedule.tags }}</p>
+        <td>
+            <p>{{ schedule.desc }}</p>
+        <td class="align-right money">
+            {{ cash_amount(schedule.amount) }}
+{% else %}
+    <tr>
+        <td colspan=8>
+            <p>no schedules were found</p>
+{% endfor %}
+    <tr>
+        <td colspan=3>
+            <p>
+                <a href="#modal_box" onclick="dialog(' url_for("ajax_schedule_edit", id=0) }}');">add new one</a>
+            </p>
+        <td colspan=2>
+            <p>
+                <a href="#" onclick="new_state = $('.selected_schedule').prop('checked'); $('.selected_schedule').each(function(){ this.checked = ! new_state; }); return false;">toggle all</a>
+            </p>
+        <td colspan=1>
+            <p>
+                <a href="#" onclick="new_state = $('.selected_schedule').prop('checked'); $('.selected_schedule').each(function(){ this.checked = ! new_state; }); return false;">verify selected</a>
+            </p>
+        <td colspan=2>
+            <p>
+                <a href="#modal_box" onclick="dialog(' url_for("ajax_schedule_transfer", id=0) }}');">transfer selected schedules</a>
+            </p>
+    </tbody>
+</table>
+</form>
+{% endblock %}

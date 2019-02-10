@@ -1,0 +1,111 @@
+{% from "macros.html" import cash_amount %}
+{% extends "authenticated.html" %}
+{% block body %}
+{% include "top_menu.html" %}
+{% include "date_panel.html" %}
+<div class="mi mi-schedule-list-container">
+<form id="schedule-form" action="{{ url_for('schedule_list') }}" method="POST" class="form-horizontal">
+    <div class="mi mi-schedule-list-header">
+        <div class="mi mi-schedule-list-delete"></div>
+        <div class="mi mi-schedule-list-edit"></div>
+        <div class="mi mi-schedule-list-booked">
+            <input type="checkbox" id="select-all">
+            <script type="text/javascript">
+                $('#select-all').click(function (event) {
+                    check_state = this.checked;
+                    $(':checkbox').each(function() {
+                        this.checked = check_state;
+                    });
+                });
+            </script>
+        </div>
+        <div class="mi mi-schedule-list-date">
+            date
+        </div>
+        <div class="mi mi-schedule-list-account">
+            account
+        </div>
+        <div class="mi mi-schedule-list-tags">
+            tags
+        </div>
+        <div class="schedule-list-description">
+            {% if account_ids|length == 1 %}
+            description
+            {% else %}
+            account
+            {% endif %}
+        </div>
+        <div class="mi mi-schedule-list-amount">
+            amount
+        </div>
+        <div class="mi mi-schedule-list-balance">
+            balance
+        </div>
+    </div>
+{% for schedule in schedule_list %}
+    <div class="mi mi-schedule-list-row">
+        <div class="mi mi-schedule-list-delete">
+            <a href="{{ url_for('schedule_remove', schedule_id=schedule.id) }}">
+                <img class="mi mi-schedule-list-delete" src="/static/remove.png">
+            </a>
+        </div>
+        <div class="mi mi-schedule-list-edit">
+            <a onclick="dialog('{{ url_for("schedule_edit", id=schedule.id) }}');">
+                <img class="mi mi-schedule-list-edit" src="/static/edit.png">
+            </a>
+        </div>
+        <div class="mi mi-schedule-list-booked">
+            <input type="checkbox" id="{{ schedule.id }}-{{ schedule.date }}" name="{{ schedule.id }}" value="{{ schedule.date }}"{{ schedule.checked }}>
+            <script type="text/javascript">
+                $('#{{ schedule.id }}-{{ schedule.date }}').click(function (event) {
+                    check_state = this.checked;
+                    $('[id^={{ schedule.id }}]').each(function() {
+                        this.checked = check_state;
+                    });
+                });
+            </script>
+        </div>
+        <div class="mi mi-schedule-list-date">
+            {{ schedule.date }}
+        </div>
+        <div class="mi mi-schedule-list-account" title="{{ schedule.account_1_name }}{% if schedule.account_2_name -%}&nbsp;({{ schedule.account_2_name }}){% endif -%}">
+            {{ schedule.account_1_name }}
+            {% if schedule.account_2_name -%}
+                ({{ schedule.account_2_name }})
+            {% endif -%}
+        </div>
+        <div class="mi mi-schedule-list-tags" title="{{ schedule.tags|map(attribute='name')|sort|join(', ') }}">
+            {{ schedule.tags|map(attribute='name')|sort|join(', ')|truncate(50, True) }}
+        </div>
+        <div class="schedule-list-description" title="{{ schedule.desc }}">
+            {{ schedule.desc|truncate(30, True) }}
+        </div>
+        <div class="mi mi-schedule-list-amount">
+            {{ cash_amount(schedule.amount) }}
+        </div>
+    </div>
+{% else %}
+    <div class="mi mi-schedule-list-empty">
+        no schedules were found
+    </div>
+{% endfor %}
+    <div class="mi mi-schedule-list-action-row">
+        <a class="mi mi-schedule-list-action-link" onclick="dialog('{{ url_for("schedule_edit", id=0) }}');">new schedule</a>
+        <a class="mi mi-schedule-list-action-link" onclick="$('#schedule-form').submit();">show simulation</a>
+        <script type="text/javascript">
+function transfer_schedule() {
+    if (confirm("Continue with transfering operations?")) {
+        form = $('#schedule-form')
+        form.attr('action', "{{ url_for('schedule_transfer') }}");
+        form.submit();
+    }
+}
+        </script>
+        <a class="mi mi-schedule-list-action-link" onclick="transfer_schedule();">transfer schedule</a>
+    </div>
+</form>
+</div>
+{% if request.method == 'POST' -%}
+{% include "accounts_list_block.html" %}
+{% endif -%}
+{% endblock %}
