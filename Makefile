@@ -1,5 +1,7 @@
 all:
 
+test: tests
+
 tests:
 	python -m pytest -vvs --cov=money --cov-report=term-missing --disable-warnings
 
