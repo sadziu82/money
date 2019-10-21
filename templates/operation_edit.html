@@ -1,0 +1,97 @@
+{% from "macros.html" import cash_amount %}
+{% if operation == None %}
+<form action="{{ url_for('operation_add') }}" method="POST" class="form-horizontal">
+{% else %}
+<form action="{{ url_for('operation_modify', id=operation.id) }}" method="POST" class="form-horizontal">
+{% endif %}
+<div class="mi mi-operation-edit-container">
+    <div class="mi mi-operation-edit-header">
+        {% if operation == None %}
+        add new operation
+        {% else %}
+        modify operation
+        {% endif %}
+        <a href="#" onclick="abort_dialog();">x</a>
+    </div>
+    <div class="mi mi-operation-edit-label">
+        account
+    </div>
+    <div class="mi mi-operation-edit-input">
+        <select class="mi mi-operation-edit-input-field" name="account_id">
+{% for type in accounts|sort %}
+    {% for account in accounts[type].accounts|sort(attribute='account_type_order') %}
+        {% if loop.first %}
+            <optgroup label="{{ accounts[type].account_type_name|join(', ') }}">
+        {% endif %}
+        {% if operation and operation.account_id == account.id %}
+                <option value="{{ account.id }}" selected>
+        {% elif not operation and account.id == current_account.id %}
+                <option value="{{ account.id }}" selected>
+        {% else %}
+                <option value="{{ account.id }}">
+        {% endif %}
+                    {{ account.name }}
+                </option>
+        {% if loop.last %}
+            </optgroup>
+        {% endif %}
+    {% endfor -%}
+{% endfor -%}
+        </select>
+    </div>
+    <div class="mi mi-operation-edit-label">
+        description
+    </div>
+    <div class="mi mi-operation-edit-input">
+        <textarea class="mi mi-operation-edit-input-field" name="description" placeholder="description">{{ operation.description }}</textarea>
+    </div>
+    <div class="mi mi-operation-edit-left-label">
+        amount
+    </div>
+    <div class="mi mi-operation-edit-left-input">
+        <input type="number" step="0.01" type="^\d+(\.|\,)\d{2}$" class="mi mi-operation-edit-input-field" name="amount"
+               placeholder="amount" required value="{{ operation.amount|default(0.00) }}">
+    </div>
+    <div class="mi mi-operation-edit-right-label">
+        date
+    </div>
+    <div class="mi mi-operation-edit-right-input">
+        <input type="date" id="operation-edit-date" name="date"
+               class="mi mi-operation-edit-input-field"
+               placeholder="date" required value="{{ operation.date|default(session['today']) }}">
+        <script type="text/javascript">
+            $('#operation-edit-date').datepicker({dateFormat: 'yy-mm-dd'})
+        </script>
+    </div>
+    <div class="mi mi-operation-edit-label">
+        tags
+    </div>
+    <div class="mi mi-operation-edit-input">
+        <select id="operation-edit-input-tags" class="mi mi-operation-edit-input-tags" style="display: none;" tabindex="-1" name="tags" multiple="multiple">
+{% for tag in tags -%}
+    {% if tag.id in operation.tags|map(attribute='id') %}
+            <option selected> {{ tag.name }}</option>
+    {% else %}
+            <option> {{ tag.name }}</option>
+    {% endif %}
+{% endfor -%}
+        </select>
+        <script type="text/javascript">
+            $("#operation-edit-input-tags").select2({
+                tags: true,
+                multipleWidth: 55,
+                width: '100%',
+            })
+        </script>
+    </div>
+    <div class="mi mi-operation-edit-submit">
+        <button type="submit" class="mi mi-operation-edit-submit-button">
+        {% if operation == None %}
+        add operation
+        {% else %}
+        update operation
+        {% endif %}
+        </button>
+    </div>
+</div>
+</form>

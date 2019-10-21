@@ -1,0 +1,104 @@
+{% from "macros.html" import cash_amount %}
+{% extends "authenticated.html" %}
+{% block body %}
+{% include "top_menu.html" %}
+{% include "date_panel.html" %}
+{% include "last_n_panel.html" %}
+{% include "switch_account_panel.html" %}
+<div class="mi mi-operation-list-container">
+    <div class="mi mi-operation-list-header">
+        <div class="mi mi-operation-list-delete"></div>
+        <div class="mi mi-operation-list-edit"></div>
+        <div class="mi mi-operation-list-booked"></div>
+        <div class="mi mi-operation-list-date">
+            date
+        </div>
+        <div class="mi mi-operation-list-account">
+            account
+        </div>
+        <div class="mi mi-operation-list-tags">
+            tags
+        </div>
+        <div class="operation-list-description">
+            {% if account_ids|length == 1 %}
+            description
+            {% else %}
+            account
+            {% endif %}
+        </div>
+        <div class="mi mi-operation-list-amount">
+            amount
+        </div>
+        <div class="mi mi-operation-list-balance">
+            balance
+        </div>
+    </div>
+{% for operation in operations %}
+    <div class="mi mi-operation-list-row">
+        <div class="mi mi-operation-list-delete">
+            {% if operation.transfer_id -%}
+            <a href="{{ url_for('transfer_remove', transfer_id=operation.transfer_id) }}">
+                <img class="mi mi-operation-list-delete" src="/static/remove.png">
+            </a>
+            {% else -%}
+            <a href="{{ url_for('operation_remove', operation_id=operation.id) }}">
+                <img class="mi mi-operation-list-delete" src="/static/remove.png">
+            </a>
+            {% endif -%}
+        </div>
+        <div class="mi mi-operation-list-edit">
+            {% if operation.transfer_id -%}
+            <a onclick="dialog('{{ url_for("transfer_edit", id=operation.transfer_id) }}');">
+                <img class="mi mi-operation-list-edit" src="/static/edit.png">
+            </a>
+            {% else -%}
+            <a onclick="dialog('{{ url_for("operation_edit", id=operation.id) }}');">
+                <img class="mi mi-operation-list-edit" src="/static/edit.png">
+            </a>
+            {% endif -%}
+        </div>
+        <div class="mi mi-operation-list-booked">
+            <a href="{{ url_for('operation_toggle_booked', operation_id=operation.id) }}">
+                {% if operation.booked %}
+                <img class="mi mi-operation-list-booked" src="/static/booked.png">
+                {% else %}
+                <img class="mi mi-operation-list-booked" src="/static/scheduled.png">
+                {% endif %}
+            </a>
+        </div>
+        <div class="mi mi-operation-list-date">
+            {{ operation.date }}
+        </div>
+        <div class="mi mi-operation-list-account">
+            {% for type in accounts %}
+                {% for account in accounts[type].accounts %}
+                    {% if account.id == operation.account_id %}
+                        {{ account.name }}
+                    {% endif %}
+                {% endfor %}
+            {% endfor %}
+        </div>
+        <div class="mi mi-operation-list-tags" title="{{ operation.tags|map(attribute='name')|sort|join(', ') }}">
+            {{ operation.tags|map(attribute='name')|sort|join(', ')|truncate(50, True) }}
+        </div>
+        <div class="operation-list-description" title="{{ operation.description }}">
+            {{ operation.description|truncate(30, True) }}
+        </div>
+        <div class="mi mi-operation-list-amount">
+            {{ cash_amount(operation.amount) }}
+        </div>
+        <div class="mi mi-operation-list-balance" title="available funds: {{ operation.available_funds }}">
+            {{ cash_amount(operation.balance) }}
+        </div>
+    </div>
+{% else %}
+    <div class="mi mi-operation-list-empty">
+        no operations were found
+    </div>
+{% endfor %}
+    <div class="mi mi-operation-list-action-row">
+        <a class="mi mi-operation-list-action-link" onclick="dialog('{{ url_for("operation_edit", id=0) }}');">new operation</a>
+        <a class="mi mi-operation-list-action-link" onclick="dialog('{{ url_for("transfer_edit", id=0) }}');">new transfer</a>
+    </div>
+</div>
+{% endblock %}

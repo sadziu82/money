@@ -1,0 +1,64 @@
+{% if account == None %}
+<form action="{{ url_for('account_add') }}" method="POST" class="form-horizontal">
+{% else %}
+<form action="{{ url_for('account_modify', id=account.id) }}" method="POST" class="form-horizontal">
+{% endif %}
+<div class="mi mi-account-edit-panel-container">
+    <div class="mi mi-account-edit-panel-header">
+        {% if account == None %}
+        add new account
+        {% else %}
+        modify account
+        {% endif %}
+        <a href="#" onclick="shortcut.remove('Escape');">x</a>
+    </div>
+    <div class="mi mi-account-edit-panel-label">
+        name
+    </div>
+    <div class="mi mi-account-edit-panel-input">
+        <input type="text" class="mi mi-account-edit-panel-input-field" name="name"
+               placeholder="name" required value="{{ account.name }}">
+    </div>
+    <div class="mi mi-account-edit-panel-label">
+        type
+    </div>
+    <div class="mi mi-account-edit-panel-input">
+        <select class="mi mi-account-edit-panel-input-field" name="account_type_id">
+{% for type in account_type_list -%}
+    {% if type.id == account.account_type_id %}
+            <option value="{{ type.id }}" selected>
+    {% elif not account and loop.first %}
+            <option value="{{ type.id }}" selected>
+    {% else %}
+            <option value="{{ type.id }}">
+    {% endif %}
+                {{ type.name }}
+            </option>
+{% endfor -%}
+        </select>
+    </div>
+    <div class="mi mi-account-edit-panel-label">
+        initial balance
+    </div>
+    <div class="mi mi-account-edit-panel-input">
+        <input type="text" class="mi mi-account-edit-panel-input-field" name="initial_balance"
+               placeholder="initial balance" required value="{{ account.initial_balance }}">
+    </div>
+    <div class="mi mi-account-edit-panel-label">
+        debit limit
+    </div>
+    <div class="mi mi-account-edit-panel-input">
+        <input type="text" class="mi mi-account-edit-panel-input-field" name="debit_limit"
+               placeholder="debit limit" required value="{{ account.debit_limit }}">
+    </div>
+    <div class="mi mi-account-edit-panel-submit">
+        <button type="submit" class="mi mi-account-edit-panel-submit-button">
+        {% if account == None %}
+        add account
+        {% else %}
+        update account
+        {% endif %}
+        </button>
+    </div>
+</div>
+</form>

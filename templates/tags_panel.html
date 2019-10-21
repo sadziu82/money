@@ -1,0 +1,25 @@
+{% block tags_panel %}
+<form id="reports-form" action="{{ url_for('reports') }}" method="POST" class="form-horizontal">
+<div class="mi mi-tags-container">
+        <select id="tags-panel-input" class="mi mi-tags-panel-input" style="display: none;" tabindex="-1" name="tags" multiple="multiple">
+{% for tag in tags -%}
+    {% if tag.id in selected_tags %}
+            <option value="{{ tag.id }}" selected> {{ tag.name }}</option>
+    {% else %}
+            <option value="{{ tag.id }}"> {{ tag.name }}</option>
+    {% endif %}
+{% endfor -%}
+        </select>
+        <script type="text/javascript">
+            $("#tags-panel-input").select2({
+                tags: false,
+                multipleWidth: 155,
+                width: '100%',
+            });
+            $("#tags-panel-input").on("change", function () {
+                $('#reports-form').submit();
+            });
+        </script>
+</div>
+</form>
+{% endblock %}

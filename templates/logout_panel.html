@@ -1,0 +1,11 @@
+<div class="mi mi-logout-panel-container">
+    <div class="mi mi-logout-panel-header">
+        sign out?
+    </div>
+    <div class="mi mi-logout-panel-cancel">
+        <button class="mi mi-logout-panel-cancel-button" onclick="abort_dialog();">cancel</button>
+    </div>
+    <div class="mi mi-logout-panel-logout">
+        <button class="mi mi-logout-panel-logout-button" onclick="go('{{ url_for('logout') }}');">logout</button>
+    </div>
+</div>

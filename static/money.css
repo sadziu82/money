@@ -1,0 +1,1877 @@
+@import 'http://fonts.googleapis.com/css?family=Montserrat:300,400,700';
+
+.ui-widget-content {
+    background: LightGray;
+	border: 1px solid Gray;
+    font-size: 10pt;
+    font-weight: bold;
+}
+
+.ui-state-default {
+    background: LightGray;
+    color: DarkSlateBlue;
+    font-size: 10pt;
+    padding: 0.5ex 1em;
+	border: 1px solid Gray;
+}
+
+.ui-state-hover {
+    background: LightGray;
+	border: 1px solid Gray;
+}
+
+/* Corner radius */
+.ui-corner-all {
+	border-radius: 4px;
+}
+
+/* date picker overrides */
+.ui-datepicker-trigger {
+    width: 24px;
+}
+
+.ui-multiselect-menu {
+    width: 45%;
+}
+
+.ui-multiselect-optgroup-label {
+    margin-bottom: 3px;
+}
+
+
+input[type='number'] {
+    -moz-appearance:textfield;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+}
+
+body.mi {
+    padding: 1ex;
+    margin: 0px;
+    font-family: Montserrat, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    color: #444;
+    background: Gainsboro;
+    overflow: scroll;
+}
+
+div.mi {
+    box-sizing: border-box;
+    border: solid black 1px;
+    padding: 0px 0px 0px 0px;
+    overflow: hidden;
+}
+
+div.mi-page-header {
+    width: 100%;
+    text-align: center;
+}
+
+.mi-close-button {
+    width: 20px;
+    float: left;
+    position: relative;
+    border: 0px black solid;
+}
+
+div.mi-login-panel-container {
+    color: DarkSlateBlue;
+    background-color: Silver;
+    border: solid 1px DarkGray;
+    min-width: 400px;
+    max-width: 600px;
+    margin: auto;
+    padding: auto;
+    border-radius: 2ex;
+    overflow: hidden;
+}
+
+div.mi-login-panel-header {
+    padding: 3ex 0px 0px 0px;
+    font-size: 20pt;
+    border: 0px;
+    text-align: center;
+}
+
+div.mi-login-panel-username-label {
+    width: 30%;
+    text-align: right;
+    font-size: 14pt;
+    float: left;
+    padding: 3ex 1em 0px 0px;
+    background-color: inherit;
+    border: 0px;
+}
+
+div.mi-login-panel-username-input {
+    width: 70%;
+    text-align: left;
+    font-size: 14pt;
+    float: left;
+    padding: 3ex 0px 0px 1em;
+    border: 0px;
+}
+
+input.mi-login-panel-username-input-field {
+    width: 80%;
+    text-align: left;
+    font-size: 14pt;
+    float: left;
+    padding: 0px 0px 0px 0.5em;
+    margin: 0px 0px 0px 0px;
+    border: solid 1px DarkGray;
+    border-radius: 0.5ex;
+    color: DarkSlateBlue;
+    background-color: LightGray;
+}
+
+div.mi-login-panel-password-label {
+    width: 30%;
+    text-align: right;
+    font-size: 14pt;
+    float: left;
+    padding: 1ex 1em 0px 0px;
+    border: 0px;
+}
+
+div.mi-login-panel-password-input {
+    width: 70%;
+    text-align: left;
+    font-size: 14pt;
+    float: left;
+    padding: 1ex 0px 0px 1em;
+    border: 0px;
+}
+
+input.mi-login-panel-password-input-field {
+    width: 80%;
+    text-align: left;
+    font-size: 14pt;
+    padding: 0px 0px 0px 0.5em;
+    border: solid 1px DarkGray;
+    border-radius: 0.5ex;
+    color: DarkSlateBlue;
+    background-color: LightGray;
+}
+
+div.mi-login-panel-submit {
+    width: 100%;
+    text-align: center;
+    font-size: 14pt;
+    padding: 3ex 0px 1ex 0px;
+    border: 0px;
+}
+
+button.mi-login-panel-submit-button {
+    min-width: 400px;
+    max-width: 600px;
+    font-size: 14pt;
+    margin-top: 3ex;
+    padding: 0px 0px 0px 0.5em;
+    border: solid 1px DarkGray;
+    border-radius: 0.5ex;
+    color: DarkSlateBlue;
+    background-color: LightGray;
+}
+
+div.mi-logout-panel-container {
+    color: DarkSlateBlue;
+    background-color: Silver;
+    border: solid 1px DarkGray;
+    min-width: 300px;
+    max-width: 500px;
+    margin: auto;
+    margin-top: 10ex;
+    padding: auto;
+    border-radius: 2ex;
+    overflow: hidden;
+}
+
+div.mi-logout-panel-header {
+    width: 100%;
+    padding: 3ex 0px 0px 0px;
+    font-size: 20pt;
+    border: 0px;
+    text-align: center;
+}
+
+div.mi-logout-panel-logout {
+    width: 50%;
+    text-align: center;
+    font-size: 14pt;
+    padding: 4ex 3em 4ex 1em;
+    border: 0px;
+    float: left;
+}
+
+button.mi-logout-panel-logout-button {
+    min-width: 175px;
+    font-size: 14pt;
+    padding: 0px 1em 0px 1em;
+    border: solid 1px DarkGray;
+    border-radius: 0.5ex;
+    color: DarkSlateBlue;
+    background-color: LightGray;
+    float: left;
+}
+
+div.mi-logout-panel-cancel {
+    width: 50%;
+    text-align: center;
+    font-size: 14pt;
+    float: left;
+    padding: 4ex 1em 4ex 3em;
+    border: 0px;
+}
+
+button.mi-logout-panel-cancel-button {
+    min-width: 175px;
+    font-size: 14pt;
+    padding: 0px 1em 0px 1em;
+    float: left;
+    border: solid 1px DarkGray;
+    border-radius: 0.5ex;
+    color: DarkSlateBlue;
+    background-color: LightGray;
+}
+
+div.mi-top-menu-container {
+    background-color: DarkSlateBlue;
+    border: 0px;
+    width: 100%;
+    margin: auto;
+    padding: auto;
+    overflow: hidden;
+}
+
+div.mi-top-menu-link {
+    width: 10%;
+    text-align: center;
+    float: left;
+    font-size: 10pt;
+    padding: 0.5ex 1em 1ex 1em;
+    border: 0px;
+}
+
+a.mi-top-menu-link {
+    color: Gold;
+    text-decoration: none;
+}
+
+a.mi-top-menu-link:hover {
+    color: Orange;
+}
+
+a:hover {
+    cursor: pointer;
+}
+
+div.mi-account-list-container {
+    border: 0px;
+    width: 100%;
+    margin: 1ex 0px 0px 0px;
+    padding: 0px;
+    font-size: 10pt;
+    overflow: hidden;
+}
+
+div.mi-account-list-header {
+    color: Gold;
+    background-color: SteelBlue;
+    line-height: 3.5ex;
+    height: 3.5ex;
+    border: 0px;
+}
+
+div.mi-account-list-section {
+    width: 100%;
+    color: #F7C974;
+    margin: 0.5ex 0px 0px 0px;
+    background-color: #9FB7E3;
+    line-height: 3.5ex;
+    height: 3.5ex;
+    border: 0px;
+    text-align: left;
+    padding-left: 10%;
+    font-style: italic;
+}
+
+div.mi-account-list-empty {
+    width: 100%;
+    color: Gray;
+    margin: 0.5ex 0px 0px 0px;
+    background-color: Beige;
+    line-height: 3.5ex;
+    height: 3.5ex;
+    border: 0px;
+    text-align: left;
+    padding-left: 10%;
+    font-style: italic;
+}
+
+div.mi-account-list-row {
+    line-height: 3.5ex;
+    height: 3.5ex;
+    border: 0px;
+}
+
+div.mi-account-list-row:nth-child(even) {
+    background-color: WhiteSmoke;
+}
+
+div.mi-account-list-row:nth-child(even):hover {
+    background-color: #dfdfdf;
+}
+
+div.mi-account-list-row:nth-child(odd) {
+    background-color: Snow;
+}
+
+div.mi-account-list-row:nth-child(odd):hover {
+    background-color: #dfdfdf;
+}
+
+div.mi-account-list-delete {
+    width: 5%;
+    text-align: center;
+    float: left;
+    border: solid 0px;
+}
+
+img.mi-account-list-delete {
+    display: inline-block;
+    height: 75%;
+    vertical-align: middle;
+    padding-bottom: 0.5ex;
+}
+
+div.mi-account-list-edit {
+    width: 5%;
+    text-align: center;
+    float: left;
+    border: solid 0px;
+}
+
+img.mi-account-list-edit {
+    display: inline-block;
+    height: 75%;
+    vertical-align: middle;
+    padding-bottom: 0.5ex;
+}
+
+div.mi-account-list-name {
+    width: 60%;
+    text-align: Left;
+    float: left;
+    border: solid 0px;
+}
+
+div.mi-account-list-to-date-balance {
+    width: 15%;
+    text-align: center;
+    float: left;
+    padding: 0px;
+    border: solid 0px;
+}
+
+div.mi-account-list-total-balance {
+    width: 15%;
+    float: left;
+    padding: 0px;
+    border: solid 0px;
+}
+
+a.mi-account-list-link {
+    color: Gold;
+    text-decoration: none;
+}
+
+a.mi-account-list-link:hover {
+    color: Orange;
+}
+
+div.mi-account-list-header > div.mi-account-list-name {
+    text-align: left;
+    padding-left: 5%;
+}
+
+div.mi-account-list-row > div.mi-account-list-name {
+    text-align: left;
+    padding-left: 5%;
+}
+
+div.mi-account-list-header > div.mi-account-list-to-date-balance {
+    text-align: right;
+    padding-right: 1em;
+}
+
+div.mi-account-list-row > div.mi-account-list-to-date-balance {
+    text-align: right;
+    padding-right: 1em;
+}
+
+div.mi-account-list-header > div.mi-account-list-total-balance {
+    text-align: right;
+    padding-right: 1em;
+}
+
+div.mi-account-list-row > div.mi-account-list-total-balance {
+    text-align: right;
+    padding-right: 1em;
+}
+
+div.mi-account-list-summary-row {
+    width: 100%;
+    background-color: Beige;
+    line-height: 3.5ex;
+    height: 3.5ex;
+    border: 0px;
+}
+
+div.mi-account-list-summary-label {
+    width: 70%;
+    border: 0px;
+    float: left;
+    color: Gray;
+    text-align: right;
+}
+
+div.mi-account-list-summary-to-date {
+    width: 15%;
+    border: 0px;
+    float: left;
+    text-align: right;
+    padding-right: 1em;
+}
+
+div.mi-account-list-summary-total {
+    width: 15%;
+    border: 0px;
+    text-align: right;
+    padding-right: 1em;
+}
+
+div.mi-account-list-action-row {
+    width: 100%;
+    color: Gold;
+    margin: 0.5ex 0px 0px 0px;
+    background-color: SteelBlue;
+    line-height: 3.5ex;
+    height: 3.5ex;
+    border: 0px;
+    text-align: left;
+    padding-left: 10%;
+}
+
+a.mi-account-list-action-link {
+    color: Gold;
+    text-decoration: none;
+}
+
+a.mi-account-list-action-link:hover {
+    color: Orange;
+    text-decoration: none;
+}
+
+div.mi-account-edit-panel-container {
+    color: Gold;
+    background-color: DarkSlateBlue;
+    border: solid 1px Black;
+    font-size: 14pt;
+    min-width: 400px;
+    max-width: 600px;
+    margin: auto;
+    padding: auto;
+    border-radius: 1ex;
+    overflow: hidden;
+}
+
+div.mi-account-edit-panel-header {
+    padding: 3ex 0px 2ex 0px;
+    font-size: 14pt;
+    border: 0px;
+    text-align: center;
+}
+
+div.mi-account-edit-panel-label {
+    width: 30%;
+    text-align: right;
+    font-size: 14pt;
+    float: left;
+    padding: 1ex 1em 0px 0px;
+    background-color: inherit;
+    border: 0px;
+}
+
+div.mi-account-edit-panel-input {
+    width: 70%;
+    text-align: left;
+    font-size: 14pt;
+    float: left;
+    padding: 1ex 0px 0px 1em;
+    border: 0px;
+}
+
+input.mi-account-edit-panel-input-field {
+    width: 80%;
+    text-align: left;
+    font-size: 14pt;
+    float: left;
+    padding: 0px 0px 0px 0.5em;
+    margin: 0px 0px 0px 0px;
+    border: solid 1px DarkGray;
+    border-radius: 0.5ex;
+    color: DarkSlateBlue;
+    background-color: LightGray;
+}
+
+select.mi-account-edit-panel-input-field {
+    width: 80%;
+    text-align: left;
+    font-size: 14pt;
+    float: left;
+    padding: 0px 0px 0px 0.5em;
+    margin: 0px 0px 0px 0px;
+    border: solid 1px DarkGray;
+    border-radius: 0.5ex;
+    color: DarkSlateBlue;
+    background-color: LightGray;
+}
+
+div.mi-account-edit-panel-submit {
+    width: 100%;
+    text-align: center;
+    font-size: 14pt;
+    padding: 3ex 0px 3ex 0px;
+    border: 0px;
+}
+
+button.mi-account-edit-panel-submit-button {
+    min-width: 400px;
+    max-width: 600px;
+    font-size: 14pt;
+    padding: 0px 0px 0px 0.5em;
+    border: solid 1px DarkGray;
+    border-radius: 0.5ex;
+    color: DarkSlateBlue;
+    background-color: LightGray;
+}
+
+div.mi-operation-edit-container {
+    color: Gold;
+    background-color: DarkSlateBlue;
+    border: solid 1px Black;
+    font-size: 14pt;
+    min-width: 600px;
+    max-width: 800px;
+    margin: auto;
+    margin-top: 10ex;
+    padding: 1ex 1em 1ex 1em;
+    border-radius: 1ex;
+    overflow: hidden;
+}
+
+div.mi-operation-edit-header {
+    padding: 0px 0px 0px 0px;
+    font-size: 14pt;
+    border: 0px;
+    text-align: center;
+}
+
+div.mi-operation-edit-label {
+    width: 20%;
+    text-align: right;
+    font-size: 14pt;
+    float: left;
+    padding: 0px 0px 0px 0px;
+    margin-top: 1ex;
+    background-color: inherit;
+    border: 0px;
+}
+
+div.mi-operation-edit-input {
+    width: 75%;
+    text-align: left;
+    font-size: 14pt;
+    float: left;
+    margin-top: 1ex;
+    padding: 0px 1em 0px 1em;
+    border: 0px;
+}
+
+input.mi-operation-edit-input-field {
+    width: 100%;
+    text-align: left;
+    font-size: 14pt;
+    float: left;
+    padding: 0px 0.5em 0px 0.5em;
+    margin: 0px 0px 0px 0px;
+    border: solid 1px DarkGray;
+    border-radius: 0.5ex;
+    color: DarkSlateBlue;
+    background-color: LightGray;
+}
+
+textarea.mi-operation-edit-input-field {
+    width: 100%;
+    height: 7.5ex;
+    text-align: left;
+    font-size: 14pt;
+    float: left;
+    padding: 0px 0.5em 0px 0.5em;
+    margin: 0px 0px 0px 0px;
+    border: solid 1px DarkGray;
+    border-radius: 0.5ex;
+    color: DarkSlateBlue;
+    background-color: LightGray;
+}
+
+div.mi-operation-edit-left-label {
+    width: 20%;
+    text-align: right;
+    font-size: 14pt;
+    float: left;
+    padding: 0px 0px 0px 0px;
+    margin-top: 1ex;
+    background-color: inherit;
+    border: 0px;
+}
+
+div.mi-operation-edit-left-input {
+    width: 30%;
+    text-align: left;
+    font-size: 14pt;
+    float: left;
+    padding: 0px 1em 0px 1em;
+    margin-top: 1ex;
+    border: 0px;
+}
+
+div.mi-operation-edit-right-label {
+    width: 15%;
+    text-align: right;
+    font-size: 14pt;
+    float: left;
+    padding: 0px 0px 0px 0px;
+    margin-top: 1ex;
+    background-color: inherit;
+    border: 0px;
+}
+
+div.mi-operation-edit-right-input {
+    width: 35%;
+    text-align: left;
+    font-size: 14pt;
+    float: left;
+    padding: 1ex 1em 0px 1em;
+    border: 0px;
+}
+
+select.mi-operation-edit-input-tags {
+    width: 100%;
+    text-align: left;
+    float: left;
+    padding: 0px 0.5em 0px 0.5em;
+    margin: 0px 0px 0px 0px;
+    border: solid 1px DarkGray;
+    border-radius: 0.5ex;
+    color: DarkSlateBlue;
+    background-color: LightGray;
+}
+
+div.mi-schedule-edit-container {
+    color: Gold;
+    background-color: DarkSlateBlue;
+    border: solid 1px Black;
+    font-size: 14pt;
+    min-width: 600px;
+    max-width: 800px;
+    margin: auto;
+    margin-top: 10ex;
+    padding: 0px 1em 1ex 1em;
+    border-radius: 1ex;
+    overflow: hidden;
+}
+
+div.mi-schedule-edit-row {
+    padding: 0px 0px 0px 0px;
+    margin-top: 1ex;
+    width: 100%;
+    font-size: 14pt;
+    border: 0px solid red;
+    text-align: center;
+}
+
+div.mi-schedule-edit-header {
+    width: 97%;
+    text-align: center;
+    font-size: 14pt;
+    float: left;
+    padding: 0px 0px 0px 0px;
+    background-color: inherit;
+    border: 0px;
+}
+
+div.mi-schedule-edit-label {
+    width: 15%;
+    text-align: right;
+    font-size: 14pt;
+    float: left;
+    padding: 0px 0px 0px 0px;
+    background-color: inherit;
+    border: 0px;
+}
+
+div.mi-schedule-edit-input {
+    width: 85%;
+    text-align: left;
+    font-size: 14pt;
+    float: left;
+    padding: 0px 1em 0px 1em;
+    border: 0px;
+}
+
+input.mi-schedule-edit-input-field {
+    width: 100%;
+    text-align: left;
+    font-size: 14pt;
+    float: left;
+    padding: 0px 0.5em 0px 0.5em;
+    border: solid 1px DarkGray;
+    border-radius: 0.5ex;
+    color: DarkSlateBlue;
+    background-color: LightGray;
+}
+
+select.mi-schedule-edit-input-field {
+    width: 100%;
+    text-align: left;
+    font-size: 14pt;
+    float: left;
+    padding: 0px 0.5em 0px 0.5em;
+    border: solid 1px DarkGray;
+    border-radius: 0.5ex;
+    color: DarkSlateBlue;
+    background-color: LightGray;
+}
+
+textarea.mi-schedule-edit-input-field {
+    width: 100%;
+    height: 7.5ex;
+    text-align: left;
+    font-size: 14pt;
+    float: left;
+    padding: 0px 0.5em 0px 0.5em;
+    border: solid 1px DarkGray;
+    border-radius: 0.5ex;
+    color: DarkSlateBlue;
+    background-color: LightGray;
+}
+
+div.mi-schedule-edit-left-label {
+    width: 15%;
+    text-align: right;
+    font-size: 14pt;
+    float: left;
+    padding: 0px 0px 0px 0px;
+    background-color: inherit;
+    border: 0px;
+}
+
+div.mi-schedule-edit-left-input {
+    width: 35%;
+    text-align: left;
+    font-size: 14pt;
+    float: left;
+    padding: 0px 1em 0px 1em;
+    border: 0px;
+}
+
+div.mi-schedule-edit-right-label {
+    width: 10%;
+    text-align: right;
+    font-size: 14pt;
+    float: left;
+    padding: 0px 0px 0px 0px;
+    background-color: inherit;
+    border: 0px;
+}
+
+div.mi-schedule-edit-right-input {
+    width: 40%;
+    text-align: left;
+    font-size: 14pt;
+    padding: 0px 1em 0px 1em;
+    float: left;
+    border: 0px;
+}
+
+select.mi-schedule-edit-input-tags {
+    width: 100%;
+    text-align: left;
+    float: left;
+    padding: 0px 0.5em 0px 0.5em;
+    border: solid 1px DarkGray;
+    border-radius: 0.5ex;
+    color: DarkSlateBlue;
+    background-color: LightGray;
+}
+
+button.mi-schedule-edit-submit-button {
+    min-width: 400px;
+    max-width: 600px;
+    font-size: 14pt;
+    padding: 0px 0px 0px 0px;
+    border: solid 1px DarkGray;
+    border-radius: 0.5ex;
+    color: DarkSlateBlue;
+    background-color: LightGray;
+}
+
+div.mi-transfer-edit-container {
+    color: Gold;
+    background-color: DarkSlateBlue;
+    border: solid 1px Black;
+    font-size: 14pt;
+    min-width: 600px;
+    max-width: 800px;
+    margin: auto;
+    margin-top: 10ex;
+    padding: 1ex 1em 1ex 1em;
+    border-radius: 1ex;
+    overflow: hidden;
+}
+
+div.mi-transfer-edit-header {
+    padding: 0px 0px 0px 0px;
+    font-size: 14pt;
+    border: 0px;
+    text-align: center;
+}
+
+div.mi-transfer-edit-label {
+    width: 20%;
+    text-align: right;
+    font-size: 14pt;
+    float: left;
+    padding: 0px 0px 0px 0px;
+    margin-top: 1ex;
+    background-color: inherit;
+    border: 0px;
+}
+
+div.mi-transfer-edit-input {
+    width: 80%;
+    text-align: left;
+    font-size: 14pt;
+    float: left;
+    margin-top: 1ex;
+    padding: 0px 1em 0px 1em;
+    border: 0px;
+}
+
+input.mi-transfer-edit-input-field {
+    width: 100%;
+    text-align: left;
+    font-size: 14pt;
+    float: left;
+    padding: 0px 0.5em 0px 0.5em;
+    margin: 0px 0px 0px 0px;
+    border: solid 1px DarkGray;
+    border-radius: 0.5ex;
+    color: DarkSlateBlue;
+    background-color: LightGray;
+}
+
+textarea.mi-transfer-edit-input-field {
+    width: 100%;
+    height: 7.5ex;
+    text-align: left;
+    font-size: 14pt;
+    float: left;
+    padding: 0px 0.5em 0px 0.5em;
+    margin: 0px 0px 0px 0px;
+    border: solid 1px DarkGray;
+    border-radius: 0.5ex;
+    color: DarkSlateBlue;
+    background-color: LightGray;
+}
+
+div.mi-transfer-edit-left-label {
+    width: 20%;
+    text-align: right;
+    font-size: 14pt;
+    float: left;
+    padding: 0px 0px 0px 0px;
+    margin-top: 1ex;
+    background-color: inherit;
+    border: 0px;
+}
+
+div.mi-transfer-edit-left-input {
+    width: 30%;
+    text-align: left;
+    font-size: 14pt;
+    float: left;
+    padding: 0px 1em 0px 1em;
+    margin-top: 1ex;
+    border: 0px;
+}
+
+div.mi-transfer-edit-right-label {
+    width: 15%;
+    text-align: right;
+    font-size: 14pt;
+    float: left;
+    padding: 0px 0px 0px 0px;
+    margin-top: 1ex;
+    background-color: inherit;
+    border: 0px;
+}
+
+div.mi-transfer-edit-right-input {
+    width: 35%;
+    text-align: left;
+    font-size: 14pt;
+    float: left;
+    padding: 1ex 1em 0px 1em;
+    border: 0px;
+}
+
+select.mi-transfer-edit-input-tags {
+    width: 100%;
+    text-align: left;
+    float: left;
+    padding: 0px 0.5em 0px 0.5em;
+    margin: 0px 0px 0px 0px;
+    border: solid 1px DarkGray;
+    border-radius: 0.5ex;
+    color: DarkSlateBlue;
+    background-color: LightGray;
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__choice {
+    color: SlateBlue;
+    background-color: Silver;
+}
+
+.select2-search__field {
+    color: SlateBlue;
+    font-weight: bold;
+    font-size: 12pt;
+}
+
+.select2-container--focus .select2-selection.select2-selection--multiple {
+    border: solid 1px DarkGray;
+    font-size: 12pt;
+    color: SlateBlue;
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__rendered {
+    color: SlateBlue;
+    background-color: LightGray;
+    font-size: 12pt;
+}
+
+.select2-container--default .select2-results__option[aria-selected=false] {
+    color: SlateBlue;
+    background-color: Gainsboro;
+}
+.select2-container--default .select2-results__option[aria-selected=true] {
+    color: SlateBlue;
+    background-color: Silver;
+}
+
+.select2-container--default .select2-results__option--highlighted[aria-selected] {
+    color: Gold;
+    background-color: SlateBlue;
+}
+
+select.mi-transfer-edit-input-field {
+    width: 100%;
+    text-align: left;
+    font-size: 14pt;
+    float: left;
+    padding: 0px 0px 0px 0.5em;
+    margin: 0px 0px 0px 0px;
+    border: solid 1px DarkGray;
+    border-radius: 0.5ex;
+    color: DarkSlateBlue;
+    background-color: LightGray;
+}
+
+div.mi-transfer-edit-submit {
+    width: 100%;
+    text-align: center;
+    font-size: 14pt;
+    padding: 3ex 0px 3ex 0px;
+    border: 0px;
+}
+
+button.mi-transfer-edit-submit-button {
+    min-width: 400px;
+    max-width: 600px;
+    font-size: 14pt;
+    padding: 0px 0px 0px 0.5em;
+    border: solid 1px DarkGray;
+    border-radius: 0.5ex;
+    color: DarkSlateBlue;
+    background-color: LightGray;
+}
+
+select.mi-operation-edit-input-field {
+    width: 100%;
+    text-align: left;
+    font-size: 14pt;
+    float: left;
+    padding: 0px 0px 0px 0.5em;
+    margin: 0px 0px 0px 0px;
+    border: solid 1px DarkGray;
+    border-radius: 0.5ex;
+    color: DarkSlateBlue;
+    background-color: LightGray;
+}
+
+div.mi-operation-edit-submit {
+    width: 100%;
+    text-align: center;
+    font-size: 14pt;
+    padding: 3ex 0px 3ex 0px;
+    border: 0px;
+}
+
+button.mi-operation-edit-submit-button {
+    min-width: 400px;
+    max-width: 600px;
+    font-size: 14pt;
+    padding: 0px 0px 0px 0.5em;
+    border: solid 1px DarkGray;
+    border-radius: 0.5ex;
+    color: DarkSlateBlue;
+    background-color: LightGray;
+}
+
+div.mi-operation-list-container {
+    border: 0px;
+    width: 100%;
+    margin: 6ex 0px 0px 0px;
+    padding: 0px;
+    font-size: 10pt;
+    overflow: hidden;
+}
+
+div.mi-operation-list-header {
+    color: Gold;
+    background-color: SteelBlue;
+    line-height: 3.5ex;
+    height: 3.5ex;
+    border: 0px;
+}
+
+div.mi-operation-list-section {
+    width: 100%;
+    color: #F7C974;
+    margin: 0.5ex 0px 0px 0px;
+    background-color: #9FB7E3;
+    line-height: 3.5ex;
+    height: 3.5ex;
+    border: 0px;
+    text-align: left;
+    padding-left: 10%;
+    font-style: italic;
+}
+
+div.mi-operation-list-empty {
+    width: 100%;
+    color: Gray;
+    margin: 0.5ex 0px 0px 0px;
+    background-color: Beige;
+    line-height: 3.5ex;
+    height: 3.5ex;
+    border: 0px;
+    text-align: left;
+    padding-left: 10%;
+    font-style: italic;
+}
+
+div.mi-operation-list-row {
+    line-height: 3.5ex;
+    height: 3.5ex;
+    border: 0px;
+}
+
+div.mi-operation-list-row:nth-child(even) {
+    background-color: WhiteSmoke;
+}
+
+div.mi-operation-list-row:nth-child(even):hover {
+    background-color: #dfdfdf;
+}
+
+div.mi-operation-list-row:nth-child(odd) {
+    background-color: Snow;
+}
+
+div.mi-operation-list-row:nth-child(odd):hover {
+    background-color: #dfdfdf;
+}
+
+div.mi-operation-list-delete {
+    width: 3%;
+    min-height: 1px;
+    text-align: center;
+    float: left;
+    border: solid 0px;
+}
+
+img.mi-operation-list-delete {
+    display: inline-block;
+    height: 75%;
+    vertical-align: middle;
+    padding-bottom: 0.5ex;
+}
+
+div.mi-operation-list-edit {
+    width: 3%;
+    min-height: 1px;
+    text-align: center;
+    float: left;
+    border: solid 0px;
+}
+
+img.mi-operation-list-edit {
+    display: inline-block;
+    height: 75%;
+    vertical-align: middle;
+    padding-bottom: 0.5ex;
+}
+
+div.mi-operation-list-booked {
+    width: 3%;
+    min-height: 1px;
+    text-align: center;
+    float: left;
+    border: solid 0px;
+}
+
+img.mi-operation-list-booked {
+    display: inline-block;
+    height: 75%;
+    vertical-align: middle;
+    padding-bottom: 0.5ex;
+}
+
+div.mi-operation-list-date {
+    width: 8%;
+    text-align: center;
+    float: left;
+    border: solid 0px;
+}
+
+div.mi-operation-list-account {
+    width: 14%;
+    text-align: left;
+    float: left;
+    border: solid 0px;
+}
+
+div.mi-operation-list-tags {
+    width: 30%;
+    min-height: 1px;
+    text-align: left;
+    float: left;
+    border: solid 0px;
+}
+
+div.operation-list-description {
+    width: 15%;
+    min-height: 1px;
+    text-align: left;
+    float: left;
+    border: solid 0px;
+}
+
+div.mi-operation-list-amount {
+    width: 12%;
+    text-align: right;
+    float: left;
+    border: solid 0px;
+    padding-right: 1em;
+}
+
+div.mi-operation-list-balance {
+    width: 12%;
+    text-align: right;
+    float: left;
+    padding: 0px;
+    border: solid 0px;
+    padding-right: 1em;
+}
+
+a.mi-operation-list-link {
+    color: Gold;
+    text-decoration: none;
+}
+
+a.mi-operation-list-link:hover {
+    color: Orange;
+}
+
+div.mi-operation-list-header > div.mi-operation-list-tags {
+    text-align: left;
+    padding-left: 1em;
+}
+
+div.mi-operation-list-row > div.mi-operation-list-tags {
+    text-align: left;
+    padding-left: 1em;
+}
+
+div.mi-operation-list-header > div.mi-operation-list-description {
+    text-align: center;
+}
+
+div.mi-operation-list-row > div.mi-operation-list-description {
+    text-align: left;
+    padding-left: 1em;
+}
+
+div.mi-operation-list-summary-row {
+    width: 100%;
+    background-color: Beige;
+    line-height: 3.5ex;
+    height: 3.5ex;
+    border: 0px;
+}
+
+div.mi-operation-list-summary-label {
+    width: 70%;
+    border: 0px;
+    float: left;
+    color: Gray;
+    text-align: right;
+}
+
+div.mi-operation-list-summary-to-date {
+    width: 15%;
+    border: 0px;
+    float: left;
+    text-align: right;
+    padding-right: 1em;
+}
+
+div.mi-operation-list-summary-total {
+    width: 15%;
+    border: 0px;
+    text-align: right;
+    padding-right: 1em;
+}
+
+div.mi-operation-list-action-row {
+    width: 100%;
+    color: Gold;
+    margin: 0.5ex 0px 0px 0px;
+    background-color: SteelBlue;
+    line-height: 3.5ex;
+    height: 3.5ex;
+    border: 0px;
+    text-align: left;
+    padding-left: 10%;
+}
+
+a.mi-operation-list-action-link {
+    color: Gold;
+    text-decoration: none;
+    padding-left: 1em;
+}
+
+a.mi-operation-list-action-link:hover {
+    color: Orange;
+    text-decoration: none;
+}
+
+div.mi-schedule-list-container {
+    border: 0px;
+    width: 100%;
+    margin: 6ex 0px 0px 0px;
+    padding: 0px;
+    font-size: 10pt;
+    overflow: hidden;
+}
+
+div.mi-schedule-list-header {
+    color: Gold;
+    background-color: SteelBlue;
+    line-height: 3.5ex;
+    height: 3.5ex;
+    border: 0px;
+}
+
+div.mi-schedule-list-section {
+    width: 100%;
+    color: #F7C974;
+    margin: 0.5ex 0px 0px 0px;
+    background-color: #9FB7E3;
+    line-height: 3.5ex;
+    height: 3.5ex;
+    border: 0px;
+    text-align: left;
+    padding-left: 10%;
+    font-style: italic;
+}
+
+div.mi-schedule-list-empty {
+    width: 100%;
+    color: Gray;
+    margin: 0.5ex 0px 0px 0px;
+    background-color: Beige;
+    line-height: 3.5ex;
+    height: 3.5ex;
+    border: 0px;
+    text-align: left;
+    padding-left: 10%;
+    font-style: italic;
+}
+
+div.mi-schedule-list-row {
+    line-height: 3.5ex;
+    height: 3.5ex;
+    border: 0px;
+}
+
+div.mi-schedule-list-row:nth-child(even) {
+    background-color: WhiteSmoke;
+}
+
+div.mi-schedule-list-row:nth-child(even):hover {
+    background-color: #dfdfdf;
+}
+
+div.mi-schedule-list-row:nth-child(odd) {
+    background-color: Snow;
+}
+
+div.mi-schedule-list-row:nth-child(odd):hover {
+    background-color: #dfdfdf;
+}
+
+div.mi-schedule-list-delete {
+    width: 3%;
+    min-height: 1px;
+    text-align: center;
+    float: left;
+    border: solid 0px;
+}
+
+img.mi-schedule-list-delete {
+    display: inline-block;
+    height: 75%;
+    vertical-align: middle;
+    padding-bottom: 0.5ex;
+}
+
+div.mi-schedule-list-edit {
+    width: 3%;
+    min-height: 1px;
+    text-align: center;
+    float: left;
+    border: solid 0px;
+}
+
+img.mi-schedule-list-edit {
+    display: inline-block;
+    height: 75%;
+    vertical-align: middle;
+    padding-bottom: 0.5ex;
+}
+
+div.mi-schedule-list-booked {
+    width: 3%;
+    min-height: 1px;
+    text-align: center;
+    float: left;
+    border: solid 0px;
+}
+
+img.mi-schedule-list-booked {
+    display: inline-block;
+    height: 75%;
+    vertical-align: middle;
+    padding-bottom: 0.5ex;
+}
+
+div.mi-schedule-list-date {
+    width: 8%;
+    text-align: center;
+    float: left;
+    border: solid 0px;
+}
+
+div.mi-schedule-list-account {
+    width: 20%;
+    text-align: left;
+    float: left;
+    border: solid 0px;
+}
+
+div.mi-schedule-list-tags {
+    width: 24%;
+    min-height: 1px;
+    text-align: left;
+    float: left;
+    border: solid 0px;
+}
+
+div.schedule-list-description {
+    width: 15%;
+    min-height: 1px;
+    text-align: left;
+    float: left;
+    border: solid 0px;
+}
+
+div.mi-schedule-list-amount {
+    width: 12%;
+    text-align: right;
+    float: left;
+    border: solid 0px;
+    padding-right: 1em;
+}
+
+div.mi-schedule-list-balance {
+    width: 12%;
+    text-align: right;
+    float: left;
+    padding: 0px;
+    border: solid 0px;
+    padding-right: 1em;
+}
+
+a.mi-schedule-list-link {
+    color: Gold;
+    text-decoration: none;
+}
+
+a.mi-schedule-list-link:hover {
+    color: Orange;
+}
+
+div.mi-schedule-list-header > div.mi-schedule-list-tags {
+    text-align: left;
+    padding-left: 1em;
+}
+
+div.mi-schedule-list-row > div.mi-schedule-list-tags {
+    text-align: left;
+    padding-left: 1em;
+}
+
+div.mi-schedule-list-header > div.mi-schedule-list-description {
+    text-align: center;
+}
+
+div.mi-schedule-list-row > div.mi-schedule-list-description {
+    text-align: left;
+    padding-left: 1em;
+}
+
+div.mi-schedule-list-summary-row {
+    width: 100%;
+    background-color: Beige;
+    line-height: 3.5ex;
+    height: 3.5ex;
+    border: 0px;
+}
+
+div.mi-schedule-list-summary-label {
+    width: 70%;
+    border: 0px;
+    float: left;
+    color: Gray;
+    text-align: right;
+}
+
+div.mi-schedule-list-summary-to-date {
+    width: 15%;
+    border: 0px;
+    float: left;
+    text-align: right;
+    padding-right: 1em;
+}
+
+div.mi-schedule-list-summary-total {
+    width: 15%;
+    border: 0px;
+    text-align: right;
+    padding-right: 1em;
+}
+
+div.mi-schedule-list-action-row {
+    width: 100%;
+    color: Gold;
+    margin: 0.5ex 0px 0px 0px;
+    background-color: SteelBlue;
+    line-height: 3.5ex;
+    height: 3.5ex;
+    border: 0px;
+    text-align: left;
+    padding-left: 10%;
+}
+
+a.mi-schedule-list-action-link {
+    color: Gold;
+    text-decoration: none;
+    padding-left: 1em;
+}
+
+a.mi-schedule-list-action-link:hover {
+    color: Orange;
+    text-decoration: none;
+}
+
+div.mi-date-panel-container {
+    border: solid 0px;
+    width: 40%;
+    float: left;
+    text-align: center;
+    vertical-align: middle;
+    margin: 1ex 0px 0px 0px;
+    min-height: 1px;
+    padding: 0ex 1em 0px 1em;
+    font-size: 12pt;
+    height: 4ex;
+    overflow: hidden;
+}
+
+input.mi-date-panel-input {
+    width: 7em;
+    text-align: center;
+    font-size: 10pt;
+    font-weight: bold;
+    padding: 0.5ex 0.5em 0.5ex 0.5em;
+    margin: 0px 1em 0ex 1em;
+    border: solid 1px DarkGray;
+    border-radius: 0.5ex;
+    color: DarkSlateBlue;
+    background-color: LightGray;
+}
+
+img.mi-date-button {
+    display: inline-block;
+    height: 75%;
+    vertical-align: middle;
+}
+
+div.mi-last-operations-container {
+    border: solid 0px;
+    width: 15%;
+    float: left;
+    text-align: center;
+    margin: 1ex 0px 0px 0px;
+    min-height: 1px;
+    padding: 0px 0px 0px 0px;
+    font-size: 12pt;
+    height: 4ex;
+}
+
+select.mi-last-operations-select {
+    text-align: left;
+    font-size: 10pt;
+    font-weight: bold;
+    padding: 0.5ex 0.5em 0.5ex 0.5em;
+    margin: 0px 0px 0px 0px;
+    border: solid 1px DarkGray;
+    border-radius: 0.5ex;
+    color: DarkSlateBlue;
+    background-color: LightGray;
+}
+
+div.mi-account-select-container {
+    border: solid 0px;
+    width: 45%;
+    float: left;
+    text-align: center;
+    margin: 1ex 0px 0px 0px;
+    padding: 0px 1em 0px 1em;
+    font-size: 12pt;
+    overflow: visible;
+    height: 4ex;
+}
+
+div.mi-tags-container {
+    border: solid 0px;
+    width: 100%;
+    float: left;
+    text-align: center;
+    margin: 1ex 0px 0px 0px;
+    padding: 1ex 1em 1ex 1em;
+    font-size: 12pt;
+}
+
+.SumoSelect {
+    width: 100%;
+}
+
+.SlectBox {
+    width: 100%;
+    background-color: LightGray;
+}
+
+.mi-dialog  {
+    position: fixed;
+    top: 0%;
+    left: 0%;
+    margin-top: auto;
+    width: 100%;
+    height: 100%;
+    padding: 10% 10%;
+    border: 0px;
+    display: none;
+    background-color: rgba(0, 0, 0, 0.75);
+    text-align: center;
+    vertical-align: center;
+}
+
+div.mi-balance-list-container {
+    border: 0px;
+    width: 100%;
+    margin: 6ex 0px 0px 0px;
+    padding: 0px;
+    font-size: 10pt;
+    overflow: hidden;
+}
+
+div.mi-balance-list-header {
+    color: Gold;
+    background-color: SteelBlue;
+    line-height: 3.5ex;
+    height: 3.5ex;
+    border: 0px;
+}
+
+div.mi-balance-list-section {
+    width: 100%;
+    color: #F7C974;
+    margin: 0.5ex 0px 0px 0px;
+    background-color: #9FB7E3;
+    line-height: 3.5ex;
+    height: 3.5ex;
+    border: 0px;
+    text-align: left;
+    padding-left: 10%;
+    font-style: italic;
+}
+
+div.mi-balance-list-empty {
+    width: 100%;
+    color: Gray;
+    margin: 0.5ex 0px 0px 0px;
+    background-color: Beige;
+    line-height: 3.5ex;
+    height: 3.5ex;
+    border: 0px;
+    text-align: left;
+    padding-left: 10%;
+    font-style: italic;
+}
+
+div.mi-balance-list-row {
+    line-height: 3.5ex;
+    height: 3.5ex;
+    border: 0px;
+}
+
+div.mi-balance-list-row:nth-child(even) {
+    background-color: WhiteSmoke;
+}
+
+div.mi-balance-list-row:nth-child(even):hover {
+    background-color: #dfdfdf;
+}
+
+div.mi-balance-list-row:nth-child(odd) {
+    background-color: Snow;
+}
+
+div.mi-balance-list-row:nth-child(odd):hover {
+    background-color: #dfdfdf;
+}
+
+div.mi-balance-list-delete {
+    width: 3%;
+    min-height: 1px;
+    text-align: center;
+    float: left;
+    border: solid 0px;
+}
+
+img.mi-balance-list-delete {
+    display: inline-block;
+    height: 75%;
+    vertical-align: middle;
+    padding-bottom: 0.5ex;
+}
+
+div.mi-balance-list-edit {
+    width: 3%;
+    min-height: 1px;
+    text-align: center;
+    float: left;
+    border: solid 0px;
+}
+
+img.mi-balance-list-edit {
+    display: inline-block;
+    height: 75%;
+    vertical-align: middle;
+    padding-bottom: 0.5ex;
+}
+
+div.mi-balance-list-booked {
+    width: 3%;
+    min-height: 1px;
+    text-align: center;
+    float: left;
+    border: solid 0px;
+}
+
+img.mi-balance-list-booked {
+    display: inline-block;
+    height: 75%;
+    vertical-align: middle;
+    padding-bottom: 0.5ex;
+}
+
+div.mi-balance-list-period {
+    width: 12%;
+    text-align: center;
+    float: left;
+    border: solid 0px;
+}
+
+div.mi-balance-list-account {
+    width: 14%;
+    text-align: left;
+    float: left;
+    border: solid 0px;
+}
+
+div.mi-balance-list-tags {
+    width: 30%;
+    min-height: 1px;
+    text-align: left;
+    float: left;
+    border: solid 0px;
+}
+
+div.operation-list-description {
+    width: 15%;
+    min-height: 1px;
+    text-align: left;
+    float: left;
+    border: solid 0px;
+}
+
+div.mi-balance-list-amount {
+    width: 12%;
+    text-align: right;
+    float: left;
+    border: solid 0px;
+    padding-right: 1em;
+}
+
+div.mi-balance-list-balance {
+    width: 12%;
+    text-align: right;
+    float: left;
+    padding: 0px;
+    border: solid 0px;
+    padding-right: 1em;
+}
+
+a.mi-balance-list-link {
+    color: Gold;
+    text-decoration: none;
+}
+
+a.mi-balance-list-link:hover {
+    color: Orange;
+}
+
+div.mi-balance-list-header > div.mi-balance-list-tags {
+    text-align: left;
+    padding-left: 1em;
+}
+
+div.mi-balance-list-row > div.mi-balance-list-tags {
+    text-align: left;
+    padding-left: 1em;
+}
+
+div.mi-balance-list-header > div.mi-balance-list-description {
+    text-align: center;
+}
+
+div.mi-balance-list-row > div.mi-balance-list-description {
+    text-align: left;
+    padding-left: 1em;
+}
+
+div.mi-balance-list-summary-row {
+    width: 100%;
+    background-color: Beige;
+    line-height: 3.5ex;
+    height: 3.5ex;
+    border: 0px;
+}
+
+div.mi-balance-list-summary-label {
+    width: 70%;
+    border: 0px;
+    float: left;
+    color: Gray;
+    text-align: right;
+}
+
+div.mi-balance-list-summary-to-date {
+    width: 15%;
+    border: 0px;
+    float: left;
+    text-align: right;
+    padding-right: 1em;
+}
+
+div.mi-balance-list-summary-total {
+    width: 15%;
+    border: 0px;
+    text-align: right;
+    padding-right: 1em;
+}
+
+div.mi-balance-list-action-row {
+    width: 100%;
+    color: Gold;
+    margin: 0.5ex 0px 0px 0px;
+    background-color: SteelBlue;
+    line-height: 3.5ex;
+    height: 3.5ex;
+    border: 0px;
+    text-align: left;
+    padding-left: 10%;
+}
+
+a.mi-balance-list-action-link {
+    color: Gold;
+    text-decoration: none;
+    padding-left: 1em;
+}
+
+a.mi-balance-list-action-link:hover {
+    color: Orange;
+    text-decoration: none;
+}
+
