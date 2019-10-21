@@ -9,10 +9,12 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.exc import NoResultFound
 
 from money.core.models import (
+    Currency,
+    AccountType,
     Base,
     User,
     Account,
-    AccountType
+    Tag,
 )
 from money.core.api import (
     user_add,
@@ -25,6 +27,11 @@ from money.core.api import (
     account_edit,
     account_remove,
     account_list,
+    tag_add,
+    tag_get,
+    tag_edit,
+    tag_remove,
+    tag_list,
 )
 
 ########################################################################
@@ -75,19 +82,26 @@ class TestCoreAPI(object):
         return users
 
     @pytest.fixture(scope='class')
-    def account_types(self, users):
-        account_types = []
-        account_types.append(account_type_add(self.session, users[0].id, 'current',
-                    100, 10))
-        account_types.append(account_type_add(self.session, users[0].id, 'debit',
-                    100, 20))
-        account_types.append(account_type_add(self.session, users[0].id, 'savings',
-                    200, 50))
-        account_types.append(account_type_add(self.session, users[0].id, 'loan',
-                    300, None))
-        account_types.append(account_type_add(self.session, users[0].id, 'installment',
-                    300, None))
-        return account_types
+    def accounts(self, users):
+        currency = iter(Currency)
+        accounts = []
+        for user in users:
+            for bank in ['PKO BP', 'Eurobank', 'mBank']:
+                for at in AccountType:
+                    for c in Currency:
+                        accounts.append(account_add(self.session, user.id, at,
+                                    '{} - {} ({})'.format(bank, at.value, c.value),
+                                    0, 0, c))
+        return accounts
+
+    @pytest.fixture(scope='class')
+    def tags(self, users):
+        tags = []
+        for user in users:
+            for name in ['food', 'clothes', 'car', 'kids']:
+                tags.append(tag_add(self.session, user.id, name))
+        return tags
+
 
     def test_user_instance(self):
         user = User('tester', 'test_pass', 'email@example.com')
@@ -125,39 +139,72 @@ class TestCoreAPI(object):
         api_user_list = user_list(self.session)
         assert set(api_user_list) == set(users)
 
+
     def test_account_instance(self):
-        account = Account('123-45-6789', AccountType.CURRENT, 'JP Morgan', 0, 1000)
+        account = Account('123-45-6789', AccountType.CURRENT, 'JP Morgan', 0, 1000,
+                Currency.PLN)
         assert len(account.id) == 36
         assert account.user_id == '123-45-6789'
         assert account.account_type == AccountType.CURRENT
         assert account.initial_balance == 0
         assert account.debit_limit == 1000
 
-    #def test_account_add(self):
-    #    account = account_add(self.session, 'test', 'password', 'email@example.com')
-    #    sql_account = self.session.query(Account).filter(Account.id==account.id).one()
-    #    assert account == sql_account
+    def test_account_add(self, users):
+        account = account_add(self.session, users[0].id, AccountType.CURRENT,
+                              'Test Account of My Bank', 0, -1000, Currency.PLN)
+        sql_account = self.session.query(Account).filter(Account.id==account.id).one()
+        assert account == sql_account
+
+    def test_account_get(self, accounts):
+        sql_account = account_get(self.session, accounts[1].id)
+        assert accounts[1] == sql_account
+        assert accounts[1].user_id == sql_account.user_id
+        assert accounts[1].account_type == sql_account.account_type
+        assert accounts[1].name == sql_account.name
+        assert accounts[1].initial_balance == sql_account.initial_balance
+        assert accounts[1].debit_limit == sql_account.debit_limit
+        assert accounts[1].currency == sql_account.currency
+        assert sql_account.__repr__() == '{} ({})'.format(accounts[1].name, accounts[1].id)
+
+    def test_account_remove(self, accounts):
+        removed_id = accounts[-1].id
+        account_remove(self.session, removed_id)
+        with pytest.raises(NoResultFound):
+            account_get(self.session, removed_id)
+
+    def test_account_list(self, accounts):
+        api_account_list = account_list(self.session)
+        assert set(api_account_list) == set(accounts)
 
 
-    #def test_account_get(self, accounts):
-    #    sql_account = account_get(self.session, accounts[1].id)
-    #    assert accounts[1] == sql_account
-    #    assert accounts[1].id == sql_account.get_id()
-    #    assert sql_account.is_anonymous() == False
-    #    assert sql_account.is_active() == True
-    #    assert sql_account.is_authenticated() == True
-    #    assert sql_account.__repr__() == '{} ({})'.format(accounts[1].login, accounts[1].id)
+    def test_account_list_by_user(self, users, accounts):
+        user_account_list = account_list(self.session, user_id=users[1].id)
+        assert set(user_account_list) == set(users[1].accounts)
 
-    #def test_account_get_by_login(self, accounts):
-    #    sql_account = account_get_by_login(self.session, accounts[1].login)
-    #    assert accounts[1] == sql_account
 
-    #def test_account_remove(self, accounts):
-    #    removed_id = accounts[-1].id
-    #    account_remove(self.session, removed_id)
-    #    with pytest.raises(NoResultFound):
-    #        account_get(self.session, removed_id)
+    def test_tag_add(self, users):
+        tag = tag_add(self.session, users[0].id, 'tag_one')
+        sql_tag = self.session.query(Tag).filter(Tag.id==tag.id).one()
+        assert tag == sql_tag
 
-    #def test_account_list(self, accounts):
-    #    api_account_list = account_list(self.session)
-    #    assert set(api_account_list) == set(accounts)
+    def test_tag_get(self, tags):
+        sql_tag = tag_get(self.session, tags[1].id)
+        assert tags[1] == sql_tag
+        assert tags[1].user_id == sql_tag.user_id
+        assert tags[1].name == sql_tag.name
+        assert sql_tag.__repr__() == '{} ({})'.format(tags[1].name, tags[1].id)
+
+    def test_tag_remove(self, tags):
+        removed_id = tags[-1].id
+        tag_remove(self.session, removed_id)
+        with pytest.raises(NoResultFound):
+            tag_get(self.session, removed_id)
+
+    def test_tag_list(self, tags):
+        api_tag_list = tag_list(self.session)
+        assert set(api_tag_list) == set(tags)
+
+
+    def test_tag_list_by_user(self, users, tags):
+        user_tag_list = tag_list(self.session, user_id=users[1].id)
+        assert set(user_tag_list) == set(users[1].tags)

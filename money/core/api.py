@@ -5,6 +5,7 @@
 from money.core.models import (
     User,
     Account,
+    Tag,
 )
 #, Operation, Tag, OperationTag,
         #Transfer, ScheduleTag, SchedulePeriod, Schedule)
@@ -48,11 +49,15 @@ def user_list(session):
     return session.query(User).all()
 
 
-def account_add(session, login, password, email):
+def account_add(session, user_id, account_type, name,
+                initial_balance, debit_limit, currency):
     account = Account(
-            login=login,
-            password=password,
-            email=email)
+            user_id=user_id,
+            account_type=account_type,
+            name=name,
+            initial_balance=initial_balance,
+            debit_limit=debit_limit,
+            currency=currency)
     session.add(account)
     session.flush()
     return account
@@ -80,48 +85,51 @@ def account_remove(session, account_id):
     return True
 
 
-def account_list(session):
-    return session.query(Account).all()
+def account_list(session, user_id=None):
+    q = session.query(Account)
+    if user_id is not None:
+        q = q.filter(Account.user_id==user_id)
+    return q.all()
 
 
-##### def account_type_list(session):
-#####     return session.query(AccountType). \
-#####         order_by(AccountType.group, AccountType.order).all()
-##### 
-##### 
-##### def account_add(session, account_type_id, user_id, name, initial_balance, debit_limit):
-#####     user = user_get(session=session, user_id=user_id)
-#####     account = Account(
-#####             account_type_id=account_type_id,
-#####             user_id=user_id,
-#####             name=name,
-#####             initial_balance=initial_balance,
-#####             debit_limit=debit_limit)
-#####     session.add(account)
-#####     session.flush()
-#####     return account
-##### 
-##### 
-##### def account_get(session, account_id):
-#####     account = session.query(Account).get(account_id)
-#####     return account
-##### 
-##### 
-##### def account_remove(session, account_id):
-#####     account = session.query(Account).get(account_id)
-#####     session.delete(account)
-#####     session.flush()
-#####     return True
-##### 
-##### 
-##### def account_list(session, user_id):
-#####     return session.query(Account). \
-#####         filter(Account.user_id == user_id). \
-#####         join(AccountType). \
-#####         order_by(AccountType.group, AccountType.order, Account.name). \
-#####         all()
-##### 
-##### 
+def tag_add(session, user_id, name):
+    tag = Tag(user_id=user_id,
+            name=name)
+    session.add(tag)
+    session.flush()
+    return tag
+
+
+def tag_get(session, tag_id):
+    tag = session.query(Tag).filter(Tag.id == tag_id).one()
+    return tag
+
+
+def tag_edit(session, id, user_id=None, name=None):
+    tag = tag_get(id=id)
+    if user_id is not None:
+        tag.user_id = user_id
+    if name is not None:
+        tag.name = name
+    session.add(tag)
+    session.flush()
+    return tag
+
+
+def tag_remove(session, tag_id):
+    tag = session.query(Tag).filter(Tag.id==tag_id).one()
+    session.delete(tag)
+    session.flush()
+    return True
+
+
+def tag_list(session, user_id=None):
+    q = session.query(Tag)
+    if user_id is not None:
+        q = q.filter(Tag.user_id==user_id)
+    return q.all()
+
+
 ##### def account_list_groupped(session, user_id):
 #####     account_list = session.query(Account.id.label('id'),
 #####             Account.account_type_id.label('account_type_id'),
