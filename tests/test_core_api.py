@@ -4,6 +4,8 @@
 import pytest
 import hashlib
 
+from datetime import datetime
+from random import random, randint
 from sqlalchemy import create_engine, event
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.exc import NoResultFound
@@ -15,6 +17,7 @@ from money.core.models import (
     User,
     Account,
     Tag,
+    Operation,
 )
 from money.core.api import (
     user_add,
@@ -32,6 +35,11 @@ from money.core.api import (
     tag_edit,
     tag_remove,
     tag_list,
+    operation_add,
+    operation_get,
+    operation_edit,
+    operation_remove,
+    operation_list,
 )
 
 ########################################################################
@@ -101,6 +109,16 @@ class TestCoreAPI(object):
             for name in ['food', 'clothes', 'car', 'kids']:
                 tags.append(tag_add(self.session, user.id, name))
         return tags
+
+
+    @pytest.fixture(scope='class')
+    def operations(self, accounts):
+        operations = []
+        for account in accounts:
+            for name in ['food', 'clothes', 'car', 'kids']:
+                operations.append(operation_add(self.session, account.id,
+                            randint(100, 200) / 100, datetime.today(), name, False))
+        return operations
 
 
     def test_user_instance(self):
@@ -208,3 +226,52 @@ class TestCoreAPI(object):
     def test_tag_list_by_user(self, users, tags):
         user_tag_list = tag_list(self.session, user_id=users[1].id)
         assert set(user_tag_list) == set(users[1].tags)
+
+
+    def test_operation_add(self, users, accounts):
+        operation = operation_add(self.session, accounts[0].id, 23.45, datetime.today(),
+                'something', False, 250, tags=['food', 'weekly'])
+        sql_operation = self.session.query(Operation).filter(Operation.id==operation.id).one()
+        assert operation == sql_operation
+
+    def test_operation_get(self, operations):
+        sql_operation = self.session.query(Operation).filter(Operation.id==operations[1].id).one()
+        assert operations[1] == sql_operation
+        assert operations[1].account_id == sql_operation.account_id
+        assert operations[1].description == sql_operation.description
+        assert sql_operation.__repr__() == '{:0.2f} ({})'.format(operations[1].amount, operations[1].id)
+
+    def test_operation_edit(self, operations):
+        NEW_DESC = 'some fancy description'
+        NEW_AMOUNT = 1234567.89
+        operation = operation_get(self.session, operations[1].id)
+        operation_edit(self.session, operation.id, description = NEW_DESC, amount = NEW_AMOUNT);
+        sql_operation = self.session.query(Operation).filter(Operation.id==operation.id).one()
+        assert sql_operation.amount == NEW_AMOUNT
+        assert sql_operation.description == NEW_DESC
+
+
+    def test_operation_remove(self, operations):
+        removed_id = operations[-1].id
+        operation_remove(self.session, removed_id)
+        with pytest.raises(NoResultFound):
+            operation_get(self.session, removed_id)
+
+    def test_operation_remove_nonexistent(self, operations):
+        removed_id = '1234-56-7890'
+        with pytest.raises(NoResultFound):
+            operation_remove(self.session, removed_id)
+
+    def test_operation_list_by_user(self, users, accounts, operations):
+        user_accounts = [a for a in users[1].accounts]
+        user_account_ids = [a.id for a in user_accounts]
+        user_operations = [o for a in user_accounts for o in a.operations]
+        api_operation_list = operation_list(self.session, user_ids=[users[1].id])
+        assert set(api_operation_list) == set(user_operations)
+
+    def test_operation_list_by_accounts(self, users, accounts, operations):
+        user_accounts = [a for a in users[1].accounts]
+        user_account_ids = [a.id for a in user_accounts]
+        user_operations = [o for a in user_accounts for o in a.operations]
+        api_operation_list = operation_list(self.session, account_ids=user_account_ids)
+        assert set(api_operation_list) == set(user_operations)

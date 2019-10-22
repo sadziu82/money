@@ -6,6 +6,7 @@ from money.core.models import (
     User,
     Account,
     Tag,
+    Operation,
 )
 #, Operation, Tag, OperationTag,
         #Transfer, ScheduleTag, SchedulePeriod, Schedule)
@@ -258,42 +259,70 @@ def tag_list(session, user_id=None):
 ##### #        summary[account.account_type_group]['end_date_balance'] = summary[account.account_type_group]['end_date_balance'] + account.end_date_balance + account.initial_balance
 ##### #        summary[account.account_type_group]['total_balance'] = summary[account.account_type_group]['total_balance'] + account.total_balance + account.initial_balance
 ##### #    return summary
-##### 
-##### 
-##### def operation_get(session, operation_id):
-#####     operation = session.query(Operation).get(operation_id)
-#####     return operation
-##### 
-##### 
-##### def operation_add(session, account_id, amount, description, date,
-#####                   transfer_id=None, booked=None, order_by=None):
-#####     operation = Operation(account_id=account_id, amount=amount,
-#####             description=description, date=date)
-#####     session.add(operation)
-#####     session.flush()
-#####     #set_operation_tags(session=session, oid=operation.oid, tags=tags)
-#####     return operation
-##### 
-##### 
-##### def operation_list(session, account_ids, tags=None,
-#####         start_date=None, end_date=None,
-#####         last_n_operations=None):
-#####     query = session.query(Operation)
-#####     if len(account_ids) > 0:
-#####         query = query.filter(Operation.account_id.in_((account_ids)))
-#####     if last_n_operations:
-#####         query = query.order_by(Operation.date.desc(), Operation.booked.desc(), Operation.order_by.desc()). \
-#####                 limit(last_n_operations)
-#####         query = query.from_self().order_by(Operation.date, Operation.booked.desc(), Operation.order_by)
-#####     else:
-#####         if start_date:
-#####             query = query.filter(Operation.date >= start_date)
-#####         if end_date:
-#####             query = query.filter(Operation.date <= end_date)
-#####         query = query.order_by(Operation.date, Operation.booked, Operation.order_by)
-#####     return query.all()
-##### 
-##### 
+
+
+def operation_get(session, operation_id):
+    operation = session.query(Operation).filter(Operation.id == operation_id).one()
+    return operation
+
+
+def operation_add(session, account_id, amount, date, description,
+                  booked=None, order_by=500, tags=None):
+    operation = Operation(account_id=account_id, amount=amount, description=description,
+                          date=date, booked=booked, order_by=order_by)
+    session.add(operation)
+    session.flush()
+    #set_operation_tags(session=session, oid=operation.oid, tags=tags)
+    return operation
+
+
+def operation_edit(session, id, account_id=None, amount=None, date=None, description=None,
+                   booked=None, order_by=None, tags=None):
+    operation = operation_get(session, id)
+    if account_id is not None:
+        operation.account_id = account_id
+    if amount is not None:
+        operation.amount = amount
+    if date is not None:
+        operation.date = date
+    if description is not None:
+        operation.description = description
+    if booked is not None:
+        operation.booked = booked
+    if order_by is not None:
+        operation.order_by = order_by
+    # TODO
+    #if tags is not None:
+    #    operation.tags = tags
+    session.add(operation)
+    session.flush()
+    return operation
+
+
+def operation_list(session, user_ids=None, account_ids=None, tags=None,
+                   start_date=None, end_date=None, last_n_operations=None):
+    query = session.query(Operation)
+    ##
+    if user_ids is not None and len(user_ids) > 0:
+        user_account_ids = [a.id for uid in user_ids for a in user_get(session, uid).accounts]
+        query = query.filter(Operation.account_id.in_((user_account_ids)))
+    if account_ids is not None and len(account_ids) > 0:
+        query = query.filter(Operation.account_id.in_((account_ids)))
+    ##
+    if start_date:
+        query = query.filter(Operation.date >= start_date)
+    if end_date:
+        query = query.filter(Operation.date <= end_date)
+    ##
+    if last_n_operations:
+        query = query.order_by(Operation.date.desc(), Operation.booked.desc(), Operation.order_by.desc()). \
+                limit(last_n_operations)
+        query = query.from_self().order_by(Operation.date, Operation.booked.desc(), Operation.order_by)
+    else:
+        query = query.order_by(Operation.date, Operation.booked, Operation.order_by)
+    return query.all()
+
+
 ##### def operation_list_with_balance(session, account_ids, tags=None,
 #####         start_date=None, end_date=None,
 #####         last_n_operations=None):
@@ -396,16 +425,17 @@ def tag_list(session, user_id=None):
 #####     operation_remove(session, operation_id=transfer.operation_to_id)
 #####     session.flush()
 #####     return True
-##### 
-##### 
-##### def operation_remove(session, operation_id):
-#####     set_operation_tags(session=session, operation_id=operation_id, tags=None)
-#####     operation = session.query(Operation).get(operation_id)
-#####     session.delete(operation)
-#####     session.flush()
-#####     return True
-##### 
-##### 
+
+
+def operation_remove(session, operation_id):
+    # TODO remove tags
+    #set_operation_tags(session=session, operation_id=operation_id, tags=None)
+    operation = operation_get(session, operation_id)
+    session.delete(operation)
+    session.flush()
+    return True
+
+
 ##### #def schedule_period_get(session, id):
 ##### #    schedule_period = session.query(SchedulePeriod).get(id)
 ##### #    return schedule_period

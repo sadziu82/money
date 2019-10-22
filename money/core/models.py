@@ -127,28 +127,26 @@ class Operation(Base):
     id = Column(String(36), primary_key=True)
     account_id = Column(String(36), ForeignKey('account.id', ondelete="cascade"),
                      nullable=False)
-    transfer_id = Column(String(36), nullable=True)
     amount = Column(Numeric(precision=10, scale=2), nullable=False)
-    description = Column(String(1024), default='', nullable=False)
     date = Column(Date, default=func.now(), nullable=False)
+    description = Column(String(1024), default='', nullable=False)
     booked = Column(Boolean, default=False, nullable=False)
     order_by = Column(Integer(), nullable=False, default=500)
     tags = relationship('Tag', secondary='operation_tag')
     account = relationship('Account', uselist=False,
                            backref='operations')
 
-    def __init__(self, account_id, amount, description, date, transfer_id=None, booked=False, order_by=500):
-        self.id = uuid.uuid4()
+    def __init__(self, account_id, amount, date, description, booked, order_by):
+        self.id = str(uuid.uuid4())
         self.account_id = account_id
         self.amount = amount
         self.description = description
         self.date = date
-        self.transfer_id = transfer_id
         self.booked = booked
         self.order_by = order_by
 
     def __repr__(self):
-        return '{:0.2f} ({})'.format(float(self.amount), self.oid)
+        return '{:0.2f} ({})'.format(float(self.amount), self.id)
 
 ##### event.listen(
 #####     Operation.__table__, 'after_create',
