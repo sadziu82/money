@@ -4,7 +4,7 @@
 import uuid
 import hashlib
 import sqlalchemy
-import ConfigParser
+import configparser
 
 ##
 from sqlalchemy import create_engine
@@ -41,7 +41,7 @@ import models
 # [prod]
 # db_uri = mysql://money:secret_password@localhost/money
 CONFIG_FILE = '/etc/money/money.cfg'
-config = ConfigParser.SafeConfigParser()
+config = configparser.SafeConfigParser()
 config.read(CONFIG_FILE)
 
 # database engine

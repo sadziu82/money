@@ -4,7 +4,7 @@
 #
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-import ConfigParser
+import configparser
 import argparse
 import models
 
@@ -17,7 +17,7 @@ parser.add_argument('--drop', help='drop existing tables',
                     action='store_true', default=False)
 args = parser.parse_args()
 
-config = ConfigParser.SafeConfigParser()
+config = configparser.SafeConfigParser()
 config.read(CONFIG_FILE)
 
 DB_ENDPOINT = config.get(args.env, 'db_uri')

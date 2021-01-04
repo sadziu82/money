@@ -105,7 +105,7 @@ def account_list_groupped(session, user_id):
         all()
     accounts = {}
     for account in account_list:
-        if account.account_type_group not in accounts.keys():
+        if account.account_type_group not in list(accounts.keys()):
             accounts[account.account_type_group] = {
                 'accounts': [],
                 'account_type_name': [],
@@ -142,7 +142,7 @@ def account_list_with_balance(session, user_id, end_date=None):
     ## execute query
     accounts = {}
     for account in query.all():
-        if account.account_type_group not in accounts.keys():
+        if account.account_type_group not in list(accounts.keys()):
             accounts[account.account_type_group] = {
                 'accounts': [],
                 'account_type_name': [],
@@ -408,7 +408,7 @@ def schedule_transfer(session, schedule_id, max_date):
         end_date = max_date
     ##
     current_date = schedule.start_date
-    print current_date, end_date
+    print(current_date, end_date)
     ##
     while str(current_date) <= end_date:
         if schedule.account_2_id:

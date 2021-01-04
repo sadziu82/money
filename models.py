@@ -45,7 +45,7 @@ class User(Base):
         return False
  
     def get_id(self):
-        return unicode(self.id)
+        return str(self.id)
 
     def __repr__(self):
         return '{} ({})'.format(self.login, self.id)
@@ -95,7 +95,7 @@ class Account(Base):
         self.debit_limit = debit_limit
 
     def __repr__(self):
-        return u'{} ({})'.format(self.name, self.id)
+        return '{} ({})'.format(self.name, self.id)
 
 
 class Tag(Base):
