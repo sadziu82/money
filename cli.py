@@ -5,7 +5,7 @@
 import re
 import models
 import argparse
-import ConfigParser
+import configparser
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from contextlib import contextmanager
@@ -91,7 +91,7 @@ def import_operation(session, file):
                     
                 #print m.group('date'), m.group('desc'), m.group('type'), m.group('tag'), amount
             else:
-                print line
+                print(line)
 
 
 #
@@ -183,7 +183,7 @@ if __name__ == '__main__':
     #
     args = parser.parse_args()
     
-    config = ConfigParser.SafeConfigParser()
+    config = configparser.ConfigParser()
     config.read(CONFIG_FILE)
     
     DB_ENDPOINT = config.get(args.env, 'db_uri')
@@ -197,14 +197,14 @@ if __name__ == '__main__':
     with session_scope() as session:
         if args.subparser == 'user':
             if args.subparser_user == 'add':
-                print user_add(session=session, login=args.login,
-                               password=args.password, email=args.email)
+                print(user_add(session=session, login=args.login,
+                               password=args.password, email=args.email))
             elif args.subparser_user == 'get':
                 user = user_get(session=session, login=args.login)
-                print '{}, {}, {}, {}'.format(user.uid, user.login,
-                                              user.email, user.accounts)
+                print('{}, {}, {}, {}'.format(user.uid, user.login,
+                                              user.email, user.accounts))
             elif args.subparser_user == 'remove':
-                print user_remove(session=session, login=args.login)
+                print(user_remove(session=session, login=args.login))
             elif args.subparser_user == 'list':
                 users = user_list(session=session)
                 keys = ['user', 'email', 'cdate', 'mdate',
@@ -215,21 +215,21 @@ if __name__ == '__main__':
                         user.cdate, user.mdate or '--', user.active,
                         ', '.join(['{} ({})'.format(x.name, x.aid)
                                    for x in user.accounts])])
-                print table
+                print(table)
         elif args.subparser == 'account':
             if args.subparser_account == 'add':
-                print account_add(session=session, owner=args.owner,
+                print(account_add(session=session, owner=args.owner,
                                   name=args.name,
-                                  initial_balance=args.initial_balance)
+                                  initial_balance=args.initial_balance))
             elif args.subparser_account == 'get':
                 account = account_get(session=session, owner=args.owner,
                                       name=args.name)
-                print '{}, {}, {}, {}'.format(account.aid, account.owner,
+                print('{}, {}, {}, {}'.format(account.aid, account.owner,
                                               account.name,
-                                              account.initial_balance)
+                                              account.initial_balance))
             elif args.subparser_account == 'remove':
-                print account_remove(session=session, owner=args.owner,
-                                     name=args.name)
+                print(account_remove(session=session, owner=args.owner,
+                                     name=args.name))
             elif args.subparser_account == 'list':
                 accounts = account_list(session=session, owner=args.owner)
                 if args.owner:
@@ -246,18 +246,18 @@ if __name__ == '__main__':
                         table.add_row([str(account),
                             '{:0.2f}'.format(account.initial_balance),
                             str(account.owner)])
-                print table
+                print(table)
         elif args.subparser == 'operation':
             if args.subparser_operation == 'add':
-                print operation_add(session=session, owner=args.owner,
+                print(operation_add(session=session, owner=args.owner,
                     account=args.account, amount=args.amount,
-                    type=args.type, tags=args.tags)
+                    type=args.type, tags=args.tags))
             elif args.subparser_operation == 'get':
                 operation = operation_get(session=session, owner=args.owner,
                                       name=args.name)
-                print '{}, {}, {}, {}'.format(operation.aid, operation.owner,
+                print('{}, {}, {}, {}'.format(operation.aid, operation.owner,
                                               operation.name,
-                                              operation.initial_balance)
+                                              operation.initial_balance))
             ### elif args.subparser_operation == 'remove':
             ###     print operation_remove(session=session, owner=args.owner,
             ###                          name=args.name)
@@ -285,4 +285,4 @@ if __name__ == '__main__':
                     values.append(', '.join([x.tag.name
                                              for x in operation.tags]))
                     table.add_row(values)
-                print table
+                print(table)
