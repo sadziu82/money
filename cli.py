@@ -1,8 +1,9 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
 #
 import re
+import os
 import models
 import argparse
 import configparser
@@ -94,12 +95,9 @@ def import_operation(session, file):
                 print(line)
 
 
-#
-CONFIG_FILE = 'money.cfg'
-
-
 # main
 if __name__ == '__main__':
+    CONFIG_FILE = os.environ['APP_CFG']
     
     parser = argparse.ArgumentParser()
     parser.add_argument('--env', help='environment to use', default='test')

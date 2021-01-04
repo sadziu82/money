@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 #
+import os
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 import configparser
@@ -9,7 +10,7 @@ import argparse
 import models
 
 #
-CONFIG_FILE = 'money.cfg'
+CONFIG_FILE = os.environ['APP_CFG']
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--env', help='environment to use', default='test')

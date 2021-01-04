@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
 ##
+import os
 import uuid
 import hashlib
 import sqlalchemy
@@ -40,7 +41,7 @@ import models
 # this file should have something like:
 # [prod]
 # db_uri = mysql://money:secret_password@localhost/money
-CONFIG_FILE = 'money.cfg'
+CONFIG_FILE = os.environ['APP_CFG']
 config = configparser.ConfigParser()
 config.read(CONFIG_FILE)
 
