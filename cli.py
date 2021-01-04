@@ -95,7 +95,7 @@ def import_operation(session, file):
 
 
 #
-CONFIG_FILE = '/etc/money/money.cfg'
+CONFIG_FILE = 'money.cfg'
 
 
 # main

@@ -14,10 +14,10 @@ import dateutil
 
 
 #
-def object_to_dict(Object):
-    dictionary = Object.__dict__.copy()
-    #del(dictionary['_sa_instance_state'])
-    return dictionary
+def object_to_dict(obj):
+    return {
+        f: getattr(obj, f) for f in type(obj)._fields
+    }
 
 
 def user_add(session, login, password, email):
