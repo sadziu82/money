@@ -1,10 +1,11 @@
 #!/usr/bin/python
 
 ##
+import os
 import uuid
 import hashlib
 import sqlalchemy
-import ConfigParser
+import configparser
 
 ##
 from sqlalchemy import create_engine
@@ -13,8 +14,8 @@ from sqlalchemy.orm.exc import (NoResultFound)
 from contextlib import contextmanager
 from flask import (Flask, request, render_template, redirect,
         url_for, g, flash, session)
-from flask.ext.sqlalchemy import SQLAlchemy
-from flask.ext.login import (LoginManager,
+from flask_sqlalchemy import SQLAlchemy
+from flask_login import (LoginManager,
                              login_user, logout_user,
                              current_user, login_required
                              )
@@ -40,8 +41,8 @@ import models
 # this file should have something like:
 # [prod]
 # db_uri = mysql://money:secret_password@localhost/money
-CONFIG_FILE = '/etc/money/money.cfg'
-config = ConfigParser.SafeConfigParser()
+CONFIG_FILE = os.environ['APP_CFG']
+config = configparser.ConfigParser()
 config.read(CONFIG_FILE)
 
 # database engine
@@ -113,7 +114,7 @@ def after_request(e):
 
 @money.route('/', methods=['GET'])
 def index():
-    if g.user.is_authenticated() is False:
+    if g.user.is_authenticated is False:
         return redirect(url_for('login'))
     else:
         return redirect(url_for('my_account'))

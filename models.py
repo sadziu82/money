@@ -30,9 +30,9 @@ class User(Base):
     mdate = Column(DateTime, onupdate=func.utc_timestamp())
 
     def __init__(self, login, password, email):
-        self.id = uuid.uuid4()
+        self.id = str(uuid.uuid4())
         self.login = login
-        self.password = hashlib.sha512(password).hexdigest()
+        self.password = hashlib.sha512(password.encode()).hexdigest()
         self.email = email
 
     def is_authenticated(self):
@@ -45,7 +45,7 @@ class User(Base):
         return False
  
     def get_id(self):
-        return unicode(self.id)
+        return str(self.id)
 
     def __repr__(self):
         return '{} ({})'.format(self.login, self.id)
@@ -59,7 +59,7 @@ class AccountType(Base):
     order = Column(Integer(), nullable=False)
 
     def __init__(self, name, group, order):
-        self.id = uuid.uuid4()
+        self.id = str(uuid.uuid4())
         self.name = name
         self.group = group
         self.order = order
@@ -87,7 +87,7 @@ class Account(Base):
     account_type = relationship('AccountType', backref='accounts', uselist=False)
 
     def __init__(self, account_type_id, user_id, name, initial_balance, debit_limit):
-        self.id = uuid.uuid4()
+        self.id = str(uuid.uuid4())
         self.account_type_id = account_type_id
         self.user_id = user_id
         self.name = name
@@ -95,7 +95,7 @@ class Account(Base):
         self.debit_limit = debit_limit
 
     def __repr__(self):
-        return u'{} ({})'.format(self.name, self.id)
+        return '{} ({})'.format(self.name, self.id)
 
 
 class Tag(Base):
@@ -104,7 +104,7 @@ class Tag(Base):
     name = Column(String(64), unique=True, nullable=False)
 
     def __init__(self, name):
-        self.id = uuid.uuid4()
+        self.id = str(uuid.uuid4())
         self.name = name
 
     def __repr__(self):
@@ -127,7 +127,7 @@ class Operation(Base):
                            backref='operations')
 
     def __init__(self, account_id, amount, description, date, transfer_id=None, booked=False, order_by=500):
-        self.id = uuid.uuid4()
+        self.id = str(uuid.uuid4())
         self.account_id = account_id
         self.amount = amount
         self.description = description
@@ -173,7 +173,7 @@ class Transfer(Base):
             uselist=False)
 
     def __init__(self, operation_from_id, operation_to_id):
-        self.id = uuid.uuid4()
+        self.id = str(uuid.uuid4())
         self.operation_from_id = operation_from_id
         self.operation_to_id = operation_to_id
 
@@ -229,7 +229,7 @@ class Schedule(Base):
 
     def __init__(self, account_1_id, account_2_id, amount, desc,
             schedule_period_id, start_date, end_date):
-        self.id = uuid.uuid4()
+        self.id = str(uuid.uuid4())
         self.account_1_id = account_1_id
         self.account_2_id = account_2_id
         self.amount = amount
