@@ -408,7 +408,7 @@ def schedule_transfer(session, schedule_id, max_date):
         end_date = max_date
     ##
     current_date = schedule.start_date
-    print current_date, end_date
+    print(current_date, end_date)
     ##
     while str(current_date) <= end_date:
         if schedule.account_2_id:

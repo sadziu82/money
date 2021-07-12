@@ -1,10 +1,10 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
 ##
 import uuid
 import hashlib
 import sqlalchemy
-import ConfigParser
+import configparser
 
 ##
 from sqlalchemy import create_engine
@@ -13,8 +13,8 @@ from sqlalchemy.orm.exc import (NoResultFound)
 from contextlib import contextmanager
 from flask import (Flask, request, render_template, redirect,
         url_for, g, flash, session)
-from flask.ext.sqlalchemy import SQLAlchemy
-from flask.ext.login import (LoginManager,
+from flask_sqlalchemy import SQLAlchemy
+from flask_login import (LoginManager,
                              login_user, logout_user,
                              current_user, login_required
                              )
@@ -30,7 +30,7 @@ import calendar
 
 # FIXME
 import sys
-sys.path.append('/srv/money.ithaca.pl/')
+sys.path.append('/srv/money/')
 
 #
 import api
@@ -38,8 +38,8 @@ import models
 
 
 #
-CONFIG_FILE = '/etc/money.ithaca.pl/money.cfg'
-config = ConfigParser.SafeConfigParser()
+CONFIG_FILE = '/srv/money-env/money.cfg'
+config = configparser.SafeConfigParser()
 config.read(CONFIG_FILE)
 
 # database engine
@@ -51,6 +51,7 @@ Session.configure(bind=engine)
 #
 money = Flask(__name__)
 money.config['SQLALCHEMY_DATABASE_URI'] = DB_ENDPOINT
+money.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(money)
 
 #
@@ -111,7 +112,7 @@ def after_request(e):
 
 @money.route('/', methods=['GET'])
 def index():
-    if g.user.is_authenticated() is False:
+    if g.user.is_authenticated is False:
         return redirect(url_for('login'))
     else:
         return redirect(url_for('my_account'))
@@ -846,7 +847,7 @@ def schedule_modify(id):
 if __name__ == '__main__':
     money.run()
 else:
-    handler = RotatingFileHandler('/srv/money.ithaca.pl/logs/money.log', maxBytes=1048576, backupCount=1)
+    handler = RotatingFileHandler('/srv/money-env/logs/money.log', maxBytes=1048576, backupCount=1)
     handler.setLevel(logging.DEBUG)
     money.logger.addHandler(handler)
     money.debug = True
