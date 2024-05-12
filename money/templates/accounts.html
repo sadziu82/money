@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% block header %}
+  <h1>{% block title %}accounts{% endblock %}</h1>
+{% endblock %}
+{% block content %}
+<form method="post">
+    <div class="mi mi-accounts-page-container">
+        <div class="mi mi-accounts-page-header">
+            <div class="mi mi-accounts-page-header-column" style="width: 10%"></div>
+            <div class="mi mi-accounts-page-header-column" style="width: 10%"></div>
+            <div class="mi mi-accounts-page-header-column mi-text-left" style="width: 40%">account name</div>
+            <div class="mi mi-accounts-page-header-column mi-text-right" style="width: 20%">to date balance</div>
+            <div class="mi mi-accounts-page-header-column mi-text-right" style="width: 20%">total balance</div>
+        </div>
+{% if accounts is defined %}
+{% else %}
+        <div class="mi mi-accounts-list-row">
+            <div class="mi mi-accounts-list-column" style="width: 20%"></div>
+            <div class="mi mi-accounts-list-column mi-text-left mi-font-italic mi-color-gray" style="width: 40%">
+                no accounts were found
+            </div>
+            <div class="mi mi-accounts-list-column" style="width: 40%"></div>
+        </div>
+{% endif %}
+        <div class="mi mi-accounts-page-footer">
+            <div class="mi mi-accounts-page-footer-column" style="width: 20%"></div>
+            <div class="mi mi-accounts-page-footer-column mi-text-left" style="width: 40%">
+                <a class="mi mi-top-menu-link" href='{{ url_for('view.account_create') }}'>add new account</a>
+            </div>
+            <div class="mi mi-accounts-page-footer-column" style="width: 40%"></div>
+        </div>
+    </div>
+</form>
+{% endblock %}

@@ -1,0 +1,191 @@
+@import 'http://fonts.googleapis.com/css?family=Montserrat:300,400,700';
+
+body.mi {
+    padding: 1ex;
+    margin: 0px;
+    font-family: Montserrat, sans-serif;
+    font-size: 10pt;
+    font-weight: bold;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    color: #444;
+    background: Gainsboro;
+    overflow: scroll;
+}
+
+div.mi {
+    box-sizing: border-box;
+    border: solid black 1px;
+    padding: 0px 0px 0px 0px;
+    overflow: hidden;
+}
+
+div.mi-top-menu-container {
+    background-color: DarkSlateBlue;
+    border: 0px;
+    width: 100%;
+    margin: auto;
+    padding: auto;
+    overflow: hidden;
+    text-align: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+div.mi-top-menu-link {
+    width: 10%;
+    padding: 0.5ex 1em 1ex 1em;
+    border: 0px;
+}
+
+div.mi-top-menu-spacer {
+    width: 30%;
+    text-align: center;
+    padding: 0.5ex 1em 1ex 1em;
+    border: 0px;
+}
+
+a.mi-top-menu-link {
+    color: Gold;
+    text-decoration: none;
+}
+
+a.mi-top-menu-link:hover {
+    color: Orange;
+}
+
+a:hover {
+    cursor: pointer;
+}
+
+div.mi-login-page-container {
+    background-color: Silver;
+    border: 0px;
+    width: 40%;
+    margin: 1ex auto;
+    padding: auto;
+    overflow: hidden;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+div.mi-login-page-header {
+    color: #F7C974;
+    margin: 1ex 1em 1ex 1em;
+    background-color: SteelBlue;
+    line-height: 3.5ex;
+    border: 0px;
+    text-align: left;
+    padding: 0ex 0em 0ex 1em;
+}
+
+div.mi-login-page-error {
+    color: Red;
+    margin: 0ex 1em 1ex 1em;
+    background-color: MistyRose;
+    line-height: 3.5ex;
+    border: 0px;
+    text-align: left;
+    padding: 0ex 0em 0ex 1em;
+}
+
+div.mi-login-page-section {
+    color: Black;
+    margin: 0ex 1em 1ex 1em;
+    border: 0px;
+    text-align: left;
+    padding: 0ex 0em 0ex 1em;
+}
+
+div.mi-login-page-section label {
+    color: Black;
+}
+
+div.mi-accounts-page-container {
+    border: 0px;
+    width: 100%;
+    margin: 1ex 0em 0ex 0em;
+    overflow: hidden;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+div.mi-accounts-page-header {
+    background-color: SteelBlue;
+    border: 0px;
+    width: 100%;
+    margin: 0ex;
+    padding: 0ex;
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+div.mi-accounts-page-header-column {
+    color: #F7C974;
+    margin: 0ex;
+    line-height: 3.5ex;
+    border: 0px;
+    padding: 0ex 1em 0ex 1em;
+}
+
+div.mi-accounts-page-footer {
+    background-color: SteelBlue;
+    border: 0px;
+    width: 100%;
+    margin: 1ex 0em 0ex 0em;
+    padding: 0ex;
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+div.mi-accounts-page-footer-column {
+    color: #F7C974;
+    margin: 0ex;
+    line-height: 3.5ex;
+    border: 0px;
+    padding: 0ex 1em 0ex 1em;
+}
+
+div.mi-accounts-list-row {
+    width: 100%;
+    margin: 1ex 0px 0px 0px;
+    background-color: Beige;
+    line-height: 3.5ex;
+    height: 3.5ex;
+    border: 0px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+div.mi-accounts-list-column {
+    line-height: 3.5ex;
+    height: 3.5ex;
+    border: 0px;
+    padding: 0ex 1em 0ex 1em;
+}
+
+.mi-color-gray {
+    color: Gray;
+}
+
+.mi-font-italic {
+    font-style: italic;
+}
+
+.mi-text-left {
+    text-align: left;
+}
+
+.mi-text-right {
+    text-align: right;
+}

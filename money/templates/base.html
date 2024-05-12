@@ -1,0 +1,43 @@
+<!doctype html>
+<html>
+    <head>
+        <title>{% block title %}{% endblock %} - money</title>
+        <!-- <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"> -->
+        <link rel="stylesheet" href="{{ url_for('static', filename='money.css') }}">
+    </head>
+    <body class="mi">
+        <div class="mi mi-top-menu-container">
+            <div class="mi mi-top-menu-link">
+                <a class="mi mi-top-menu-link" href='{{ url_for('view.index') }}'>money</a>
+            </div>
+{% if current_user.is_authenticated %}
+            <div class="mi mi-top-menu-link">
+                <a class="mi mi-top-menu-link" href='{{ url_for('view.account_list') }}'>accounts</a>
+            </div>
+            <div class="mi mi-top-menu-link">
+                <a class="mi mi-top-menu-link" href='{{ url_for('view.index') }}'>operations</a>
+            </div>
+            <div class="mi mi-top-menu-link">
+                <a class="mi mi-top-menu-link" href='{{ url_for('view.index') }}'>schedule</a>
+            </div>
+            <div class="mi mi-top-menu-link">
+                <a class="mi mi-top-menu-link" href='{{ url_for('view.index') }}'>reports</a>
+            </div>
+            <div class="mi mi-top-menu-link">
+                <a class="mi mi-top-menu-link" href='{{ url_for('view.index') }}'>balance</a>
+            </div>
+            <div class="mi mi-top-menu-spacer"></div>
+            <div class="mi mi-top-menu-link">
+                <a class="mi mi-top-menu-link" href="{{ url_for('auth.logout') }}">logout</a>
+            </div>
+{% else %}
+            <div class="mi mi-top-menu-spacer"></div>
+            <div class="mi mi-top-menu-link">
+                <a class="mi mi-top-menu-link" href="{{ url_for('auth.login') }}">login</a>
+            </div>
+{% endif %}
+        </div>
+{% block content %}{% endblock %}
+{{ current_user }}
+    </body>
+</html>

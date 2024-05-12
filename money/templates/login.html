@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block header %}
+  <h1>{% block title %}login{% endblock %}</h1>
+{% endblock %}
+{% block content %}
+<form method="post">
+    <div class="mi mi-login-page-container">
+        <div class="mi mi-login-page-header">login</div>
+{% for message in get_flashed_messages() %}
+            <div class="mi mi-login-page-error">{{ message }}</div>
+{% endfor %}
+        <div class="mi mi-login-page-section">
+            <label for="username">username</label>
+            <br>
+            <input name="username" id="username" required>
+        </div>
+        <div class="mi mi-login-page-section">
+            <label for="password">password</label>
+            <br>
+            <input type="password" name="password" id="password" required>
+        </div>
+        <div class="mi mi-login-page-section">
+            <input type="submit" value="login">
+        </div>
+    </div>
+</form>
+{% endblock %}
