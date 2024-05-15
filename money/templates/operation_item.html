@@ -1,0 +1,96 @@
+{% if action == "create" -%}
+    {% set title = "adding new operation" -%}
+{% elif action == "update" -%}
+    {% set title = "updating an operation" -%}
+{% elif action == "delete" -%}
+    {% set disabled = "disabled" -%}
+    {% set title = "confirm deletion of an operation" -%}
+{% endif -%}
+
+{% if operation -%}
+    {% set operation_uuid = operation.uuid -%}
+    {% set operation_account_uuid = operation.account.uuid -%}
+    {% if operation.sibling_operation.account -%}
+        {% set operation_sibling_account_uuid = operation.sibling_operation.account.uuid -%}
+        {% set sibling_operation_amount = operation.sibling_operation.amount-%}
+    {% endif -%}
+    {% set operation_amount = operation.amount -%}
+    {% set operation_date = operation.date -%}
+    {% set operation_description = operation.description -%}
+{% endif -%}
+
+<div class="mi mi-dialog-box-container">
+    <form method="post" action="{{ url_for('view.operation_' + action) }}">
+{% if action != 'create' %}
+        <input name="uuid" type="hidden" required value="{{ operation_uuid }}">
+{% endif %}
+        <div class="mi mi-dialog-box-header">{{ title }}</div>
+        <div class="mi-flex mi-flex-row">
+            <div class="mi mi-dialog-box-section" style="width: 50%">
+                <label for="account">account</label>
+                <br>
+                <select name="account_uuid" {{ disabled }}>
+{% for account in account_list -%}
+    {% if operation_account_uuid == account.uuid -%}
+                    <option value="{{ account.uuid }}" selected>
+    {% else -%}
+                    <option value="{{ account.uuid }}">
+    {% endif -%}
+                    {{ account.name }}
+                    </option>
+{% endfor -%}
+                </select>
+            </div>
+            <div class="mi mi-dialog-box-section" style="width: 50%">
+                <label for="account">target account</label>
+                <br>
+                <select name="sibling_account_uuid" {{ disabled }}>
+                    <option value="None" selected>
+                    -- external account --
+                    </option>
+{% for sibling_account in account_list -%}
+    {% if operation_sibling_account_uuid == sibling_account.uuid -%}
+                    <option value="{{ sibling_account.uuid }}" selected>
+    {% else -%}
+                    <option value="{{ sibling_account.uuid }}">
+    {% endif -%}
+                    {{ sibling_account.name }}
+                    </option>
+{% endfor -%}
+                </select>
+            </div>
+        </div>
+        <div class="mi-flex mi-flex-row">
+            <div class="mi mi-dialog-box-section" style="width: 50%">
+                <label for="amount">amount</label>
+                <br>
+                <input name="amount" {{ disabled }} value="{{ operation_amount }}">
+            </div>
+            <div class="mi mi-dialog-box-section" style="width: 50%">
+                <label for="sibling_amount">sibling_amount</label>
+                <br>
+                <input name="sibling_amount" {{ disabled }} value="{{ sibling_operation_amount }}">
+            </div>
+        </div>
+        <div class="mi mi-dialog-box-section">
+            <label for="date">date</label>
+            <br>
+            <input name="date" {{ disabled }} value="{{ operation_date }}">
+        </div>
+        <div class="mi mi-dialog-box-section">
+            <label for="tags">tags</label>
+            <br>
+            <input name="tags" {{ disabled }}>
+        </div>
+        <div class="mi mi-dialog-box-section">
+            <label for="description">description</label>
+            <br>
+            <textarea name="description" {{ disabled }}>{{ operation_description }}</textarea>
+        </div>
+        <div class="mi mi-dialog-box-section">
+            <input type="submit" value="{{ action }}">
+            <input type="button" value="cancel" onClick='close_dialog();'>
+        </div>
+    </form>
+</div>
+

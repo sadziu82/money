@@ -3,8 +3,10 @@
 
 ##
 from money.database import init_db
+from money import create_app
 
 
 ##
 if __name__ == "__main__":
-    init_db()
+    app = create_app()
+    init_db(app)

@@ -1,0 +1,55 @@
+<div class="mi mi-dialog-box-container">
+    <form method="post" action="{{ url_for('view.account_edit') }}">
+        <input name="uuid" type="hidden" required value="{{ account.uuid }}">
+        <div class="mi mi-dialog-box-header">update account details</div>
+        <div class="mi mi-dialog-box-section">
+            <label for="name">name</label>
+            <br>
+            <input name="name" required value="{{ account.name }}">
+        </div>
+        <div class="mi mi-dialog-box-section">
+            <label for="type">currency</label>
+            <br>
+            <select name="currency_uuid">
+{% for currency in currency_list -%}
+    {% if account.currency_uuid == currency.uuid %}
+                <option value="{{ currency.uuid }}" selected>
+    {% else %}
+                <option value="{{ currency.uuid }}">
+    {% endif %}
+                {{ currency.name }}
+                </option>
+{% endfor -%}
+            </select>
+        </div>
+        <div class="mi mi-dialog-box-section">
+            <label for="type">type</label>
+            <br>
+            <select name="account_type_uuid">
+{% for type in account_type_list -%}
+    {% if account.account_type_uuid == type.uuid %}
+                <option value="{{ type.uuid }}" selected>
+    {% else %}
+                <option value="{{ type.uuid }}">
+    {% endif %}
+                {{ type.name }}
+                </option>
+{% endfor -%}
+            </select>
+        </div>
+        <div class="mi mi-dialog-box-section">
+            <label for="initial balance">initial balance</label>
+            <br>
+            <input name="initial_balance" required value="{{ account.initial_balance }}">
+        </div>
+        <div class="mi mi-dialog-box-section">
+            <label for="debit limit">debit limit</label>
+            <br>
+            <input name="debit_limit" required value="{{ account.debit_limit }}">
+        </div>
+        <div class="mi mi-dialog-box-section">
+            <input type="submit" value="update">
+            <input type="button" value="cancel" onClick='close_dialog();'>
+        </div>
+    </form>
+</div>

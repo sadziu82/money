@@ -19,6 +19,10 @@ def create_app(test_config=None):
         app.config.from_mapping(test_config)
 
     ##
+    from money.database import db
+    db.init_app(app)
+
+    ##
     from money.auth import login_manager
     login_manager.init_app(app)
 

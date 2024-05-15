@@ -1,6 +1,11 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+##
 from money import create_app
 
 
+##
 def test_app_config():
     db_uri_key = 'SQLALCHEMY_DATABASE_URI'
     db_uri_value = 'sqlite:///test.db'

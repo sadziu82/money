@@ -1,0 +1,22 @@
+<div class="mi mi-dialog-box-container">
+    <form method="post" action="{{ url_for('view.account_delete') }}">
+        <input name="uuid" type="hidden" required value="{{ account.uuid }}">
+        <div class="mi mi-dialog-box-header">confirm deletion of an account</div>
+        <div class="mi mi-dialog-box-section">
+            <label for="name">name</label>
+            <br>
+            <input name="name" required value="{{ account.name }}">
+        </div>
+        <div class="mi mi-dialog-box-section">
+            <label for="used_by">used by</label>
+{% for user_account in user_account_list -%}
+            <br>
+            <input name="used_by" required value="{{ user_account.user.login }}">
+{% endfor -%}
+        </div>
+        <div class="mi mi-dialog-box-section">
+            <input type="submit" value="delete this account">
+            <input type="button" value="cancel" onClick='close_dialog();'>
+        </div>
+    </form>
+</div>

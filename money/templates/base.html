@@ -2,10 +2,11 @@
 <html>
     <head>
         <title>{% block title %}{% endblock %} - money</title>
-        <!-- <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"> -->
+        <script type="text/javascript" src="{{ url_for('static', filename='money.js') }}"></script>
         <link rel="stylesheet" href="{{ url_for('static', filename='money.css') }}">
     </head>
     <body class="mi">
+        <!-- used for dialog boxes -->
         <div class="mi mi-top-menu-container">
             <div class="mi mi-top-menu-link">
                 <a class="mi mi-top-menu-link" href='{{ url_for('view.index') }}'>money</a>
@@ -15,7 +16,7 @@
                 <a class="mi mi-top-menu-link" href='{{ url_for('view.account_list') }}'>accounts</a>
             </div>
             <div class="mi mi-top-menu-link">
-                <a class="mi mi-top-menu-link" href='{{ url_for('view.index') }}'>operations</a>
+                <a class="mi mi-top-menu-link" href='{{ url_for('view.operation_list') }}'>operations</a>
             </div>
             <div class="mi mi-top-menu-link">
                 <a class="mi mi-top-menu-link" href='{{ url_for('view.index') }}'>schedule</a>
@@ -38,6 +39,12 @@
 {% endif %}
         </div>
 {% block content %}{% endblock %}
+        <!-- used for dialog boxes -->
+        <div id="mi-dialog-box-div">
+            <dialog id="mi-dialog-box" class="mi mi-dialog-box">intializing ...</dialog>
+        </div>
+        <div class="mi mi-accounts-page-debug">
 {{ current_user }}
+        </div>
     </body>
 </html>

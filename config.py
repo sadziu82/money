@@ -4,7 +4,7 @@
 ##
 class Config:
     ## location of database
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///instance/money.sqlite'
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///money.sqlite'
 
     ## to generate new secret use
     ## python -c 'import secrets; print(secrets.token_hex())'

@@ -1,0 +1,66 @@
+{% from 'macros.html' import cash_amount %}
+{% extends 'base.html' %}
+{% block header %}
+  <h1>{% block title %}accounts{% endblock %}</h1>
+{% endblock %}
+{% block content %}
+<form method="post">
+    <div class="mi mi-account-page-container">
+        <div class="mi mi-account-page-header">
+            <div class="mi mi-account-page-header-column" style="width: 3%; min-width: 3em"></div>
+            <div class="mi mi-account-page-header-column" style="width: 3%; min-width: 3em"></div>
+            <div class="mi mi-account-page-header-column" style="width: 3%; min-width: 3em"></div>
+            <div class="mi mi-account-page-header-column" style="width: 7%; min-width: 5em">date</div>
+            <div class="mi mi-account-page-header-column mi-text-left" style="width: 18%">account name</div>
+            <div class="mi mi-account-page-header-column mi-text-left" style="width: 25%">tags</div>
+            <div class="mi mi-account-page-header-column mi-text-left" style="width: 25%">description</div>
+            <div class="mi mi-account-page-header-column mi-text-right" style="width: 8%">amount</div>
+            <div class="mi mi-account-page-header-column mi-text-right" style="width: 8%">balance</div>
+        </div>
+{% if operation_list is defined and operation_list | length > 0 %}
+    {% for item in operation_list -%}
+        {% if loop.first -%}
+        <div class="mi mi-account-list-row mi-account-list-row mi-account-list-row-first" style="color: Black">
+        {% else -%}
+        <div class="mi mi-account-list-row mi-account-list-row" style="color: Black">
+        {% endif -%}
+            <div class="mi mi-account-list-column" style="width: 3%; min-width: 3em">
+                <a class="mi mi-account-list-link" onclick="show_dialog('{{ url_for("view.operation_delete", uuid=item.Operation.uuid) }}');"><img src="{{ url_for('static', filename='delete.svg') }}" class="mi-filter-red"></a>
+            </div>
+            <div class="mi mi-account-list-column" style="width: 3%; min-width: 3em">
+                <a class="mi mi-account-list-link" onclick="show_dialog('{{ url_for("view.operation_update", action='update', uuid=item.Operation.uuid) }}');"><img src="{{ url_for('static', filename='edit.svg') }}" class="mi-filter-blue"></a>
+            </div>
+        {% if item.Operation.booked == 1 -%}
+            {% set filter = "green" -%}
+        {% else -%}
+            {% set filter = "orange" -%}
+        {% endif -%}
+            <div class="mi mi-account-list-column" style="width: 3%; min-width: 3em">
+                <a class="mi mi-account-list-link" href="{{ url_for("view.operation_book", uuid=item.Operation.uuid) }}"><img src="{{ url_for('static', filename='book.svg') }}" class="mi-filter-{{ filter }}"></a>
+            </div>
+            <div class="mi mi-account-list-column" style="width: 7%; min-width: 5em">{{ item.Operation.date }}</div>
+            <div class="mi mi-account-list-column mi-text-left" style="width: 18%">{{ item.Account.name }}</div>
+            <div class="mi mi-account-list-column mi-text-left" style="width: 25%">tag1, tag2, ...</div>
+            <div class="mi mi-account-list-column mi-text-left" style="width: 25%">{{ item.Operation.description }}</div>
+            <div class="mi mi-account-list-column mi-flex mi-flex-right mi-text-right" style="width: 8%">{{ cash_amount(item.Operation.amount, item.Account.currency.symbol ) }}</div>
+            <div class="mi mi-account-list-column mi-flex mi-flex-right mi-text-right" style="width: 8%">{{ cash_amount(item.balance + item.Account.initial_balance, item.Account.currency.symbol) }}</div>
+        </div>
+    {% endfor -%}
+{% else %}
+        <div class="mi mi-account-list-row-notice">
+            <div class="mi mi-account-list-column" style="width: 20%; min-width: 12em"></div>
+            <div class="mi mi-account-list-column mi-text-left mi-font-italic mi-color-gray" style="width: 50%">no operations were found</div>
+            <div class="mi mi-account-list-column" style="width: 30%"></div>
+        </div>
+{% endif %}
+        <div class="mi mi-account-page-footer">
+            <div class="mi mi-account-page-footer-column" style="width: 16%; min-width: 12em"></div>
+            <div class="mi mi-account-page-footer-column mi-text-left" style="width: 18%">
+                <a class="mi mi-top-menu-link" onclick="show_dialog('{{ url_for("view.operation_create") }}');">add new operation</a>
+            </div>
+            <div class="mi mi-account-page-footer-column" style="width: 66%"></div>
+        </div>
+    </div>
+</form>
+{% endblock %}
+

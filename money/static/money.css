@@ -4,8 +4,8 @@ body.mi {
     padding: 1ex;
     margin: 0px;
     font-family: Montserrat, sans-serif;
-    font-size: 10pt;
-    font-weight: bold;
+    font-size: 11pt;
+    font-weight: normal;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
     color: #444;
@@ -15,14 +15,13 @@ body.mi {
 
 div.mi {
     box-sizing: border-box;
-    border: solid black 1px;
+    border: solid black 0px;
     padding: 0px 0px 0px 0px;
     overflow: hidden;
 }
 
 div.mi-top-menu-container {
     background-color: DarkSlateBlue;
-    border: 0px;
     width: 100%;
     margin: auto;
     padding: auto;
@@ -36,14 +35,12 @@ div.mi-top-menu-container {
 div.mi-top-menu-link {
     width: 10%;
     padding: 0.5ex 1em 1ex 1em;
-    border: 0px;
 }
 
 div.mi-top-menu-spacer {
     width: 30%;
     text-align: center;
     padding: 0.5ex 1em 1ex 1em;
-    border: 0px;
 }
 
 a.mi-top-menu-link {
@@ -61,7 +58,6 @@ a:hover {
 
 div.mi-login-page-container {
     background-color: Silver;
-    border: 0px;
     width: 40%;
     margin: 1ex auto;
     padding: auto;
@@ -77,7 +73,6 @@ div.mi-login-page-header {
     margin: 1ex 1em 1ex 1em;
     background-color: SteelBlue;
     line-height: 3.5ex;
-    border: 0px;
     text-align: left;
     padding: 0ex 0em 0ex 1em;
 }
@@ -87,7 +82,6 @@ div.mi-login-page-error {
     margin: 0ex 1em 1ex 1em;
     background-color: MistyRose;
     line-height: 3.5ex;
-    border: 0px;
     text-align: left;
     padding: 0ex 0em 0ex 1em;
 }
@@ -95,7 +89,6 @@ div.mi-login-page-error {
 div.mi-login-page-section {
     color: Black;
     margin: 0ex 1em 1ex 1em;
-    border: 0px;
     text-align: left;
     padding: 0ex 0em 0ex 1em;
 }
@@ -104,8 +97,7 @@ div.mi-login-page-section label {
     color: Black;
 }
 
-div.mi-accounts-page-container {
-    border: 0px;
+div.mi-account-page-container {
     width: 100%;
     margin: 1ex 0em 0ex 0em;
     overflow: hidden;
@@ -115,11 +107,10 @@ div.mi-accounts-page-container {
     justify-content: space-between;
 }
 
-div.mi-accounts-page-header {
+div.mi-account-page-header {
     background-color: SteelBlue;
-    border: 0px;
     width: 100%;
-    margin: 0ex;
+    margin: 0ex 0em 0ex 0em;
     padding: 0ex;
     overflow: hidden;
     display: flex;
@@ -127,17 +118,28 @@ div.mi-accounts-page-header {
     justify-content: space-between;
 }
 
-div.mi-accounts-page-header-column {
+div.mi-account-page-header-column {
     color: #F7C974;
     margin: 0ex;
     line-height: 3.5ex;
-    border: 0px;
     padding: 0ex 1em 0ex 1em;
 }
-
-div.mi-accounts-page-footer {
-    background-color: SteelBlue;
+/*
+div.mi-account-list-section {
+    width: 100%;
+    color: #F7C974;
+    margin: 0.5ex 0px 0px 0px;
+    background-color: #9FB7E3;
+    line-height: 3.5ex;
+    height: 3.5ex;
     border: 0px;
+    text-align: left;
+    padding-left: 10%;
+    font-style: italic;
+}
+*/
+div.mi-account-list-section-row {
+    background-color: #9FB7E3;
     width: 100%;
     margin: 1ex 0em 0ex 0em;
     padding: 0ex;
@@ -147,31 +149,175 @@ div.mi-accounts-page-footer {
     justify-content: space-between;
 }
 
-div.mi-accounts-page-footer-column {
+div.mi-account-list-section-column {
     color: #F7C974;
     margin: 0ex;
     line-height: 3.5ex;
-    border: 0px;
     padding: 0ex 1em 0ex 1em;
 }
 
-div.mi-accounts-list-row {
+div.mi-account-page-footer {
+    background-color: SteelBlue;
     width: 100%;
-    margin: 1ex 0px 0px 0px;
-    background-color: Beige;
-    line-height: 3.5ex;
-    height: 3.5ex;
-    border: 0px;
+    margin: 1ex 0em 0ex 0em;
+    padding: 0ex;
+    overflow: hidden;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
 }
 
-div.mi-accounts-list-column {
+div.mi-account-page-footer-column {
+    color: #F7C974;
+    margin: 0ex;
+    line-height: 3.5ex;
+    padding: 0ex 1em 0ex 1em;
+}
+
+div.mi-account-list-row {
+    width: 100%;
+    margin: 0ex 0px 0px 0px;
+    background-color: Beige;
     line-height: 3.5ex;
     height: 3.5ex;
-    border: 0px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+div.mi-account-list-row-first {
+    margin: 1ex 0px 0px 0px;
+}
+
+div.mi-account-list-row:nth-child(even) {
+    background-color: WhiteSmoke;
+}
+
+div.mi-account-list-row:nth-child(even):hover {
+    background-color: #dfdfdf;
+}
+
+div.mi-account-list-row:nth-child(odd) {
+    background-color: Snow;
+}
+
+div.mi-account-list-row:nth-child(odd):hover {
+    background-color: #dfdfdf;
+}
+
+
+div.mi-account-list-column {
+    line-height: 3.5ex;
+    height: 3.5ex;
     padding: 0ex 1em 0ex 1em;
+}
+
+div.mi-account-list-row-total {
+    width: 100%;
+    margin: 0ex 0px 0px 0px;
+    background-color: Beige;
+    line-height: 3.5ex;
+    height: 3.5ex;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+div.mi-account-list-row-notice {
+    width: 100%;
+    margin: 1ex 0px 0px 0px;
+    background-color: Beige;
+    line-height: 3.5ex;
+    height: 3.5ex;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+dialog::backdrop {
+    background-color: Gray;
+    opacity: 0.75;
+}
+
+dialog.mi-dialog-box {
+    padding: 1ex 2em 1ex 2em;
+    background-color: Silver;
+    margin-top: 5%;
+    /*
+    width: 70%;
+    height: 70%;
+    */
+    flex-direction: row;
+    justify-content: center;
+}
+
+div.mi-dialog-box-container {
+    background-color: Silver;
+    width: 100%;
+    margin: 1ex auto;
+    padding: auto;
+    overflow: hidden;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+div.mi-dialog-box-header {
+    color: #F7C974;
+    margin: 1ex 1em 1ex 1em;
+    background-color: SteelBlue;
+    line-height: 3.5ex;
+    text-align: left;
+    padding: 0ex 1em 0ex 1em;
+}
+
+div.mi-dialog-box-error {
+    color: Red;
+    margin: 0ex 1em 1ex 1em;
+    background-color: MistyRose;
+    line-height: 3.5ex;
+    text-align: left;
+    padding: 0ex 0em 0ex 1em;
+}
+
+div.mi-dialog-box-section {
+    color: Black;
+    margin: 0ex 1em 1ex 1em;
+    text-align: left;
+    padding: 0ex 0em 0ex 1em;
+}
+
+div.mi-dialog-box-section label {
+    color: Black;
+}
+
+div.mi-account-page-debug {
+    background-color: Beige;
+    color: Gray;
+    width: 100%;
+    margin: 1ex 0em 0ex 0em;
+    padding: 1ex 1em 1ex 1em;
+    font-weight: normal;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.mi-flex {
+    display: flex;
+}
+
+.mi-flex-left {
+    flex-direction: row;
+}
+
+.mi-flex-right {
+    justify-content: flex-end;
+}
+
+.mi-flex-row {
+    justify-content: row;
 }
 
 .mi-color-gray {
@@ -188,4 +334,36 @@ div.mi-accounts-list-column {
 
 .mi-text-right {
     text-align: right;
+}
+
+.mi-filter-DarkSlateBlue {
+    filter: invert(24%) sepia(10%) saturate(5946%) hue-rotate(217deg) brightness(97%) contrast(90%);
+}
+
+.mi-filter-SteelBlue {
+    filter: invert(71%) sepia(62%) saturate(2981%) hue-rotate(180deg) brightness(73%) contrast(90%);
+}
+
+/*
+    for colors and filters go to:
+        - https://htmlcolorcodes.com/color-chart/
+        - https://isotropic.co/tool/hex-color-to-css-filter/
+*/
+
+.mi-filter-red {
+    /* #d32f2f */
+    filter: invert(20%) sepia(70%) saturate(2238%) hue-rotate(339deg) brightness(117%) contrast(99%);
+}
+
+.mi-filter-blue {
+    /* #0d47a1 */
+    filter: invert(9%) sepia(97%) saturate(5737%) hue-rotate(212deg) brightness(96%) contrast(90%);
+}
+.mi-filter-orange {
+    /* #229954 */
+    filter: invert(39%) sepia(73%) saturate(1461%) hue-rotate(342deg) brightness(109%) contrast(122%);
+}
+.mi-filter-green {
+    /*  */
+    filter: invert(48%) sepia(67%) saturate(487%) hue-rotate(93deg) brightness(86%) contrast(89%);
 }

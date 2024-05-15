@@ -1,0 +1,15 @@
+{% macro cash_amount(amount, currency_symbol) -%}
+    {% if amount <= -2500 -%}
+        {% set color = "Red" -%}
+    {% elif amount < 0 -%}
+        {% set color = "LightCoral" -%}
+    {% elif amount >= 2500 -%}
+        {% set color = "Green" -%}
+    {% elif amount > 0 -%}
+        {% set color = "CadetBlue" -%}
+    {% else %}
+        {% set color = "Black" -%}
+    {% endif -%} 
+<div style="color: {{ color }}; font-family: monospace;">{{ '{:,.2f}'.format(amount) }}</div><div class="mi-text-left" style="color: {{ color }}; font-family: monospace; width: 1em; margin: 0ex 0em 0em 0.2em">{{ currency_symbol }}</div>
+{%- endmacro %}
+

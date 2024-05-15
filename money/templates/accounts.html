@@ -1,33 +1,62 @@
+{% from 'macros.html' import cash_amount %}
 {% extends 'base.html' %}
 {% block header %}
   <h1>{% block title %}accounts{% endblock %}</h1>
 {% endblock %}
 {% block content %}
 <form method="post">
-    <div class="mi mi-accounts-page-container">
-        <div class="mi mi-accounts-page-header">
-            <div class="mi mi-accounts-page-header-column" style="width: 10%"></div>
-            <div class="mi mi-accounts-page-header-column" style="width: 10%"></div>
-            <div class="mi mi-accounts-page-header-column mi-text-left" style="width: 40%">account name</div>
-            <div class="mi mi-accounts-page-header-column mi-text-right" style="width: 20%">to date balance</div>
-            <div class="mi mi-accounts-page-header-column mi-text-right" style="width: 20%">total balance</div>
+    <div class="mi mi-account-page-container">
+        <div class="mi mi-account-page-header">
+            <div class="mi mi-account-page-header-column" style="width: 5%; min-width: 5em"></div>
+            <div class="mi mi-account-page-header-column" style="width: 5%; min-width: 5em"></div>
+            <div class="mi mi-account-page-header-column mi-text-left" style="width: 50%">account name</div>
+            <div class="mi mi-account-page-header-column mi-text-right" style="width: 20%">to date balance</div>
+            <div class="mi mi-account-page-header-column mi-text-right" style="width: 20%">total balance</div>
         </div>
-{% if accounts is defined %}
+{% if groupped_account_list is defined and groupped_account_list | length > 0 %}
+    {% for group in groupped_account_list | sort -%}
+        {% set group_label = groupped_account_list[group]['account_types'] | join(', ') %}
+        <div class="mi mi-account-list-section-row">
+            <div class="mi mi-account-list-section-column" style="width: 10%; min-width: 10em"></div>
+            <div class="mi mi-account-list-section-column mi-text-left mi-font-italic" style="width: 50%">{{ group_label }}</div>
+            <div class="mi mi-account-list-section-column mi-text-right" style="width: 40%"></div>
+        </div>
+    {% for account in groupped_account_list[group]['accounts'] -%}
+        <div class="mi mi-account-list-row">
+            <div class="mi mi-account-list-column" style="width: 5%; min-width: 5em">
+                <a class="mi mi-account-list-link" onclick="show_dialog('{{ url_for("view.account_delete", uuid=account.uuid) }}');">delete</a>
+            </div>
+            <div class="mi mi-account-list-column" style="width: 5%; min-width: 5em">
+                <a class="mi mi-account-list-link" onclick="show_dialog('{{ url_for("view.account_edit", uuid=account.uuid) }}');">edit</a>
+            </div>
+            <div class="mi mi-account-list-column mi-text-left" style="width: 50%">
+                <a class="mi mi-account-list-link" href="{{ url_for('view.account_edit', account_uuid=account.uuid) }}">{{ account.name }}</a>
+            </div>
+            <div class="mi mi-account-list-column mi-flex mi-flex-right mi-text-right" style="width: 20%">{{ cash_amount(range(-15000, 15000) | random, account.currency.symbol ) }}</div>
+            <div class="mi mi-account-list-column mi-flex mi-flex-right mi-text-right" style="width: 20%">{{ cash_amount(range(-5000, 5000) | random, account.currency.symbol) }}</div>
+        </div>
+    {% endfor -%}
+        <div class="mi mi-account-list-row-total">
+            <div class="mi mi-account-list-column" style="width: 10%; min-width: 10em"></div>
+            <div class="mi mi-account-list-column mi-text-right mi-color-gray" style="width: 50%">total</div>
+            <div class="mi mi-account-list-column" style="width: 40%"></div>
+        </div>
+    {% endfor -%}
 {% else %}
-        <div class="mi mi-accounts-list-row">
-            <div class="mi mi-accounts-list-column" style="width: 20%"></div>
-            <div class="mi mi-accounts-list-column mi-text-left mi-font-italic mi-color-gray" style="width: 40%">
+        <div class="mi mi-account-list-row-notice">
+            <div class="mi mi-account-list-column" style="width: 10%; min-width: 10em"></div>
+            <div class="mi mi-account-list-column mi-text-left mi-font-italic mi-color-gray" style="width: 50%">
                 no accounts were found
             </div>
-            <div class="mi mi-accounts-list-column" style="width: 40%"></div>
+            <div class="mi mi-account-list-column" style="width: 40%"></div>
         </div>
 {% endif %}
-        <div class="mi mi-accounts-page-footer">
-            <div class="mi mi-accounts-page-footer-column" style="width: 20%"></div>
-            <div class="mi mi-accounts-page-footer-column mi-text-left" style="width: 40%">
-                <a class="mi mi-top-menu-link" href='{{ url_for('view.account_create') }}'>add new account</a>
+        <div class="mi mi-account-page-footer">
+            <div class="mi mi-account-page-footer-column" style="width: 10%; min-width: 10em"></div>
+            <div class="mi mi-account-page-footer-column mi-text-left" style="width: 50%">
+                <a class="mi mi-top-menu-link" onclick="show_dialog('{{ url_for("view.account_create") }}');">add new account</a>
             </div>
-            <div class="mi mi-accounts-page-footer-column" style="width: 40%"></div>
+            <div class="mi mi-account-page-footer-column" style="width: 40%"></div>
         </div>
     </div>
 </form>
