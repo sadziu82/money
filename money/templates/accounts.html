@@ -24,13 +24,13 @@
     {% for account in groupped_account_list[group]['accounts'] -%}
         <div class="mi mi-account-list-row">
             <div class="mi mi-account-list-column" style="width: 5%; min-width: 5em">
-                <a class="mi mi-account-list-link" onclick="show_dialog('{{ url_for("view.account_delete", uuid=account.uuid) }}');">delete</a>
+                <a class="mi mi-account-list-link" onclick="show_dialog('{{ url_for("view.account_delete", uuid=account.uuid) }}');"><img src="{{ url_for('static', filename='delete.svg') }}" class="mi-filter-red"></a>
             </div>
             <div class="mi mi-account-list-column" style="width: 5%; min-width: 5em">
-                <a class="mi mi-account-list-link" onclick="show_dialog('{{ url_for("view.account_edit", uuid=account.uuid) }}');">edit</a>
+                <a class="mi mi-account-list-link" onclick="show_dialog('{{ url_for("view.account_edit", uuid=account.uuid) }}');"><img src="{{ url_for('static', filename='edit.svg') }}" class="mi-filter-blue"></a>
             </div>
             <div class="mi mi-account-list-column mi-text-left" style="width: 50%">
-                <a class="mi mi-account-list-link" href="{{ url_for('view.account_edit', account_uuid=account.uuid) }}">{{ account.name }}</a>
+                <a class="mi mi-account-list-link" onclick="show_dialog('{{ url_for('view.account_edit', uuid=account.uuid) }}');">{{ account.name }}</a>
             </div>
             <div class="mi mi-account-list-column mi-flex mi-flex-right mi-text-right" style="width: 20%">{{ cash_amount(account.to_date_balance, account.currency.symbol ) }}</div>
             <div class="mi mi-account-list-column mi-flex mi-flex-right mi-text-right" style="width: 20%">{{ cash_amount(account.total_balance, account.currency.symbol) }}</div>

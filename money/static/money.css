@@ -367,3 +367,23 @@ div.mi-account-page-debug {
     /*  */
     filter: invert(48%) sepia(67%) saturate(487%) hue-rotate(93deg) brightness(86%) contrast(89%);
 }
+
+a.mi-account-list-link {
+    color: #444;
+    text-decoration: none;
+}
+
+a.mi-account-list-link:hover {
+    color: #444;
+    text-decoration: none;
+}
+
+div.mi-account-list-column.mi-text-left a.mi-account-list-link {
+    color: #0066cc;
+    text-decoration: none;
+}
+
+div.mi-account-list-column.mi-text-left a.mi-account-list-link:hover {
+    color: SteelBlue;
+    text-decoration: underline;
+}
