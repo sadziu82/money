@@ -99,9 +99,26 @@ def account_type_create(name, group):
         raise AccountTypeError(f'account_type_create({name}, {group} error')
 
 ##
-def account_get_balance(uuid=None, date=None):
+def account_get_balance(user_uuid, account_uuid, date=None):
     ##
-    return random(1000) - 400
+    account = account_fetch(uuid=account_uuid, user_uuid=user_uuid)
+    account_balance = account.initial_balance
+
+    ##
+    query = db.session.query(func.sum(Operation.amount)).where(Operation.account_uuid==account_uuid)
+
+    ##
+    if date is not None:
+        query = query.where(Operation.date<=date)
+
+    ##
+    res = query.one()
+    if res[0] is not None:
+        account_balance += res[0]
+
+    ## return proper value
+    return account_balance
+
 
 ##
 def account_list(user_uuid=None):
@@ -143,9 +160,11 @@ def account_create(name, currency, account_type, initial_balance, debit_limit, u
 
 
 ##
-def account_list_groupped_with_balance(user_uuid):
+def account_list_groupped_with_balance(user_uuid, today_date=None):
     ##
     result = defaultdict(lambda: defaultdict(list))
+    to_date_balance = defaultdict(int)
+    total_balance = defaultdict(int)
 
     ##
     account_types = db.session.query(AccountType).all()
@@ -159,10 +178,22 @@ def account_list_groupped_with_balance(user_uuid):
     for account in accounts:
         if account.account_type.name not in result[int(account.account_type.group / 1000)]['account_types']:
             result[int(account.account_type.group / 1000)]['account_types'].append(account.account_type.name)
+        if today_date is not None:
+            account.to_date_balance = account_get_balance(user_uuid=user_uuid, account_uuid=account.uuid,
+                                                          date=today_date)
+            to_date_balance[int(account.account_type.group / 1000)] += account.to_date_balance
+        else:
+            account.to_date_balance = 'n/a'
+        account.total_balance = account_get_balance(user_uuid=user_uuid, account_uuid=account.uuid)
+        total_balance[int(account.account_type.group / 1000)] += account.total_balance
+
         result[int(account.account_type.group / 1000)]['accounts'].append(account)
 
     groups = list(result.keys())
     for group in groups:
+        result[group]['to_date_balance'] = to_date_balance[group]
+        result[group]['total_balance'] = total_balance[group]
+        result[group]['currency'] = 'zł'
         if len(result[group]['accounts']) == 0:
             del result[group]
 

@@ -30,7 +30,8 @@ def index():
 @login_required
 def account_list():
     ##
-    groupped_account_list = api.account_list_groupped_with_balance(user_uuid=current_user.uuid)
+    groupped_account_list = api.account_list_groupped_with_balance(user_uuid=current_user.uuid,
+                                                                   today_date=datetime.today())
     return render_template('accounts.html', groupped_account_list=groupped_account_list)
 
 ##
