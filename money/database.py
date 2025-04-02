@@ -60,7 +60,7 @@ def init_db(app, testing=False):
             account_type_12 = api.account_type_create("rainy day", 4700)
 
             ##
-            user_1 = api.user_create("pawel", "pawels82", "money@sadziu")
+            user_1 = api.user_create("pawel", "test1234", "money@sadziu")
 
             ##
             account_1 = api.account_create(
@@ -75,8 +75,8 @@ def init_db(app, testing=False):
         ##### ##
         ##### if testing is True:
         #####     ##
-        #####     user_1 = api.user_create("pawel", "pawels82", "money@sadziu")
-        #####     user_2 = api.user_create("izka", "izka81", "izka@sadziu")
+        #####     user_1 = api.user_create("pawel", "test1234", "money@sadziu")
+        #####     user_2 = api.user_create("izka", "test1234", "izka@sadziu")
         #####     ##
         #####     account_1 = api.account_create(
         #####         name="PKO BP",
