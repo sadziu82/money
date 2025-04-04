@@ -11,7 +11,7 @@ from money.exc import UserError, AccountError
 
 
 ##
-def test_operation_create(app):
+def test_operation_create_simple(app):
 
     with app.app_context():
 
