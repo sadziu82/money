@@ -14,7 +14,7 @@ from datetime import datetime
 ##
 from money.exc import UserNotValid, AccountError, OperationError
 from money.database import db
-from money import api
+from money import sdk
 
 ##
 bp = Blueprint('view', __name__)
@@ -30,7 +30,7 @@ def index():
 @login_required
 def account_list():
     ##
-    groupped_account_list = api.account_list_groupped_with_balance(user_uuid=current_user.uuid,
+    groupped_account_list = sdk.account_list_groupped_with_balance(user_uuid=current_user.uuid,
                                                                    today_date=datetime.today())
     return render_template('accounts.html', groupped_account_list=groupped_account_list)
 
@@ -47,7 +47,7 @@ def account_create():
         debit_limit = request.form['debit_limit']
         ##
         try:
-            account = api.account_create(name=name, currency=currency, account_type=account_type,
+            account = sdk.account_create(name=name, currency=currency, account_type=account_type,
                                          initial_balance=initial_balance, debit_limit=debit_limit,
                                          user_uuids=[current_user.uuid])
             db.session.commit()
@@ -56,8 +56,8 @@ def account_create():
             flash('account creation error')
 
     ##
-    currency_list = api.currency_list()
-    account_type_list = api.account_type_list()
+    currency_list = sdk.currency_list()
+    account_type_list = sdk.account_type_list()
     return render_template('account_create.html', currency_list=currency_list, account_type_list=account_type_list)
 
 ##
@@ -74,7 +74,7 @@ def account_edit():
         debit_limit = request.form['debit_limit']
         ##
         try:
-            account = api.account_update(uuid=uuid, name=name,
+            account = sdk.account_update(uuid=uuid, name=name,
                                          currency_uuid=currency_uuid, account_type_uuid=account_type_uuid,
                                          initial_balance=initial_balance, debit_limit=debit_limit)
                                          
@@ -85,10 +85,10 @@ def account_edit():
 
     ##
     uuid = request.args.get('uuid')
-    account = api.account_fetch(uuid)
+    account = sdk.account_fetch(uuid)
     ##
-    currency_list = api.currency_list()
-    account_type_list = api.account_type_list()
+    currency_list = sdk.currency_list()
+    account_type_list = sdk.account_type_list()
     ##
     return render_template('account_edit.html', account=account, currency_list=currency_list,
                            account_type_list=account_type_list)
@@ -103,7 +103,7 @@ def account_delete():
         uuid = request.form['uuid']
         ##
         try:
-            account = api.account_delete(uuid=uuid)
+            account = sdk.account_delete(uuid=uuid)
             db.session.commit()
             return redirect(url_for('view.account_list'))
         except UserNotValid:
@@ -111,8 +111,8 @@ def account_delete():
 
     ## get params
     uuid = request.args.get('uuid')
-    account = api.account_fetch(uuid=uuid, user_uuid=current_user.uuid)
-    user_account_list = api.user_account_list(account_uuid=account.uuid)
+    account = sdk.account_fetch(uuid=uuid, user_uuid=current_user.uuid)
+    user_account_list = sdk.user_account_list(account_uuid=account.uuid)
     return render_template('account_delete.html', account=account, user_account_list=user_account_list)
 
 
@@ -121,8 +121,8 @@ def account_delete():
 @login_required
 def operation_list():
     ##
-    operation_list = api.operation_list_with_balance(account_uuids=[], user_uuid=current_user.uuid)
-    #operation_list = api.operation_list(account_uuids=[])
+    operation_list = sdk.operation_list_with_balance(account_uuids=[], user_uuid=current_user.uuid)
+    #operation_list = sdk.operation_list(account_uuids=[])
     return render_template('operation_list.html', operation_list=operation_list)
 
 
@@ -138,7 +138,7 @@ def operation_create():
             params['sibling_amount'] = float(params['sibling_amount'] or 0)
             params['date'] = datetime.strptime(params['date'], '%Y-%m-%d')
 
-            operation = api.operation_create(**params, user_uuid=current_user.uuid)
+            operation = sdk.operation_create(**params, user_uuid=current_user.uuid)
             db.session.commit()
             return redirect(url_for('view.operation_list'))
         except OperationError:
@@ -147,7 +147,7 @@ def operation_create():
     ##
     action = request.args.get('action')
     uuid = request.args.get('uuid')
-    account_list = api.account_list(user_uuid=current_user.uuid)
+    account_list = sdk.account_list(user_uuid=current_user.uuid)
     ##
     return render_template('operation_item.html', action='create', account_list=account_list)
 
@@ -164,7 +164,7 @@ def operation_update():
             params['sibling_amount'] = float(params['sibling_amount'] or 0)
             params['date'] = datetime.strptime(params['date'], '%Y-%m-%d')
 
-            operation = api.operation_update(**params, user_uuid=current_user.uuid)
+            operation = sdk.operation_update(**params, user_uuid=current_user.uuid)
             db.session.commit()
             return redirect(url_for('view.operation_list'))
         except OperationError:
@@ -173,8 +173,8 @@ def operation_update():
     ##
     action = request.args.get('action')
     uuid = request.args.get('uuid')
-    operation = api.operation_fetch(uuid=uuid, user_uuid=current_user.uuid)
-    account_list = api.account_list(user_uuid=current_user.uuid)
+    operation = sdk.operation_fetch(uuid=uuid, user_uuid=current_user.uuid)
+    account_list = sdk.account_list(user_uuid=current_user.uuid)
     ##
     return render_template('operation_item.html', action='update', operation=operation, account_list=account_list)
 
@@ -185,7 +185,7 @@ def operation_update():
 def operation_delete():
     if request.method == 'POST':
         try:
-            operation = api.operation_delete(**(request.form), user_uuid=current_user.uuid)
+            operation = sdk.operation_delete(**(request.form), user_uuid=current_user.uuid)
             db.session.commit()
             return redirect(url_for('view.operation_list'))
         except OperationError:
@@ -194,8 +194,8 @@ def operation_delete():
     ##
     action = request.args.get('action')
     uuid = request.args.get('uuid')
-    operation = api.operation_fetch(uuid=uuid, user_uuid=current_user.uuid)
-    account_list = api.account_list(user_uuid=current_user.uuid)
+    operation = sdk.operation_fetch(uuid=uuid, user_uuid=current_user.uuid)
+    account_list = sdk.account_list(user_uuid=current_user.uuid)
     ##
     return render_template('operation_item.html', action='delete', operation=operation, account_list=account_list)
 
@@ -206,7 +206,7 @@ def operation_delete():
 def operation_book():
     ##
     uuid = request.args.get('uuid')
-    api.operation_toggle(uuid=uuid, user_uuid=current_user.uuid)
+    sdk.operation_toggle(uuid=uuid, user_uuid=current_user.uuid)
     db.session.commit()
     ##
     return redirect(url_for('view.operation_list'))

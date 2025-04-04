@@ -6,7 +6,7 @@ import re
 import pytest
 
 ##
-from money import api
+from money import sdk
 from money.exc import UserError, AccountError
 
 
@@ -19,7 +19,7 @@ def test_operation_create(app):
         user_password = "password!123efwmef0932098r3209r3209rm039rm2"
         user_email = "money@example.com"
 
-        user = api.user_create(user_login, user_password, user_email)
+        user = sdk.user_create(user_login, user_password, user_email)
 
         assert re.match(r'^[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}$', user.uuid)
         assert user.login == user_login

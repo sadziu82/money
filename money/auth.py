@@ -13,7 +13,7 @@ from flask_login import LoginManager, login_user, logout_user
 #from money.database import db_session
 #from money.database import db
 from money.exc import UserNotValid
-from money.api import user_validate, user_fetch
+from money.sdk import user_validate, user_fetch
 
 
 #

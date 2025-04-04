@@ -6,7 +6,7 @@ import re
 import pytest
 
 ##
-from money import api
+from money import sdk
 from money.exc import UserError, AccountError
 
 
@@ -22,7 +22,7 @@ def test_account_create(app, currencies, account_types, users):
         debit_limit = 234
         user_uuids = [users[0].uuid]
 
-        account = api.account_create(
+        account = sdk.account_create(
             name=account_name,
             currency=account_currency.uuid,
             account_type=account_type.uuid,
@@ -31,7 +31,7 @@ def test_account_create(app, currencies, account_types, users):
             user_uuids=user_uuids,
         )
 
-        account_1 = api.account_fetch(uuid=account.uuid, user_uuid=users[0].uuid)
+        account_1 = sdk.account_fetch(uuid=account.uuid, user_uuid=users[0].uuid)
 
         assert account_1.name == account_name
         assert account_1.initial_balance == initial_balance

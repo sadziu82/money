@@ -6,7 +6,7 @@ import re
 import pytest
 
 ##
-from money import api
+from money import sdk
 from money.exc import UserError, AccountError
 
 
@@ -19,7 +19,7 @@ def test_user_create(app):
         user_password = "password!123efwmef0932098r3209r3209rm039rm2"
         user_email = "money@example.com"
 
-        user = api.user_create(user_login, user_password, user_email)
+        user = sdk.user_create(user_login, user_password, user_email)
 
         assert re.match(r'^[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}$', user.uuid)
         assert user.login == user_login
@@ -34,7 +34,7 @@ def test_user_fetch_by_uuid(app, users):
 
     with app.app_context():
 
-        user_0 = api.user_fetch(uuid=users[0].uuid)
+        user_0 = sdk.user_fetch(uuid=users[0].uuid)
 
         assert user_0.uuid == users[0].uuid
         assert user_0.login == users[0].login
@@ -43,7 +43,7 @@ def test_user_fetch_by_uuid(app, users):
         assert user_0.active == users[0].active
         assert user_0.create_date == users[0].create_date
 
-        user_1 = api.user_fetch(uuid=users[1].uuid)
+        user_1 = sdk.user_fetch(uuid=users[1].uuid)
 
         assert user_1.uuid == users[1].uuid
         assert user_1.login == users[1].login
@@ -61,7 +61,7 @@ def test_user_fetch_by_login(app, users):
 
     with app.app_context():
 
-        user_0 = api.user_fetch(login=users[0].login)
+        user_0 = sdk.user_fetch(login=users[0].login)
 
         assert user_0.uuid == users[0].uuid
         assert user_0.login == users[0].login
@@ -70,7 +70,7 @@ def test_user_fetch_by_login(app, users):
         assert user_0.active == users[0].active
         assert user_0.create_date == users[0].create_date
 
-        user_1 = api.user_fetch(login=users[1].login)
+        user_1 = sdk.user_fetch(login=users[1].login)
 
         assert user_1.uuid == users[1].uuid
         assert user_1.login == users[1].login
@@ -89,10 +89,10 @@ def test_user_fetch_wrong_login(app, users):
     with app.app_context():
 
         with pytest.raises(UserError):
-            api.user_fetch(login='unknown')
+            sdk.user_fetch(login='unknown')
 
         with pytest.raises(AssertionError):
-            api.user_fetch()
+            sdk.user_fetch()
 
 
 ##
@@ -101,7 +101,7 @@ def test_user_fetch_wrong_uuid(app, users):
     with app.app_context():
 
         with pytest.raises(UserError):
-            api.user_fetch(uuid='unknown')
+            sdk.user_fetch(uuid='unknown')
 
 
 ##
@@ -110,4 +110,4 @@ def test_user_fetch_no_login_uuid(app, users):
     with app.app_context():
 
         with pytest.raises(AssertionError):
-            api.user_fetch()
+            sdk.user_fetch()
