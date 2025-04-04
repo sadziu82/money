@@ -23,7 +23,7 @@ bp = Blueprint('view', __name__)
 @bp.route('/', methods=['GET'])
 @login_required
 def index():
-    return render_template('index.html')
+    return redirect(url_for('view.account_list'))
 
 ##
 @bp.route('/accounts', methods=['GET'])

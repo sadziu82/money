@@ -14,44 +14,6 @@ from money.exc import UserNotValid
 
 
 ##
-class User(Base):
-    __tablename__ = 'user'
-    uuid = Column(String(36), primary_key=True)
-    login = Column(String(64), unique=True)
-    password = Column(String(128))
-    email = Column(String(255), unique=True)
-    active = Column(Boolean, default=True)
-    create_date = Column(DateTime, default=func.now())
-
-    def __init__(self, login, password, email):
-        self.uuid = str(uuid.uuid4())
-        self.login = login
-        self.password = hashlib.sha512(password.encode()).hexdigest()
-        self.email = email
-
-    def verify_password(self, password):
-        try:
-            assert self.password == hashlib.sha512(password.encode()).hexdigest()
-        except AssertionError:
-            raise UserNotValid(f'verify_password({self.login}, {password}) failed')
- 
-    def is_authenticated(self):
-        return True
- 
-    def is_active(self):
-        return True
- 
-    def is_anonymous(self):
-        return False
- 
-    def get_id(self):
-        return str(self.uuid)
-
-    def __repr__(self):
-        return '{} ({})'.format(self.login, self.uuid)
-
-
-##
 class Currency(Base):
     __tablename__ = 'currency'
     uuid = Column(String(36), primary_key=True)
@@ -83,6 +45,49 @@ class AccountType(Base):
 
     def __repr__(self):
         return '{} ({})'.format(self.name, self.uuid)
+
+
+##
+class User(Base):
+    __tablename__ = 'user'
+    uuid = Column(String(36), primary_key=True)
+    login = Column(String(64), unique=True)
+    password = Column(String(128))
+    email = Column(String(255), unique=True)
+    base_currency_uuid = mapped_column(String(36), ForeignKey('currency.uuid',
+                ondelete="cascade"), nullable=False)
+    active = Column(Boolean, default=True)
+    create_date = Column(DateTime, default=func.now())
+    ##
+    base_currency = relationship('Currency', uselist=False)
+
+    def __init__(self, login, password, email, base_currency_uuid):
+        self.uuid = str(uuid.uuid4())
+        self.login = login
+        self.password = hashlib.sha512(password.encode()).hexdigest()
+        self.email = email
+        self.base_currency_uuid = base_currency_uuid
+
+    def verify_password(self, password):
+        try:
+            assert self.password == hashlib.sha512(password.encode()).hexdigest()
+        except AssertionError:
+            raise UserNotValid(f'verify_password({self.login}, {password}) failed')
+ 
+    def is_authenticated(self):
+        return True
+ 
+    def is_active(self):
+        return True
+ 
+    def is_anonymous(self):
+        return False
+ 
+    def get_id(self):
+        return str(self.uuid)
+
+    def __repr__(self):
+        return '{} ({})'.format(self.login, self.uuid)
 
 
 ##
@@ -134,6 +139,7 @@ class Operation(Base):
     __tablename__ = 'operation'
     uuid = mapped_column(String(36), primary_key=True)
     amount = mapped_column(Numeric(precision=10, scale=2), nullable=False)
+    base_currency_amount = mapped_column(Numeric(precision=10, scale=2), nullable=False)
     description = mapped_column(String(1024), default='', nullable=False)
     date = mapped_column(Date, default=func.now(), nullable=False)
     booked = mapped_column(Boolean, default=False, nullable=False)
@@ -145,7 +151,7 @@ class Operation(Base):
     account_uuid = mapped_column(String(36), ForeignKey('account.uuid', ondelete="cascade"), nullable=False)
     account = relationship('Account', uselist=False, backref='operations')
 
-    def __init__(self, account_uuid, amount, description, date, booked=False, order_by=500):
+    def __init__(self, account_uuid, amount, base_currency_amount, description, date, booked=False, order_by=500):
         self.uuid = str(uuid.uuid4())
         self.account_uuid = account_uuid
         self.amount = amount

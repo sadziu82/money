@@ -19,10 +19,12 @@ from money.exc import UserError, CurrencyError, AccountError, OperationError
 
 
 ##
-def user_create(login, password, email):
+def user_create(login, password, email, base_currency_uuid):
+    ##
+    base_currency = db.session.query(Currency).where(Currency.uuid==base_currency_uuid).one()
     ##
     try:
-        user = User(login=login, password=password, email=email)
+        user = User(login=login, password=password, email=email, base_currency_uuid=base_currency_uuid)
         db.session.add(user)
         db.session.flush()
         return user
@@ -36,14 +38,13 @@ def user_create(login, password, email):
 def user_fetch(uuid=None, login=None):
     ## FIXME add assertion if both options are specified
     assert uuid is not None or login is not None, f'user_fetch({uuid}, {login}) must be called with uuid or login'
+    assert uuid is None or login is None, f'user_fetch({uuid}, {login}) must be called with uuid or login, not both'
     ##
     try:
         if uuid is not None:
             user = db.session.query(User).where(User.uuid==uuid).one()
         elif login is not None:
             user = db.session.query(User).where(User.login==login).one()
-        else:
-            assert False, f'user_fetch({uuid}, {login}) call failure #1'
         return user
 
     except sqlalchemy.exc.NoResultFound:

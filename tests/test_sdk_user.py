@@ -11,22 +11,39 @@ from money.exc import UserError, AccountError
 
 
 ##
-def test_user_create(app):
+def test_user_create(app, currencies):
 
     with app.app_context():
 
         user_login = "pawel"
         user_password = "password!123efwmef0932098r3209r3209rm039rm2"
         user_email = "money@example.com"
+        base_currency_uuid = currencies[0].uuid
 
-        user = sdk.user_create(user_login, user_password, user_email)
+        user = sdk.user_create(user_login, user_password, user_email, base_currency_uuid=currencies[0].uuid)
 
         assert re.match(r'^[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}$', user.uuid)
         assert user.login == user_login
         assert user.password != user_password
         assert len(user.password) == 128
         assert user.email == user_email
+        assert user.base_currency_uuid == base_currency_uuid
         assert user.active is True
+
+
+##
+def test_user_create_duplicated_login(app, currencies):
+
+    with app.app_context():
+
+        user_login = "pawel"
+        user_password = "password!123efwmef0932098r3209r3209rm039rm2"
+        user_email = "money@example.com"
+        base_currency_uuid = currencies[0].uuid
+
+        user_1 = sdk.user_create(user_login, user_password, user_email, base_currency_uuid=currencies[0].uuid)
+        with pytest.raises(UserError):
+            sdk.user_create(user_login, user_password, user_email, base_currency_uuid=currencies[0].uuid)
 
 
 ##
@@ -111,3 +128,12 @@ def test_user_fetch_no_login_uuid(app, users):
 
         with pytest.raises(AssertionError):
             sdk.user_fetch()
+
+
+##
+def test_user_fetch_by_uuid_and_login(app, users):
+
+    with app.app_context():
+
+        with pytest.raises(AssertionError):
+            sdk.user_fetch(uuid=users[0].uuid, login=users[0].login)

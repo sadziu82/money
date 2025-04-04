@@ -66,9 +66,10 @@ def account_types(app):
         account_type_4 = sdk.account_type_create("installment", 2300)
         account_type_5 = sdk.account_type_create("loan", 2500)
         account_type_6 = sdk.account_type_create("mortgage", 2700)
-        account_type_7 = sdk.account_type_create("shares", 3300)
+        account_type_7 = sdk.account_type_create("savings", 3300)
+        account_type_7 = sdk.account_type_create("shares", 3400)
         account_type_8 = sdk.account_type_create("securities", 3500)
-        account_type_9 = sdk.account_type_create("pension plan", 3700)
+        account_type_9 = sdk.account_type_create("pension plan", 3600)
         account_type_10 = sdk.account_type_create("cash", 4300)
         account_type_11 = sdk.account_type_create("money to burn", 4500)
         account_type_12 = sdk.account_type_create("rainy day", 4700)
@@ -80,12 +81,14 @@ def account_types(app):
 
 ##
 @pytest.fixture
-def users(app):
+def users(app, currencies):
     from money import sdk
 
     with app.app_context():
-        user_1 = sdk.user_create('pawel', 'password!123', 'money.pawel@example.com')
-        user_2 = sdk.user_create('izka', 'password!456', 'money.izka@example.com')
+        user_1 = sdk.user_create(login='user1', password='password!123', email='user1@example.com',
+                                 base_currency_uuid=currencies[0].uuid)
+        user_2 = sdk.user_create(login='user2', password='password!456', email='user2@example.com',
+                                 base_currency_uuid=currencies[1].uuid)
 
         sdk.db.session.commit()
 
